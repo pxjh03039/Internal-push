@@ -1,7 +1,15 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:push_test_app/core/util/develop/develop_tool.dart';
 import 'package:push_test_app/domain/repository/push_repository.dart';
 import 'package:push_test_app/presentation/push/push_action.dart';
 import 'package:push_test_app/presentation/push/push_state.dart';
+
+enum PushField {
+  textChange,
+  selectRepeat,
+}
 
 class PushViewModel with ChangeNotifier {
   final PushRepository _pushRepository;
@@ -22,9 +30,22 @@ class PushViewModel with ChangeNotifier {
 
   void onAction(PushAction action) {
     switch (action) {
+      case SetField():
+        _handelSetField(action);
       case OnTextChanged():
         _onTextChanged(action.value);
     }
+  }
+
+  void _handelSetField(SetField action) {
+    _pushState = switch (action.field) {
+      PushField.textChange => pushState.copyWith(query: action.value),
+      PushField.selectRepeat => () {
+          debugLog(action.value);
+          return pushState.copyWith(selectRepeat: action.value);
+        }(),
+    };
+    notifyListeners();
   }
 
   void _loadPushList() async {
@@ -32,8 +53,8 @@ class PushViewModel with ChangeNotifier {
 
     _pushState = pushState.copyWith(
         pushSchedule: await _pushRepository.getPushSchedules());
-
-    print(await _pushRepository.getPushSchedule("push002"));
+    var data = await _pushRepository.getPushSchedule("push002");
+    log(data.toString());
 
     notifyListeners();
   }

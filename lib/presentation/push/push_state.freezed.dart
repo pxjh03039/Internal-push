@@ -16,6 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$PushState {
   String get query;
+  String get selectRepeat;
   List<PushSchedule> get pushSchedule;
 
   /// Create a copy of PushState
@@ -31,18 +32,20 @@ mixin _$PushState {
         (other.runtimeType == runtimeType &&
             other is PushState &&
             (identical(other.query, query) || other.query == query) &&
+            (identical(other.selectRepeat, selectRepeat) ||
+                other.selectRepeat == selectRepeat) &&
             const DeepCollectionEquality()
                 .equals(other.pushSchedule, pushSchedule));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, query, const DeepCollectionEquality().hash(pushSchedule));
+  int get hashCode => Object.hash(runtimeType, query, selectRepeat,
+      const DeepCollectionEquality().hash(pushSchedule));
 
   @override
   String toString() {
-    return 'PushState(query: $query, pushSchedule: $pushSchedule)';
+    return 'PushState(query: $query, selectRepeat: $selectRepeat, pushSchedule: $pushSchedule)';
   }
 }
 
@@ -51,7 +54,8 @@ abstract mixin class $PushStateCopyWith<$Res> {
   factory $PushStateCopyWith(PushState value, $Res Function(PushState) _then) =
       _$PushStateCopyWithImpl;
   @useResult
-  $Res call({String query, List<PushSchedule> pushSchedule});
+  $Res call(
+      {String query, String selectRepeat, List<PushSchedule> pushSchedule});
 }
 
 /// @nodoc
@@ -67,12 +71,17 @@ class _$PushStateCopyWithImpl<$Res> implements $PushStateCopyWith<$Res> {
   @override
   $Res call({
     Object? query = null,
+    Object? selectRepeat = null,
     Object? pushSchedule = null,
   }) {
     return _then(PushState(
       query: null == query
           ? _self.query
           : query // ignore: cast_nullable_to_non_nullable
+              as String,
+      selectRepeat: null == selectRepeat
+          ? _self.selectRepeat
+          : selectRepeat // ignore: cast_nullable_to_non_nullable
               as String,
       pushSchedule: null == pushSchedule
           ? _self.pushSchedule

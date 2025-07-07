@@ -15,25 +15,19 @@ T _$identity<T>(T value) => value;
 
 /// @nodoc
 mixin _$PushAction {
-  String get value;
-
-  /// Create a copy of PushAction
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @pragma('vm:prefer-inline')
-  $PushActionCopyWith<PushAction> get copyWith =>
-      _$PushActionCopyWithImpl<PushAction>(this as PushAction, _$identity);
+  dynamic get value;
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is PushAction &&
-            (identical(other.value, value) || other.value == value));
+            const DeepCollectionEquality().equals(other.value, value));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, value);
+  int get hashCode =>
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(value));
 
   @override
   String toString() {
@@ -42,35 +36,8 @@ mixin _$PushAction {
 }
 
 /// @nodoc
-abstract mixin class $PushActionCopyWith<$Res> {
-  factory $PushActionCopyWith(
-          PushAction value, $Res Function(PushAction) _then) =
-      _$PushActionCopyWithImpl;
-  @useResult
-  $Res call({String value});
-}
-
-/// @nodoc
-class _$PushActionCopyWithImpl<$Res> implements $PushActionCopyWith<$Res> {
-  _$PushActionCopyWithImpl(this._self, this._then);
-
-  final PushAction _self;
-  final $Res Function(PushAction) _then;
-
-  /// Create a copy of PushAction
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? value = null,
-  }) {
-    return _then(_self.copyWith(
-      value: null == value
-          ? _self.value
-          : value // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
+class $PushActionCopyWith<$Res> {
+  $PushActionCopyWith(PushAction _, $Res Function(PushAction) __);
 }
 
 /// @nodoc
@@ -83,7 +50,6 @@ class OnTextChanged implements PushAction {
 
   /// Create a copy of PushAction
   /// with the given fields replaced by the non-null parameter values.
-  @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
   $OnTextChangedCopyWith<OnTextChanged> get copyWith =>
@@ -112,7 +78,6 @@ abstract mixin class $OnTextChangedCopyWith<$Res>
   factory $OnTextChangedCopyWith(
           OnTextChanged value, $Res Function(OnTextChanged) _then) =
       _$OnTextChangedCopyWithImpl;
-  @override
   @useResult
   $Res call({String value});
 }
@@ -127,7 +92,6 @@ class _$OnTextChangedCopyWithImpl<$Res>
 
   /// Create a copy of PushAction
   /// with the given fields replaced by the non-null parameter values.
-  @override
   @pragma('vm:prefer-inline')
   $Res call({
     Object? value = null,
@@ -137,6 +101,77 @@ class _$OnTextChangedCopyWithImpl<$Res>
           ? _self.value
           : value // ignore: cast_nullable_to_non_nullable
               as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class SetField implements PushAction {
+  SetField(this.field, this.value);
+
+  final PushField field;
+  @override
+  final dynamic value;
+
+  /// Create a copy of PushAction
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  $SetFieldCopyWith<SetField> get copyWith =>
+      _$SetFieldCopyWithImpl<SetField>(this, _$identity);
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is SetField &&
+            (identical(other.field, field) || other.field == field) &&
+            const DeepCollectionEquality().equals(other.value, value));
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      runtimeType, field, const DeepCollectionEquality().hash(value));
+
+  @override
+  String toString() {
+    return 'PushAction.setField(field: $field, value: $value)';
+  }
+}
+
+/// @nodoc
+abstract mixin class $SetFieldCopyWith<$Res>
+    implements $PushActionCopyWith<$Res> {
+  factory $SetFieldCopyWith(SetField value, $Res Function(SetField) _then) =
+      _$SetFieldCopyWithImpl;
+  @useResult
+  $Res call({PushField field, dynamic value});
+}
+
+/// @nodoc
+class _$SetFieldCopyWithImpl<$Res> implements $SetFieldCopyWith<$Res> {
+  _$SetFieldCopyWithImpl(this._self, this._then);
+
+  final SetField _self;
+  final $Res Function(SetField) _then;
+
+  /// Create a copy of PushAction
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? field = null,
+    Object? value = freezed,
+  }) {
+    return _then(SetField(
+      null == field
+          ? _self.field
+          : field // ignore: cast_nullable_to_non_nullable
+              as PushField,
+      freezed == value
+          ? _self.value
+          : value // ignore: cast_nullable_to_non_nullable
+              as dynamic,
     ));
   }
 }

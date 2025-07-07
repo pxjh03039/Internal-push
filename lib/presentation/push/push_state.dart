@@ -11,9 +11,11 @@ part 'push_state.g.dart';
 @JsonSerializable()
 class PushState with _$PushState {
   final String query;
+  final String selectRepeat;
   final List<PushSchedule> pushSchedule;
   const PushState({
     this.query = '2',
+    this.selectRepeat = '',
     this.pushSchedule = const [],
   });
 

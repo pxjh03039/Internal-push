@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:push_test_app/core/presentation/components/search_input_filed.dart';
+import 'package:push_test_app/core/presentation/components/small_text_button_group.dart';
 import 'package:push_test_app/presentation/push/push_action.dart';
 import 'package:push_test_app/presentation/push/push_view_model.dart';
 import 'package:push_test_app/ui/color_style.dart';
@@ -62,6 +63,15 @@ class PushScreen extends StatelessWidget {
               ),
               const SizedBox(
                 height: 15,
+              ),
+              SmallTextButtonGroup(
+                options: const ['none', 'daily', 'weekly'],
+                selectedTarget: viewModel.pushState.selectRepeat,
+                onChanged: (value) {
+                  viewModel.onAction(
+                    PushAction.setField(PushField.selectRepeat, value),
+                  );
+                },
               ),
               Text(viewModel.pushState.query),
               ElevatedButton(
