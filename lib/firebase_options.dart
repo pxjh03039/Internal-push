@@ -48,6 +48,7 @@ class DefaultFirebaseOptions {
     authDomain: 'web-push-test-mhlee.firebaseapp.com',
     storageBucket: 'web-push-test-mhlee.firebasestorage.app',
     measurementId: 'G-445XZ9W6T0',
+    databaseURL: 'https://web-push-test-mhlee-default-rtdb.firebaseio.com',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
