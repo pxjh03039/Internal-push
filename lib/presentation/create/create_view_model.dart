@@ -1,7 +1,21 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:push_test_app/core/util/develop/develop_tool.dart';
+import 'package:push_test_app/domain/model/push_schedule.dart';
 import 'package:push_test_app/presentation/create/create_state.dart';
+import 'package:push_test_app/util/date_picker_helper.dart';
+
+enum CreateField {
+  selectedTime,
+  title,
+  message,
+  target,
+  repeat,
+  selectedDays,
+  startDate,
+  endDate,
+}
 
 class CreateViewModel extends ChangeNotifier {
   final TextEditingController titleController = TextEditingController();
@@ -10,8 +24,10 @@ class CreateViewModel extends ChangeNotifier {
   CreateState _createState = CreateState(
     selectedTime: Duration(
       hours: DateTime.now().hour,
-      minutes: DateTime.now().minute,
+      minutes: (DateTime.now().minute ~/ 5) * 5,
     ),
+    selectedTarget: 'All',
+    selectedRepeat: 'none',
     startDate: DateTime.now(),
     endDate: DateTime.now().add(const Duration(days: 7)),
   );
@@ -23,28 +39,32 @@ class CreateViewModel extends ChangeNotifier {
     messageController.text = createState.message;
 
     titleController.addListener(() {
-      _createState = createState.copyWith(title: titleController.text);
-      notifyListeners();
+      setField(CreateField.title, titleController.text);
     });
 
     messageController.addListener(() {
-      _createState = createState.copyWith(message: messageController.text);
-      notifyListeners();
+      setField(CreateField.message, messageController.text);
     });
   }
 
-  void updateTime(Duration time) {
-    _createState = createState.copyWith(selectedTime: time);
-    notifyListeners();
-  }
+  /// enum 기반 필드 업데이트 메서드 (중복 최소화)
+  void setField<T>(CreateField field, T value) {
+    _createState = switch (field) {
+      CreateField.selectedTime =>
+        _createState.copyWith(selectedTime: value as Duration),
+      CreateField.title => _createState.copyWith(title: value as String),
+      CreateField.message => _createState.copyWith(message: value as String),
+      CreateField.target =>
+        _createState.copyWith(selectedTarget: value as String),
+      CreateField.repeat =>
+        _createState.copyWith(selectedRepeat: value as String),
+      CreateField.selectedDays =>
+        _createState.copyWith(selectedDays: value as List<String>),
+      CreateField.startDate =>
+        _createState.copyWith(startDate: value as DateTime),
+      CreateField.endDate => _createState.copyWith(endDate: value as DateTime),
+    };
 
-  void updateTarget(String target) {
-    _createState = createState.copyWith(selectedTarget: target);
-    notifyListeners();
-  }
-
-  void updateRepeat(String repeat) {
-    _createState = createState.copyWith(selectedRepeat: repeat);
     notifyListeners();
   }
 
@@ -55,46 +75,51 @@ class CreateViewModel extends ChangeNotifier {
     } else {
       newDays.add(day);
     }
-    _createState = createState.copyWith(selectedDays: newDays);
-    notifyListeners();
+    setField(CreateField.selectedDays, newDays);
   }
 
   Future<void> selectStartDate(BuildContext context) async {
-    final picked = await showDatePicker(
-      context: context,
-      initialDate: createState.startDate,
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
-    );
+    final picked =
+        await datePicker(context: context, initialDate: createState.startDate!);
 
     if (picked == null) return;
-
     if (picked.isAfter(createState.endDate!)) {
       log("시작일은 종료일보다 늦을 수 없습니다.");
       return;
     }
 
-    _createState = _createState.copyWith(startDate: picked);
-    notifyListeners();
+    setField(CreateField.startDate, picked);
   }
 
   Future<void> selectEndDate(BuildContext context) async {
-    final picked = await showDatePicker(
-      context: context,
-      initialDate: createState.endDate,
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
-    );
+    final picked =
+        await datePicker(context: context, initialDate: createState.endDate!);
 
     if (picked == null) return;
-
     if (picked.isBefore(createState.startDate!)) {
       log("종료일은 시작일보다 빠를 수 없습니다.");
       return;
     }
 
-    _createState = _createState.copyWith(endDate: picked);
-    notifyListeners();
+    setField(CreateField.endDate, picked);
+  }
+
+  void createPushSchedule() {
+    var data = PushSchedule(
+      id: "00111",
+      title: _createState.title,
+      message: _createState.message,
+      platform: "AOS",
+      userId: "Test001",
+      scheduleAt: _createState.selectedTime,
+      target: _createState.selectedTarget,
+      startTime: _createState.startDate!,
+      repeat: _createState.selectedRepeat,
+      endTime: _createState.endDate!,
+      isSent: false,
+      scheduleDays: _createState.selectedDays,
+    );
+    debugLog(data.toString());
   }
 
   @override

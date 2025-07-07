@@ -21,11 +21,12 @@ mixin _$PushSchedule {
   String get platform;
   String get userId;
   String get target;
-  DateTime get scheduleAt;
+  Duration get scheduleAt;
   DateTime get startTime;
   DateTime get endTime;
   String get repeat;
   bool get isSent;
+  List<String> get scheduleDays;
 
   /// Create a copy of PushSchedule
   /// with the given fields replaced by the non-null parameter values.
@@ -53,17 +54,31 @@ mixin _$PushSchedule {
                 other.startTime == startTime) &&
             (identical(other.endTime, endTime) || other.endTime == endTime) &&
             (identical(other.repeat, repeat) || other.repeat == repeat) &&
-            (identical(other.isSent, isSent) || other.isSent == isSent));
+            (identical(other.isSent, isSent) || other.isSent == isSent) &&
+            const DeepCollectionEquality()
+                .equals(other.scheduleDays, scheduleDays));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, title, message, platform,
-      userId, target, scheduleAt, startTime, endTime, repeat, isSent);
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      title,
+      message,
+      platform,
+      userId,
+      target,
+      scheduleAt,
+      startTime,
+      endTime,
+      repeat,
+      isSent,
+      const DeepCollectionEquality().hash(scheduleDays));
 
   @override
   String toString() {
-    return 'PushSchedule(id: $id, title: $title, message: $message, platform: $platform, userId: $userId, target: $target, scheduleAt: $scheduleAt, startTime: $startTime, endTime: $endTime, repeat: $repeat, isSent: $isSent)';
+    return 'PushSchedule(id: $id, title: $title, message: $message, platform: $platform, userId: $userId, target: $target, scheduleAt: $scheduleAt, startTime: $startTime, endTime: $endTime, repeat: $repeat, isSent: $isSent, scheduleDays: $scheduleDays)';
   }
 }
 
@@ -79,12 +94,13 @@ abstract mixin class $PushScheduleCopyWith<$Res> {
       String message,
       String platform,
       String userId,
-      DateTime scheduleAt,
+      Duration scheduleAt,
       String target,
       DateTime startTime,
       String repeat,
       DateTime endTime,
-      bool isSent});
+      bool isSent,
+      List<String> scheduleDays});
 }
 
 /// @nodoc
@@ -110,6 +126,7 @@ class _$PushScheduleCopyWithImpl<$Res> implements $PushScheduleCopyWith<$Res> {
     Object? repeat = null,
     Object? endTime = null,
     Object? isSent = null,
+    Object? scheduleDays = null,
   }) {
     return _then(PushSchedule(
       id: null == id
@@ -135,7 +152,7 @@ class _$PushScheduleCopyWithImpl<$Res> implements $PushScheduleCopyWith<$Res> {
       scheduleAt: null == scheduleAt
           ? _self.scheduleAt
           : scheduleAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
+              as Duration,
       target: null == target
           ? _self.target
           : target // ignore: cast_nullable_to_non_nullable
@@ -156,6 +173,10 @@ class _$PushScheduleCopyWithImpl<$Res> implements $PushScheduleCopyWith<$Res> {
           ? _self.isSent
           : isSent // ignore: cast_nullable_to_non_nullable
               as bool,
+      scheduleDays: null == scheduleDays
+          ? _self.scheduleDays
+          : scheduleDays // ignore: cast_nullable_to_non_nullable
+              as List<String>,
     ));
   }
 }

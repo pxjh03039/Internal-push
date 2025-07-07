@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:push_test_app/domain/model/push_schedule.dart';
 
 part 'create_state.freezed.dart';
 part 'create_state.g.dart';

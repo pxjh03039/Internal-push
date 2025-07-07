@@ -28,7 +28,9 @@ class CreateScreen extends StatelessWidget {
                 mode: CupertinoTimerPickerMode.hm,
                 initialTimerDuration: viewModel.createState.selectedTime,
                 minuteInterval: 5,
-                onTimerDurationChanged: viewModel.updateTime,
+                onTimerDurationChanged: (Duration value) {
+                  viewModel.setField(CreateField.selectedTime, value);
+                },
               ),
             ),
             const SizedBox(height: 20),
@@ -68,7 +70,9 @@ class CreateScreen extends StatelessWidget {
             SmallTextButtonGroup(
               options: const ['All', 'User'],
               selectedTarget: viewModel.createState.selectedTarget,
-              onChanged: viewModel.updateTarget,
+              onChanged: (String value) {
+                viewModel.setField(CreateField.target, value);
+              },
             ),
             const SizedBox(height: 20),
 
@@ -79,10 +83,11 @@ class CreateScreen extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             SmallTextButtonGroup(
-              options: const ['none', 'daily', 'weekly'],
-              selectedTarget: viewModel.createState.selectedRepeat,
-              onChanged: viewModel.updateRepeat,
-            ),
+                options: const ['none', 'daily', 'weekly'],
+                selectedTarget: viewModel.createState.selectedRepeat,
+                onChanged: (String value) {
+                  viewModel.setField(CreateField.repeat, value);
+                }),
             const SizedBox(height: 20),
 
             /// 요일 선택 (weekly 때만 표시)
@@ -163,7 +168,7 @@ class CreateScreen extends StatelessWidget {
               const SizedBox(height: 20),
             ],
             const SizedBox(height: 20),
-            BigButton(label: '등록', onPressed: () {}),
+            BigButton(label: '등록', onPressed: viewModel.createPushSchedule),
           ],
         ),
       ),
