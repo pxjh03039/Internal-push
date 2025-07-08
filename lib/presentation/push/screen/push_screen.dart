@@ -45,8 +45,8 @@ class PushScreen extends StatelessWidget {
                       controller: viewModel.controller,
                       placeHolder: "Search",
                       onChanged: (value) {
-                        return viewModel
-                            .onAction(PushAction.onTextChanged(value));
+                        return viewModel.onAction(
+                            PushAction.setField(PushField.textChange, value));
                       },
                     ),
                   ),
@@ -72,6 +72,64 @@ class PushScreen extends StatelessWidget {
                     PushAction.setField(PushField.selectRepeat, value),
                   );
                 },
+              ),
+              const SizedBox(height: 8),
+              Stack(
+                children: [
+                  Column(
+                    children: [
+                      Container(
+                        height: 90,
+                        decoration: BoxDecoration(
+                          color: ColorStyle.gray4,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Positioned(
+                    top: 14,
+                    bottom: 14,
+                    left: 17,
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 52,
+                          height: 52,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            color: ColorStyle.white,
+                          ),
+                          child: const Icon(
+                            Icons.circle_outlined,
+                            size: 50,
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 16,
+                        ),
+                        const SizedBox(
+                          width: 143,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '점심 알림',
+                                style: TextStyles.normalTextBold,
+                              ),
+                              Text(
+                                '오늘 오후 5시 Zoom 입장해주세요. 오늘 회의는 바쁩니다. 알아서',
+                                style: TextStyles.smallerTextRegular,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
               ),
               Text(viewModel.pushState.query),
               ElevatedButton(

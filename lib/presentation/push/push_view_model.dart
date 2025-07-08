@@ -1,10 +1,12 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:push_test_app/core/util/develop/develop_tool.dart';
 import 'package:push_test_app/domain/repository/push_repository.dart';
 import 'package:push_test_app/presentation/push/push_action.dart';
 import 'package:push_test_app/presentation/push/push_state.dart';
+
+import 'package:rxdart/rxdart.dart';
 
 enum PushField {
   textChange,
@@ -12,6 +14,9 @@ enum PushField {
 }
 
 class PushViewModel with ChangeNotifier {
+  final _eventController = BehaviorSubject<PushAction>();
+  Stream<PushAction> get eventStream => _eventController.stream;
+
   final PushRepository _pushRepository;
 
   PushViewModel({
@@ -32,8 +37,6 @@ class PushViewModel with ChangeNotifier {
     switch (action) {
       case SetField():
         _handelSetField(action);
-      case OnTextChanged():
-        _onTextChanged(action.value);
     }
   }
 
@@ -41,10 +44,10 @@ class PushViewModel with ChangeNotifier {
     _pushState = switch (action.field) {
       PushField.textChange => pushState.copyWith(query: action.value),
       PushField.selectRepeat => () {
-          debugLog(action.value);
           return pushState.copyWith(selectRepeat: action.value);
         }(),
     };
+    _eventController.add(action);
     notifyListeners();
   }
 

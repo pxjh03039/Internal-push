@@ -13,9 +13,9 @@ class PushSchedule with _$PushSchedule {
   final String platform;
   final String userId;
   final String target;
-  final Duration scheduleAt;
-  final DateTime startTime;
-  final DateTime endTime;
+  final String scheduleAt;
+  final String startTime;
+  final String endTime;
   final String repeat;
   final bool isSent;
   final List<String> scheduleDays;

@@ -21,9 +21,9 @@ mixin _$PushSchedule {
   String get platform;
   String get userId;
   String get target;
-  Duration get scheduleAt;
-  DateTime get startTime;
-  DateTime get endTime;
+  String get scheduleAt;
+  String get startTime;
+  String get endTime;
   String get repeat;
   bool get isSent;
   List<String> get scheduleDays;
@@ -94,13 +94,12 @@ abstract mixin class $PushScheduleCopyWith<$Res> {
       String message,
       String platform,
       String userId,
-      Duration scheduleAt,
+      String scheduleAt,
       String target,
-      DateTime startTime,
+      String startTime,
       String repeat,
-      DateTime endTime,
-      bool isSent,
-      List<String> scheduleDays});
+      String endTime,
+      bool isSent});
 }
 
 /// @nodoc
@@ -152,7 +151,7 @@ class _$PushScheduleCopyWithImpl<$Res> implements $PushScheduleCopyWith<$Res> {
       scheduleAt: null == scheduleAt
           ? _self.scheduleAt
           : scheduleAt // ignore: cast_nullable_to_non_nullable
-              as Duration,
+              as String,
       target: null == target
           ? _self.target
           : target // ignore: cast_nullable_to_non_nullable
@@ -160,7 +159,7 @@ class _$PushScheduleCopyWithImpl<$Res> implements $PushScheduleCopyWith<$Res> {
       startTime: null == startTime
           ? _self.startTime
           : startTime // ignore: cast_nullable_to_non_nullable
-              as DateTime,
+              as String,
       repeat: null == repeat
           ? _self.repeat
           : repeat // ignore: cast_nullable_to_non_nullable
@@ -168,7 +167,7 @@ class _$PushScheduleCopyWithImpl<$Res> implements $PushScheduleCopyWith<$Res> {
       endTime: null == endTime
           ? _self.endTime
           : endTime // ignore: cast_nullable_to_non_nullable
-              as DateTime,
+              as String,
       isSent: null == isSent
           ? _self.isSent
           : isSent // ignore: cast_nullable_to_non_nullable

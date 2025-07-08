@@ -15,7 +15,7 @@ class PushState with _$PushState {
   final List<PushSchedule> pushSchedule;
   const PushState({
     this.query = '2',
-    this.selectRepeat = '',
+    this.selectRepeat = 'none',
     this.pushSchedule = const [],
   });
 
