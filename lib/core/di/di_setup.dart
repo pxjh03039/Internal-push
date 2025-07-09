@@ -15,5 +15,6 @@ void diSetup() {
   getIt.registerFactory<PushViewModel>(
       () => PushViewModel(pushRepository: getIt()));
 
-  getIt.registerFactory<CreateViewModel>(() => CreateViewModel());
+  getIt.registerFactory<CreateViewModel>(
+      () => CreateViewModel(pushRepository: getIt()));
 }

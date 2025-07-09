@@ -62,19 +62,19 @@ class CreateScreen extends StatelessWidget {
             const SizedBox(height: 20),
 
             /// 타겟 선택
-            const Align(
-              alignment: Alignment.centerLeft,
-              child: Text('타겟', style: TextStyles.mediumTextBold),
-            ),
-            const SizedBox(height: 10),
-            SmallTextButtonGroup(
-              options: const ['All', 'User'],
-              selectedTarget: viewModel.createState.selectedTarget,
-              onChanged: (String value) {
-                viewModel.setField(CreateField.target, value);
-              },
-            ),
-            const SizedBox(height: 20),
+            // const Align(
+            //   alignment: Alignment.centerLeft,
+            //   child: Text('타겟', style: TextStyles.mediumTextBold),
+            // ),
+            // const SizedBox(height: 10),
+            // SmallTextButtonGroup(
+            //   options: const ['All', 'User'],
+            //   selectedTarget: viewModel.createState.selectedTarget,
+            //   onChanged: (String value) {
+            //     viewModel.setField(CreateField.target, value);
+            //   },
+            // ),
+            // const SizedBox(height: 20),
 
             /// 반복 선택
             const Align(
@@ -113,35 +113,35 @@ class CreateScreen extends StatelessWidget {
               const SizedBox(height: 20),
             ],
 
-            /// 날짜 선택 (daily 또는 weekly일 때만 표시)
-            if (viewModel.createState.selectedRepeat == 'daily' ||
-                viewModel.createState.selectedRepeat == 'weekly') ...[
-              const Align(
-                alignment: Alignment.centerLeft,
-                child: Text('기간', style: TextStyles.mediumTextBold),
-              ),
-              const SizedBox(height: 10),
-              Row(
-                children: [
-                  const Icon(Icons.calendar_today,
-                      color: ColorStyle.primary100),
-                  const SizedBox(width: 10),
-                  OutlinedButton(
-                    style: OutlinedButton.styleFrom(
-                      side: const BorderSide(color: ColorStyle.gray4),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 20),
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Text('기간', style: TextStyles.mediumTextBold),
+            ),
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                const Icon(Icons.calendar_today, color: ColorStyle.primary100),
+                const SizedBox(width: 10),
+                OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                    side: const BorderSide(color: ColorStyle.gray4),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                    onPressed: () => viewModel.selectStartDate(context),
-                    child: Text(
-                      "${viewModel.createState.startDate}".split(' ')[0],
-                      style: TextStyles.mediumTextBold
-                          .copyWith(color: ColorStyle.black),
-                    ),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 20),
                   ),
+                  onPressed: () => viewModel.selectStartDate(context),
+                  child: Text(
+                    "${viewModel.createState.startDate}".split(' ')[0],
+                    style: TextStyles.mediumTextBold
+                        .copyWith(color: ColorStyle.black),
+                  ),
+                ),
+
+                /// 날짜 선택 (daily 또는 weekly일 때만 종료일 표시)
+                if (viewModel.createState.selectedRepeat == 'daily' ||
+                    viewModel.createState.selectedRepeat == 'weekly') ...[
                   Text(
                     " ~ ",
                     style: TextStyles.mediumTextBold
@@ -164,10 +164,9 @@ class CreateScreen extends StatelessWidget {
                     ),
                   ),
                 ],
-              ),
-              const SizedBox(height: 20),
-            ],
-            const SizedBox(height: 20),
+              ],
+            ),
+            const SizedBox(height: 40),
             BigButton(label: '등록', onPressed: viewModel.createPushSchedule),
           ],
         ),
