@@ -9,12 +9,13 @@ class MockPushRepositoryImpl implements PushRepository {
       "message": "좋은 아침입니다! 오늘도 화이팅 ☀",
       "platform": "AOS",
       "userId": "user_aos_001",
-      "target": "user",
-      "scheduleAt": "2025-07-02T07:00:00+09:00",
-      "startTime": "2025-07-02T06:55:00+09:00",
-      "endTime": "2025-07-02T07:05:00+09:00",
-      "repeat": "daily",
-      "isSent": false
+      "target": "all",
+      "scheduleAt": "07:00",
+      "startTime": "07-09",
+      "endTime": "07-09",
+      "repeat": "none",
+      "isSent": false,
+      "scheduleDays": [],
     },
     {
       "id": "push002",
@@ -22,12 +23,13 @@ class MockPushRepositoryImpl implements PushRepository {
       "message": "점심 먹을 시간이에요 🍱",
       "platform": "AOS",
       "userId": "user_aos_123",
-      "target": "user",
-      "scheduleAt": "2025-07-02T12:00:00+09:00",
-      "startTime": "2025-07-02T11:55:00+09:00",
-      "endTime": "2025-07-02T12:05:00+09:00",
-      "repeat": "none",
-      "isSent": false
+      "target": "all",
+      "scheduleAt": "15:00",
+      "startTime": "07-09",
+      "endTime": "07-16",
+      "repeat": "daily",
+      "isSent": false,
+      "scheduleDays": [],
     },
     {
       "id": "push003",
@@ -36,11 +38,12 @@ class MockPushRepositoryImpl implements PushRepository {
       "platform": "AOS",
       "userId": "user_aos_456",
       "target": "user",
-      "scheduleAt": "2025-07-02T18:00:00+09:00",
-      "startTime": "2025-07-02T17:55:00+09:00",
-      "endTime": "2025-07-02T18:10:00+09:00",
+      "scheduleAt": "15:00",
+      "startTime": "07-09",
+      "endTime": "07-16",
       "repeat": "weekly",
-      "isSent": false
+      "isSent": false,
+      "scheduleDays": ['Fri', 'Sat', 'Mon'],
     }
   ];
   @override

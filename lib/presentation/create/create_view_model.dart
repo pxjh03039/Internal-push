@@ -127,7 +127,7 @@ class CreateViewModel extends ChangeNotifier {
   }
 
   void createPushSchedule() async {
-    var data = PushSchedule(
+    PushSchedule data = PushSchedule(
       id: "00111",
       title: _createState.title,
       message: _createState.message,
