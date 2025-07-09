@@ -16,19 +16,21 @@ class PushScheduleCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Row(
+            Row(
               children: [
-                Icon(Icons.access_time, size: 16),
-                SizedBox(width: 4),
-                Text("07:00", style: TextStyles.smallTextBold),
+                const Icon(Icons.access_time, size: 16),
+                const SizedBox(width: 4),
+                Text(pushSchedule.scheduleAt, style: TextStyles.smallTextBold),
               ],
             ),
             const SizedBox(height: 4),
-            const Row(
+            Row(
               children: [
-                Icon(Icons.calendar_month, size: 16),
-                SizedBox(width: 4),
-                Text("07/07 ~ 07/08", style: TextStyles.smallTextRegular),
+                const Icon(Icons.calendar_month, size: 16),
+                const SizedBox(width: 4),
+                Text(
+                    "${pushSchedule.startTime.substring(5)} ~ ${pushSchedule.endTime.substring(5)}",
+                    style: TextStyles.smallTextRegular),
               ],
             ),
             Row(
@@ -37,7 +39,7 @@ class PushScheduleCard extends StatelessWidget {
                   width: 20,
                 ),
                 Text(
-                  "월 수",
+                  pushSchedule.repeat,
                   style: TextStyles.smallerTextRegular
                       .copyWith(color: ColorStyle.gray3),
                 ),
@@ -59,7 +61,7 @@ class PushScheduleCard extends StatelessWidget {
               height: 4,
             ),
             Text(
-              "ALL",
+              pushSchedule.target,
               style:
                   TextStyles.smallTextRegular.copyWith(color: ColorStyle.gray3),
             ),

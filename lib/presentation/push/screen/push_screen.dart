@@ -10,130 +10,10 @@ import 'package:push_test_app/presentation/push/push_view_model.dart';
 import 'package:push_test_app/ui/color_style.dart';
 import 'package:push_test_app/ui/text_styles.dart';
 
-final List<Map<String, dynamic>> items = [
-  {
-    "id": "id_001",
-    "title": "점심 알림",
-    "message": "오늘 오후 5시 Zoom 입장해주세요. 오늘 회의는 바쁩니다.",
-    "platform": "AOS",
-    "userId": "user_001",
-    "target": "All",
-    "scheduleAt": "07:00",
-    "startTime": "2025-07-07",
-    "endTime": "2025-07-08",
-    "repeat": "daily",
-    "isSent": false,
-    "scheduleDays": ["월", "화", "수", "목", "금"]
-  },
-  {
-    "id": "id_002",
-    "title": "팀 미팅",
-    "message": "팀 전체 회의가 예정되어 있습니다. 참석 바랍니다.",
-    "platform": "AOS",
-    "userId": "user_002",
-    "target": "All",
-    "scheduleAt": "09:00",
-    "startTime": "2025-07-08",
-    "endTime": "2025-07-09",
-    "repeat": "weekly",
-    "isSent": false,
-    "scheduleDays": ["월", "수", "금"]
-  },
-  {
-    "id": "id_003",
-    "title": "개발 리뷰",
-    "message": "모듈 리뷰 및 코드 정리 시간입니다.",
-    "platform": "AOS",
-    "userId": "user_003",
-    "target": "All",
-    "scheduleAt": "14:00",
-    "startTime": "2025-07-09",
-    "endTime": "2025-07-10",
-    "repeat": "none",
-    "isSent": false,
-    "scheduleDays": []
-  },
-  {
-    "id": "id_004",
-    "title": "업무 종료 알림",
-    "message": "오늘 업무 종료 전 마무리 점검 부탁드립니다.",
-    "platform": "AOS",
-    "userId": "user_004",
-    "target": "All",
-    "scheduleAt": "17:00",
-    "startTime": "2025-07-10",
-    "endTime": "2025-07-11",
-    "repeat": "daily",
-    "isSent": true,
-    "scheduleDays": ["월", "화", "수", "목", "금"]
-  },
-  {
-    "id": "id_005",
-    "title": "업무 종료 알림",
-    "message": "오늘 업무 종료 전 마무리 점검 부탁드립니다.",
-    "platform": "AOS",
-    "userId": "user_005",
-    "target": "All",
-    "scheduleAt": "17:00",
-    "startTime": "2025-07-10",
-    "endTime": "2025-07-11",
-    "repeat": "weekly",
-    "isSent": false,
-    "scheduleDays": ["화", "목"]
-  },
-  {
-    "id": "id_006",
-    "title": "업무 종료 알림",
-    "message": "오늘 업무 종료 전 마무리 점검 부탁드립니다.",
-    "platform": "AOS",
-    "userId": "user_006",
-    "target": "All",
-    "scheduleAt": "17:00",
-    "startTime": "2025-07-10",
-    "endTime": "2025-07-11",
-    "repeat": "none",
-    "isSent": false,
-    "scheduleDays": []
-  },
-  {
-    "id": "id_007",
-    "title": "업무 종료 알림",
-    "message": "오늘 업무 종료 전 마무리 점검 부탁드립니다.",
-    "platform": "AOS",
-    "userId": "user_007",
-    "target": "All",
-    "scheduleAt": "17:00",
-    "startTime": "2025-07-10",
-    "endTime": "2025-07-11",
-    "repeat": "daily",
-    "isSent": true,
-    "scheduleDays": ["월", "화", "수", "목", "금"]
-  }
-];
-
 class PushScreen extends StatelessWidget {
-  PushScreen({
+  const PushScreen({
     super.key,
   });
-
-  final List<PushSchedule> pushSchedules = items.asMap().entries.map((entry) {
-    final idx = entry.key;
-    final map = entry.value;
-    return PushSchedule(
-      id: 'id_$idx',
-      title: map['title'] ?? '',
-      message: map['description'] ?? '',
-      platform: 'AOS', // 임의 값
-      userId: 'user_$idx', // 임의 값
-      target: 'All', // 임의 값
-      scheduleAt: map['time'] ?? '',
-      startTime: map['dateRange'] ?? '',
-      endTime: map['dateRange'] ?? '',
-      repeat: 'none', // 임의 값
-      isSent: false, // 기본 false
-      scheduleDays: [], // 빈 리스트
-    );
-  }).toList();
 
   @override
   Widget build(BuildContext context) {
@@ -205,9 +85,10 @@ class PushScreen extends StatelessWidget {
                     crossAxisSpacing: 8,
                     childAspectRatio: 12,
                   ),
-                  itemCount: pushSchedules.length,
+                  itemCount: viewModel.pushState.pushSchedule.length,
                   itemBuilder: (context, index) {
-                    final PushSchedule item = pushSchedules[index];
+                    final PushSchedule item =
+                        viewModel.pushState.pushSchedule[index];
                     return PushScheduleCard(
                       pushSchedule: item,
                     );
