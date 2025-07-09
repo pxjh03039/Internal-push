@@ -58,6 +58,6 @@ class _PushRootState extends State<PushRoot> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-        create: (_) => viewModel, child: const PushScreen());
+        create: (_) => viewModel, child: PushScreen());
   }
 }
