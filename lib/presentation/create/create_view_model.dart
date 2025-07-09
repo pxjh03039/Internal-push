@@ -135,9 +135,9 @@ class CreateViewModel extends ChangeNotifier {
       userId: "Test001",
       scheduleAt: _createState.selectedTime.toString().substring(0, 5),
       target: _createState.selectedTarget,
-      startTime: _createState.startDate!.toString().substring(5, 10),
+      startTime: _createState.startDate!.toString().substring(0, 10),
       repeat: _createState.selectedRepeat,
-      endTime: _createState.endDate!.toString().substring(5, 10),
+      endTime: _createState.endDate!.toString().substring(0, 10),
       isSent: false,
       scheduleDays: _createState.selectedDays,
     );
