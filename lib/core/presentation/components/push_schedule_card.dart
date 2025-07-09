@@ -35,13 +35,12 @@ class PushScheduleCard extends StatelessWidget {
             ),
             Row(
               children: [
-                const SizedBox(
-                  width: 20,
-                ),
                 Text(
-                  pushSchedule.repeat,
+                  pushSchedule.scheduleDays?.isEmpty ?? true
+                      ? "없음"
+                      : pushSchedule.scheduleDays!.join(", "),
                   style: TextStyles.smallerTextRegular
-                      .copyWith(color: ColorStyle.gray3),
+                      .copyWith(fontSize: 9, color: ColorStyle.gray3),
                 ),
               ],
             ),
