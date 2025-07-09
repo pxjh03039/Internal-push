@@ -18,8 +18,8 @@ PushSchedule _$PushScheduleFromJson(Map<String, dynamic> json) => PushSchedule(
       repeat: json['repeat'] as String,
       endTime: json['endTime'] as String,
       isSent: json['isSent'] as bool,
-      scheduleDays: (json['scheduleDays'] as List<dynamic>)
-          .map((e) => e as String)
+      scheduleDays: (json['scheduleDays'] as List<dynamic>?)
+          ?.map((e) => e as String)
           .toList(),
     );
 

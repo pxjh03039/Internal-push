@@ -32,7 +32,7 @@ class CreateViewModel extends ChangeNotifier {
     selectedTarget: 'All',
     selectedRepeat: 'none',
     startDate: DateTime.now(),
-    endDate: DateTime.now().add(const Duration(days: 7)),
+    endDate: DateTime.now(),
   );
 
   CreateState get createState => _createState;

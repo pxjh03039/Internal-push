@@ -26,7 +26,7 @@ mixin _$PushSchedule {
   String get endTime;
   String get repeat;
   bool get isSent;
-  List<String> get scheduleDays;
+  List<String>? get scheduleDays;
 
   /// Create a copy of PushSchedule
   /// with the given fields replaced by the non-null parameter values.
@@ -99,7 +99,8 @@ abstract mixin class $PushScheduleCopyWith<$Res> {
       String startTime,
       String repeat,
       String endTime,
-      bool isSent});
+      bool isSent,
+      List<String>? scheduleDays});
 }
 
 /// @nodoc
@@ -125,7 +126,7 @@ class _$PushScheduleCopyWithImpl<$Res> implements $PushScheduleCopyWith<$Res> {
     Object? repeat = null,
     Object? endTime = null,
     Object? isSent = null,
-    Object? scheduleDays = null,
+    Object? scheduleDays = freezed,
   }) {
     return _then(PushSchedule(
       id: null == id
@@ -172,10 +173,10 @@ class _$PushScheduleCopyWithImpl<$Res> implements $PushScheduleCopyWith<$Res> {
           ? _self.isSent
           : isSent // ignore: cast_nullable_to_non_nullable
               as bool,
-      scheduleDays: null == scheduleDays
+      scheduleDays: freezed == scheduleDays
           ? _self.scheduleDays
           : scheduleDays // ignore: cast_nullable_to_non_nullable
-              as List<String>,
+              as List<String>?,
     ));
   }
 }

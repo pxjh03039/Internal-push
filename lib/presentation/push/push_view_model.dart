@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:push_test_app/core/util/develop/develop_tool.dart';
 import 'package:push_test_app/domain/repository/push_repository.dart';
 import 'package:push_test_app/presentation/push/push_action.dart';
 import 'package:push_test_app/presentation/push/push_state.dart';
@@ -56,8 +57,8 @@ class PushViewModel with ChangeNotifier {
 
     _pushState = pushState.copyWith(
         pushSchedule: await _pushRepository.getPushSchedules());
-    var data = await _pushRepository.getPushSchedule("push002");
-    log(data.toString());
+    // var data = await _pushRepository.getPushSchedule("push002");
+    debugLog(_pushState.toString());
 
     notifyListeners();
   }

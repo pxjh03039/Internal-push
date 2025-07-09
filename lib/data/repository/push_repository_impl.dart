@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:firebase_database/firebase_database.dart';
+import 'package:push_test_app/core/util/develop/develop_tool.dart';
 import 'package:push_test_app/domain/model/push_schedule.dart';
 import 'package:push_test_app/domain/repository/push_repository.dart';
 
@@ -35,6 +38,7 @@ class PushRepositoryImpl implements PushRepository {
     final newRef = _dbRef.push(); // Firebase가 고유한 키 생성
     final newId = newRef.key!;
     final newSchedule = schedule.copyWith(id: newId); // id 필드에 자동 id 넣기
+    debugLog("newSchedule ${newSchedule.toString()}");
 
     await newRef.set(newSchedule.toJson());
   }

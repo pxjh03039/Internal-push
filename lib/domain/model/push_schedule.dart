@@ -18,7 +18,7 @@ class PushSchedule with _$PushSchedule {
   final String endTime;
   final String repeat;
   final bool isSent;
-  final List<String> scheduleDays;
+  final List<String>? scheduleDays;
 
   const PushSchedule({
     required this.id,
@@ -32,7 +32,7 @@ class PushSchedule with _$PushSchedule {
     required this.repeat,
     required this.endTime,
     required this.isSent,
-    required this.scheduleDays,
+    this.scheduleDays,
   });
 
   factory PushSchedule.fromJson(Map<String, dynamic> json) =>
