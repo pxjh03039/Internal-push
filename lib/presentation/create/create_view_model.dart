@@ -133,7 +133,7 @@ class CreateViewModel extends ChangeNotifier {
       message: _createState.message,
       platform: "AOS",
       userId: "Test001",
-      scheduleAt: _createState.selectedTime as String,
+      scheduleAt: _createState.selectedTime.toString().substring(0, 5),
       target: _createState.selectedTarget,
       startTime: _createState.startDate!.toString().substring(0, 10),
       repeat: _createState.selectedRepeat,
