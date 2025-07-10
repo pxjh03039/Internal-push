@@ -39,4 +39,23 @@ class UserRepositoryImpl implements UserRepository {
         await FirebaseDatabase.instance.ref("userTokens/$userId").get();
     return snapshot.exists;
   }
+
+  @override
+  Future<void> updateToken(String token, String userId) async {
+    try {
+      String platform = isPlatform();
+      final now = DateTime.now().toIso8601String();
+
+      debugLog('Updating token for user $userId: $token on $platform at $now');
+
+      await FirebaseDatabase.instance.ref("userTokens/$userId").update({
+        "fcmToken": token,
+        "platform": platform,
+        "updatedAt": now,
+      });
+    } catch (e) {
+      debugLog('Failed to update token for $userId: $e');
+      rethrow;
+    }
+  }
 }

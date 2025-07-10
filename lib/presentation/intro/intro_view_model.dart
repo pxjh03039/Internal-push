@@ -27,6 +27,12 @@ class IntroViewModel with ChangeNotifier {
     await _userRepository.registerToken(token, userId);
   }
 
+  Future<void> updateUserToken() async {
+    String token = await getToken();
+    String userId = await getDeviceId();
+    await _userRepository.updateToken(token, userId);
+  }
+
   Future<void> deleteToken() async {
     String userId = await getDeviceId();
     await _userRepository.deleteToken(userId);

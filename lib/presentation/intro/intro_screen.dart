@@ -76,6 +76,8 @@ class IntroScreen extends StatelessWidget {
                       try {
                         if (!viewModel.introState.isRegistered) {
                           await viewModel.registerToken();
+                        } else {
+                          await viewModel.updateUserToken();
                         }
                         if (context.mounted) {
                           context.push(RoutePath.profile);
