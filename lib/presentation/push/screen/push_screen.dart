@@ -80,7 +80,7 @@ class PushScreen extends StatelessWidget {
                 child: GridView.builder(
                   gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                     maxCrossAxisExtent: 250, // 각 칸 최대 너비 고정
-                    mainAxisExtent: 200,
+                    mainAxisExtent: 220,
                     mainAxisSpacing: 8,
                     crossAxisSpacing: 8,
                     childAspectRatio: 12,
@@ -95,62 +95,6 @@ class PushScreen extends StatelessWidget {
                   },
                 ),
               ),
-              //   Text(viewModel.pushState.query),
-              //   ElevatedButton(
-              //       onPressed: () async {
-              //         // log(viewModel.pushState.pushSchedule.toString());
-              //         viewModel.controller.text = '2234324';
-
-              //         final dbRef =
-              //             FirebaseDatabase.instance.ref().child('pushSchedules');
-
-              //         final List<Map<String, dynamic>> schedules = [
-              //           {
-              //             "id": "push001",
-              //             "title": "기상 알림",
-              //             "message": "좋은 아침입니다! 오늘도 화이팅 ☀",
-              //             "platform": "AOS",
-              //             "userId": "user_aos_001",
-              //             "target": "user",
-              //             "scheduleAt": "2025-07-02T07:00:00+09:00",
-              //             "startTime": "2025-07-02T06:55:00+09:00",
-              //             "endTime": "2025-07-02T07:05:00+09:00",
-              //             "repeat": "daily",
-              //             "isSent": false
-              //           },
-              //           {
-              //             "id": "push002",
-              //             "title": "점심시간 알림",
-              //             "message": "점심 먹을 시간이에요 🍱",
-              //             "platform": "AOS",
-              //             "userId": "user_aos_123",
-              //             "target": "user",
-              //             "scheduleAt": "2025-07-02T12:00:00+09:00",
-              //             "startTime": "2025-07-02T11:55:00+09:00",
-              //             "endTime": "2025-07-02T12:05:00+09:00",
-              //             "repeat": "none",
-              //             "isSent": false
-              //           },
-              //           {
-              //             "id": "push003",
-              //             "title": "일정 알림",
-              //             "message": "18시에 운동 일정이 있어요 🏃",
-              //             "platform": "AOS",
-              //             "userId": "user_aos_456",
-              //             "target": "user",
-              //             "scheduleAt": "2025-07-02T18:00:00+09:00",
-              //             "startTime": "2025-07-02T17:55:00+09:00",
-              //             "endTime": "2025-07-02T18:10:00+09:00",
-              //             "repeat": "weekly",
-              //             "isSent": false
-              //           },
-              //         ];
-
-              //         for (var schedule in schedules) {
-              //           await dbRef.child(schedule['id']).set(schedule);
-              //         }
-              //       },
-              //       child: const Text('click me'))
             ],
           ),
         )),

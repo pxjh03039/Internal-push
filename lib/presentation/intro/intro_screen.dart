@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:push_test_app/core/presentation/components/medium_button.dart';
+import 'package:push_test_app/presentation/intro/intro_view_model.dart';
 import 'package:push_test_app/router/route_path.dart';
 import 'package:push_test_app/ui/color_style.dart';
 import 'package:push_test_app/ui/text_styles.dart';
@@ -10,6 +12,7 @@ class IntroScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final viewModel = context.watch<IntroViewModel>();
     return Scaffold(
       body: Stack(
         children: [
@@ -45,7 +48,9 @@ class IntroScreen extends StatelessWidget {
                 SizedBox(
                   width: 341,
                   child: Text(
-                    "미등록\n 사용자 입니다.",
+                    viewModel.introState.isRegistered
+                        ? "등록된 사용자 입니다."
+                        : "미등록\n 사용자 입니다.",
                     textAlign: TextAlign.center,
                     style: TextStyles.titleTextBold.copyWith(
                       color: ColorStyle.white,
@@ -67,8 +72,22 @@ class IntroScreen extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 66),
                   child: MediumButton(
                     label: '등록',
-                    onPressed: () {
-                      context.push(RoutePath.profile);
+                    onPressed: () async {
+                      try {
+                        if (!viewModel.introState.isRegistered) {
+                          await viewModel.registerToken();
+                        }
+                        if (context.mounted) {
+                          context.push(RoutePath.profile);
+                        }
+                      } catch (e) {
+                        // 오류 핸들링 (예: 스낵바로 알림)
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text("토큰 등록에 실패했습니다.")),
+                          );
+                        }
+                      }
                     },
                   ),
                 ),

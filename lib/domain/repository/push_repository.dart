@@ -6,4 +6,5 @@ abstract interface class PushRepository {
   Future<void> createPushSchedule(PushSchedule schedule);
   Future<void> updatePushSchedule(PushSchedule schedule);
   Future<void> deletePushSchedule(String id);
+  Future<void> registerToken();
 }

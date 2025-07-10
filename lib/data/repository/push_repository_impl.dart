@@ -1,6 +1,5 @@
-import 'dart:developer';
-
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:push_test_app/core/util/develop/develop_tool.dart';
 import 'package:push_test_app/domain/model/push_schedule.dart';
 import 'package:push_test_app/domain/repository/push_repository.dart';
@@ -51,5 +50,21 @@ class PushRepositoryImpl implements PushRepository {
   @override
   Future<void> deletePushSchedule(String id) async {
     await _dbRef.child(id).remove();
+  }
+
+  @override
+  Future<void> registerToken() async {
+    final fcmToken = await FirebaseMessaging.instance.getToken();
+    final userId = await getDeviceId();
+    String platform = isPlatform();
+
+    if (fcmToken != null) {
+      final now = DateTime.now().toIso8601String();
+      FirebaseDatabase.instance.ref("userTokens/$userId").set({
+        "fcmToken": fcmToken,
+        "platform": platform,
+        "updatedAt": now,
+      });
+    }
   }
 }

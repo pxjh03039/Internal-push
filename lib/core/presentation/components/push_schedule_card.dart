@@ -33,16 +33,19 @@ class PushScheduleCard extends StatelessWidget {
                     style: TextStyles.smallTextRegular),
               ],
             ),
-            Row(
-              children: [
-                Text(
-                  pushSchedule.scheduleDays?.isEmpty ?? true
-                      ? "없음"
-                      : pushSchedule.scheduleDays!.join(", "),
-                  style: TextStyles.smallerTextRegular
-                      .copyWith(fontSize: 9, color: ColorStyle.gray3),
-                ),
-              ],
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  Text(
+                    pushSchedule.scheduleDays?.isEmpty ?? true
+                        ? "없음"
+                        : pushSchedule.scheduleDays!.join(", "),
+                    style: TextStyles.smallerTextRegular
+                        .copyWith(fontSize: 9, color: ColorStyle.gray3),
+                  ),
+                ],
+              ),
             ),
             const Divider(),
             Text(
