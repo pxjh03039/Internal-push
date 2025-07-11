@@ -12,15 +12,14 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
-// 백그라운드 or 다른 탭에서 푸시 수신 시 브라우저 알림 표시
 messaging.onBackgroundMessage(function (payload) {
-  console.log('[firebase-messaging-sw.js] 백그라운드 메시지:', payload);
-
-  const notificationTitle = payload.notification?.title || '📬 새 알림';
-  const notificationOptions = {
-    body: payload.notification?.body || '',
-    icon: '/icon.png', // 아이콘 경로
-  };
-
-  self.registration.showNotification(notificationTitle, notificationOptions);
+  // 이미 브라우저가 notification 띄울 거면, 따로 안 띄움
+  if (!payload.notification) {
+    const notificationTitle = payload.data?.title || '📬 새 알림';
+    const notificationOptions = {
+      body: payload.data?.body || '',
+      icon: '/icon.png',
+    };
+    self.registration.showNotification(notificationTitle, notificationOptions);
+  }
 });
