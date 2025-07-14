@@ -7,12 +7,14 @@ class TextInputFiled extends StatelessWidget {
   final String placeHolder;
   final TextEditingController controller;
   final void Function(String value)? onSubmitted;
+  final Color? textColor;
 
   const TextInputFiled({
     super.key,
     required this.placeHolder,
     required this.controller,
     this.onSubmitted,
+    this.textColor,
   });
 
   @override
@@ -20,6 +22,9 @@ class TextInputFiled extends StatelessWidget {
     return SizedBox(
       height: 55,
       child: TextField(
+        style: TextStyles.mediumTextRegular.copyWith(
+          color: textColor ?? ColorStyle.black,
+        ),
         controller: controller,
         onSubmitted: onSubmitted,
         decoration: InputDecoration(

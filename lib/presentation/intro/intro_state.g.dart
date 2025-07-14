@@ -8,9 +8,11 @@ part of 'intro_state.dart';
 
 IntroState _$IntroStateFromJson(Map<String, dynamic> json) => IntroState(
       isRegistered: json['isRegistered'] as bool? ?? false,
+      titleController: json['titleController'] as String? ?? '',
     );
 
 Map<String, dynamic> _$IntroStateToJson(IntroState instance) =>
     <String, dynamic>{
       'isRegistered': instance.isRegistered,
+      'titleController': instance.titleController,
     };

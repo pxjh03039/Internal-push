@@ -16,6 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$IntroState {
   bool get isRegistered;
+  String get titleController;
 
   /// Create a copy of IntroState
   /// with the given fields replaced by the non-null parameter values.
@@ -30,16 +31,18 @@ mixin _$IntroState {
         (other.runtimeType == runtimeType &&
             other is IntroState &&
             (identical(other.isRegistered, isRegistered) ||
-                other.isRegistered == isRegistered));
+                other.isRegistered == isRegistered) &&
+            (identical(other.titleController, titleController) ||
+                other.titleController == titleController));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, isRegistered);
+  int get hashCode => Object.hash(runtimeType, isRegistered, titleController);
 
   @override
   String toString() {
-    return 'IntroState(isRegistered: $isRegistered)';
+    return 'IntroState(isRegistered: $isRegistered, titleController: $titleController)';
   }
 }
 
@@ -49,7 +52,7 @@ abstract mixin class $IntroStateCopyWith<$Res> {
           IntroState value, $Res Function(IntroState) _then) =
       _$IntroStateCopyWithImpl;
   @useResult
-  $Res call({bool isRegistered});
+  $Res call({bool isRegistered, String titleController});
 }
 
 /// @nodoc
@@ -65,12 +68,17 @@ class _$IntroStateCopyWithImpl<$Res> implements $IntroStateCopyWith<$Res> {
   @override
   $Res call({
     Object? isRegistered = null,
+    Object? titleController = null,
   }) {
     return _then(IntroState(
       isRegistered: null == isRegistered
           ? _self.isRegistered
           : isRegistered // ignore: cast_nullable_to_non_nullable
               as bool,
+      titleController: null == titleController
+          ? _self.titleController
+          : titleController // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }

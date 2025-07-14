@@ -8,8 +8,10 @@ part 'intro_state.g.dart';
 @JsonSerializable()
 class IntroState with _$IntroState {
   final bool isRegistered;
+  final String titleController;
   const IntroState({
     this.isRegistered = false,
+    this.titleController = '',
   });
 
   factory IntroState.fromJson(Map<String, dynamic> json) =>

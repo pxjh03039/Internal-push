@@ -1,10 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
-import 'package:push_test_app/core/di/di_setup.dart';
 import 'package:push_test_app/presentation/create/screen/create_root.dart';
-import 'package:push_test_app/presentation/intro/intro_screen.dart';
-import 'package:push_test_app/presentation/intro/intro_view_model.dart';
+import 'package:push_test_app/presentation/intro/screen/intro_root.dart';
 import 'package:push_test_app/presentation/main/main_screen.dart';
 import 'package:push_test_app/presentation/profile/profile_screen.dart';
 import 'package:push_test_app/presentation/push/screen/push_root.dart';
@@ -15,10 +12,7 @@ final router = GoRouter(
   routes: [
     GoRoute(
       path: RoutePath.intro,
-      builder: (context, state) => ChangeNotifierProvider(
-        create: (_) => getIt<IntroViewModel>(),
-        child: const IntroScreen(),
-      ),
+      builder: (context, state) => const IntroRoot(),
     ),
     GoRoute(
       path: '/',

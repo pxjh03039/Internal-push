@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:push_test_app/core/presentation/components/medium_button.dart';
+import 'package:push_test_app/core/presentation/components/text_input_filed.dart';
 import 'package:push_test_app/presentation/intro/intro_view_model.dart';
 import 'package:push_test_app/router/route_path.dart';
 import 'package:push_test_app/ui/color_style.dart';
@@ -43,7 +44,7 @@ class IntroScreen extends StatelessWidget {
                         color: ColorStyle.white,
                       ),
                     ),
-                    const SizedBox(height: 222),
+                    const SizedBox(height: 80),
                     SizedBox(
                       width: 341,
                       child: Text(
@@ -62,20 +63,38 @@ class IntroScreen extends StatelessWidget {
                       style: TextStyles.normalTextRegular
                           .copyWith(color: Colors.white),
                     ),
-                    const SizedBox(height: 64),
+                    const SizedBox(height: 20),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: TextInputFiled(
+                        placeHolder: "닉네임을 입력해주세요.",
+                        controller: viewModel.titleController,
+                        textColor: ColorStyle.white,
+                        onSubmitted: (value) {
+                          viewModel.titleController.text = value;
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 20),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 66),
                       child: MediumButton(
                         label: '등록',
                         onPressed: () async {
                           try {
-                            if (!viewModel.introState.isRegistered) {
-                              await viewModel.registerToken();
+                            if (viewModel.titleController.text.isNotEmpty) {
+                              if (!viewModel.introState.isRegistered) {
+                                await viewModel.registerToken();
+                              }
+                              if (context.mounted) {
+                                context.push(RoutePath.profile);
+                              }
                             } else {
-                              await viewModel.updateUserToken();
-                            }
-                            if (context.mounted) {
-                              context.push(RoutePath.profile);
+                              ScaffoldMessenger.of(context)
+                                  .clearSnackBars(); // 기존 스낵바 제거
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text("닉네임이 비었습니다.")),
+                              );
                             }
                           } catch (e) {
                             if (context.mounted) {

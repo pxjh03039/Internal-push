@@ -5,6 +5,7 @@ import 'package:push_test_app/presentation/intro/intro_state.dart';
 
 class IntroViewModel with ChangeNotifier {
   final UserRepository _userRepository;
+  final titleController = TextEditingController();
 
   IntroViewModel({required UserRepository userRepository})
       : _userRepository = userRepository {
@@ -15,10 +16,16 @@ class IntroViewModel with ChangeNotifier {
   IntroState _introState = const IntroState();
   IntroState get introState => _introState;
 
+  void setInputNickname(String nickname) {
+    _introState = _introState.copyWith(titleController: nickname);
+    notifyListeners();
+  }
+
   Future<void> testGetDeviceId() async {
     String token = await getToken();
     String userId = await getDeviceId();
     debugLog('token: $token, userId: $userId');
+    notifyListeners();
   }
 
   Future<void> registerToken() async {
@@ -31,6 +38,13 @@ class IntroViewModel with ChangeNotifier {
     String token = await getToken();
     String userId = await getDeviceId();
     await _userRepository.updateToken(token, userId);
+    // 상태 갱신 (예: 토큰 등록 상태 다시 체크)
+    var isRegistered = await _userRepository.isUserTokenRegistered(userId);
+
+    _introState = _introState.copyWith(isRegistered: isRegistered);
+    notifyListeners();
+
+    debugLog('updateUserToken 완료, isRegistered: $isRegistered');
   }
 
   Future<void> deleteToken() async {
