@@ -142,7 +142,6 @@ class CreateViewModel extends ChangeNotifier {
       scheduleDays: _createState.selectedDays,
     );
     debugLog(data.toString());
-    // createPushSchedule 데이터 필수 요소 체크
     await _pushRepository.createPushSchedule(data);
   }
 
