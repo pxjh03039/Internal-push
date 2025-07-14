@@ -7,22 +7,12 @@ import 'package:push_test_app/domain/repository/push_repository.dart';
 import 'package:push_test_app/presentation/create/create_state.dart';
 import 'package:push_test_app/util/date_picker_helper.dart';
 
-enum CreateField {
-  selectedTime,
-  title,
-  message,
-  target,
-  repeat,
-  selectedDays,
-  startDate,
-  endDate,
-}
-
 class CreateViewModel extends ChangeNotifier {
   final PushRepository _pushRepository;
 
   final TextEditingController titleController = TextEditingController();
   final TextEditingController messageController = TextEditingController();
+  final List<String> WEEKLY = ['일', '월', '화', '수', '목', '금', '토'];
 
   CreateState _createState = CreateState(
     selectedTime: Duration(
@@ -39,105 +29,143 @@ class CreateViewModel extends ChangeNotifier {
 
   CreateViewModel({required PushRepository pushRepository})
       : _pushRepository = pushRepository {
-    titleController.text = createState.title;
-    messageController.text = createState.message;
+    titleController.text = _createState.title;
+    messageController.text = _createState.message;
 
     titleController.addListener(() {
-      setField(CreateField.title, titleController.text);
+      updateTitle(titleController.text);
     });
-
     messageController.addListener(() {
-      setField(CreateField.message, messageController.text);
+      updateMessage(messageController.text);
     });
   }
 
-  /// enum 기반 필드 업데이트 메서드 (중복 최소화)
-  void setField<T>(CreateField field, T value) {
-    _createState = switch (field) {
-      CreateField.selectedTime =>
-        createState.copyWith(selectedTime: value as Duration),
-      CreateField.title => createState.copyWith(title: value as String),
-      CreateField.message => createState.copyWith(message: value as String),
-      CreateField.target =>
-        createState.copyWith(selectedTarget: value as String),
-      CreateField.repeat => createState.copyWith(
-          selectedRepeat: value as String,
-          selectedDays: (value as String) == 'weekly'
-              ? createState.selectedDays
-              : <String>[],
-          endDate: (value as String) == 'none'
-              ? createState.startDate!
-              : (value as String) != 'none'
-                  ? createState.startDate!.add(const Duration(days: 7))
-                  : createState.endDate,
-        ),
-      CreateField.selectedDays =>
-        createState.copyWith(selectedDays: value as List<String>),
-      CreateField.startDate =>
-        createState.copyWith(startDate: value as DateTime),
-      CreateField.endDate => createState.copyWith(
-          endDate: value as DateTime,
-        ),
-    };
-
+  void updateSelectedTime(Duration newTime) {
+    _createState = _createState.copyWith(selectedTime: newTime);
     notifyListeners();
   }
 
-  void toggleDay(String day) {
-    final newDays = List<String>.from(createState.selectedDays);
-    if (newDays.contains(day)) {
-      newDays.remove(day);
-    } else {
-      newDays.add(day);
+  void updateTitle(String newTitle) {
+    _createState = _createState.copyWith(title: newTitle);
+    notifyListeners();
+  }
+
+  void updateMessage(String newMessage) {
+    _createState = _createState.copyWith(message: newMessage);
+    notifyListeners();
+  }
+
+  void updateTarget(String newTarget) {
+    _createState = _createState.copyWith(selectedTarget: newTarget);
+    notifyListeners();
+  }
+
+  void updateRepeat(String newRepeat) {
+    DateTime newStart = _createState.startDate!;
+    DateTime newEnd = _createState.endDate!;
+    List<String> newDays = _createState.selectedDays;
+    switch (newRepeat) {
+      case 'none':
+        newEnd = _createState.startDate!;
+        newDays = <String>[];
+        break;
+      case 'daily':
+        newEnd = newStart.add(const Duration(days: 7));
+        newDays = <String>[];
+        break;
+      case 'weekly':
+        newStart = DateTime.now();
+        newEnd = newStart.add(const Duration(days: 30));
     }
-    setField(CreateField.selectedDays, newDays);
+    _createState = _createState.copyWith(
+      selectedRepeat: newRepeat,
+      selectedDays: newDays,
+      startDate: newStart,
+      endDate: newEnd,
+    );
+    notifyListeners();
+  }
+
+  bool updateStartDate(DateTime newStart) {
+    if (_createState.selectedRepeat != 'none' &&
+        newStart.isAfter(_createState.endDate!)) {
+      return false;
+    }
+    // repeat none 이면 startDate = endDate
+    DateTime newEnd = _createState.selectedRepeat == 'none'
+        ? newStart
+        : _createState.endDate!;
+    _createState = _createState.copyWith(startDate: newStart, endDate: newEnd);
+    notifyListeners();
+    return true;
+  }
+
+  bool updateEndDate(DateTime newEnd) {
+    if (newEnd.isBefore(_createState.startDate!)) {
+      return false;
+    }
+    _createState = _createState.copyWith(endDate: newEnd);
+    notifyListeners();
+    return true;
   }
 
   Future<void> selectStartDate(BuildContext context) async {
-    final picked =
-        await datePicker(context: context, initialDate: createState.startDate!);
-
+    final picked = await datePicker(
+        context: context, initialDate: _createState.startDate!);
     if (picked == null) return;
-    if (createState.selectedRepeat == 'none') {
-      setField(CreateField.endDate, picked);
-    } else if (createState.selectedRepeat != 'none' &&
-        picked.isAfter(createState.endDate!)) {
-      log("시작일은 종료일보다 늦을 수 없습니다.");
-      log("시작일 : ${createState.startDate}");
-      log("종료일 : ${createState.endDate}");
-      return;
+    if (!updateStartDate(picked)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('시작일이 종료일 다음 날로 지정될 수 없습니다.'),
+          duration: Duration(seconds: 2),
+        ),
+      );
     }
-
-    setField(CreateField.startDate, picked);
   }
 
   Future<void> selectEndDate(BuildContext context) async {
     final picked =
-        await datePicker(context: context, initialDate: createState.endDate!);
-
+        await datePicker(context: context, initialDate: _createState.endDate!);
     if (picked == null) return;
-    if (picked.isBefore(createState.startDate!)) {
-      log("종료일은 시작일보다 빠를 수 없습니다.");
-      log("시작일 : ${createState.startDate}");
-      log("종료일 : ${createState.endDate}");
-      return;
+    if (!updateEndDate(picked)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('종료일이 시작일 이전 날로 지정될 수 없습니다.'),
+          duration: Duration(seconds: 2),
+        ),
+      );
     }
-
-    setField(CreateField.endDate, picked);
   }
 
-  void createPushSchedule() async {
-    PushSchedule data = PushSchedule(
-      id: "00111",
+  void updateSelectedDays(String day) {
+    final days = List<String>.from(_createState.selectedDays);
+    if (days.contains(day)) {
+      days.remove(day);
+    } else {
+      days.add(day);
+    }
+    days.sort((a, b) => WEEKLY.indexOf(a).compareTo(WEEKLY.indexOf(b))); // 정렬
+
+    _createState = _createState.copyWith(selectedDays: days);
+    notifyListeners();
+  }
+
+  Future<void> createPushSchedule() async {
+    if (_createState.title.isEmpty || _createState.message.isEmpty) {
+      throw Exception();
+    }
+
+    final data = PushSchedule(
+      id: "",
       title: _createState.title,
       message: _createState.message,
       platform: "AOS",
       userId: "Test001",
       scheduleAt: _createState.selectedTime.toString().substring(0, 5),
       target: _createState.selectedTarget,
-      startTime: _createState.startDate!.toString().substring(0, 10),
+      startTime: _createState.startDate!.toIso8601String().substring(0, 10),
       repeat: _createState.selectedRepeat,
-      endTime: _createState.endDate!.toString().substring(0, 10),
+      endTime: _createState.endDate!.toIso8601String().substring(0, 10),
       isSent: false,
       scheduleDays: _createState.selectedDays,
     );

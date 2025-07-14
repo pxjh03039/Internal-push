@@ -29,7 +29,7 @@ class CreateScreen extends StatelessWidget {
                 initialTimerDuration: viewModel.createState.selectedTime,
                 minuteInterval: 5,
                 onTimerDurationChanged: (Duration value) {
-                  viewModel.setField(CreateField.selectedTime, value);
+                  viewModel.updateSelectedTime(value);
                 },
               ),
             ),
@@ -62,19 +62,19 @@ class CreateScreen extends StatelessWidget {
             const SizedBox(height: 20),
 
             /// 타겟 선택
-            // const Align(
-            //   alignment: Alignment.centerLeft,
-            //   child: Text('타겟', style: TextStyles.mediumTextBold),
-            // ),
-            // const SizedBox(height: 10),
-            // SmallTextButtonGroup(
-            //   options: const ['All', 'User'],
-            //   selectedTarget: viewModel.createState.selectedTarget,
-            //   onChanged: (String value) {
-            //     viewModel.setField(CreateField.target, value);
-            //   },
-            // ),
-            // const SizedBox(height: 20),
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Text('타겟', style: TextStyles.mediumTextBold),
+            ),
+            const SizedBox(height: 10),
+            SmallTextButtonGroup(
+              options: const ['All', 'User'],
+              selectedTarget: viewModel.createState.selectedTarget,
+              onChanged: (String value) {
+                viewModel.updateTarget(value);
+              },
+            ),
+            const SizedBox(height: 20),
 
             /// 반복 선택
             const Align(
@@ -86,7 +86,7 @@ class CreateScreen extends StatelessWidget {
                 options: const ['none', 'daily', 'weekly'],
                 selectedTarget: viewModel.createState.selectedRepeat,
                 onChanged: (String value) {
-                  viewModel.setField(CreateField.repeat, value);
+                  viewModel.updateRepeat(value);
                 }),
             const SizedBox(height: 20),
 
@@ -97,18 +97,16 @@ class CreateScreen extends StatelessWidget {
                 child: Text('요일', style: TextStyles.mediumTextBold),
               ),
               const SizedBox(height: 10),
-              SmallMultiSelectButtonGroup(
-                options: const [
-                  'Sun',
-                  'Mon',
-                  'Tue',
-                  'Wed',
-                  'Thu',
-                  'Fri',
-                  'Sat'
-                ],
-                selectedValues: viewModel.createState.selectedDays,
-                onChanged: viewModel.toggleDay,
+              Align(
+                alignment: Alignment.centerLeft,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: SmallMultiSelectButtonGroup(
+                    options: viewModel.WEEKLY,
+                    selectedValues: viewModel.createState.selectedDays,
+                    onChanged: viewModel.updateSelectedDays,
+                  ),
+                ),
               ),
               const SizedBox(height: 20),
             ],
@@ -167,7 +165,27 @@ class CreateScreen extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 40),
-            BigButton(label: '등록', onPressed: viewModel.createPushSchedule),
+            BigButton(
+              label: '등록',
+              onPressed: () async {
+                try {
+                  await viewModel.createPushSchedule();
+                  if (context.mounted) {
+                    Navigator.of(context)
+                        .pop(); // pop하고 난뒤 push화면으로 갈때 push리스트 새로고침 안됨
+                  }
+                } catch (e) {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('빈 값이 있습니다.'),
+                        backgroundColor: ColorStyle.primaryColor,
+                      ),
+                    );
+                  }
+                }
+              },
+            ),
           ],
         ),
       ),
