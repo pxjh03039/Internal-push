@@ -8,6 +8,7 @@ import 'package:push_test_app/presentation/create/create_view_model.dart';
 import 'package:push_test_app/ui/text_styles.dart';
 import 'package:push_test_app/ui/color_style.dart';
 import 'package:push_test_app/core/presentation/components/small_text_button_group.dart';
+import 'package:push_test_app/util/date_picker_helper.dart';
 
 class CreateScreen extends StatelessWidget {
   const CreateScreen({super.key});
@@ -129,7 +130,21 @@ class CreateScreen extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(
                         vertical: 10, horizontal: 20),
                   ),
-                  onPressed: () => viewModel.selectStartDate(context),
+                  onPressed: () async {
+                    final picked = await datePicker(
+                      context: context,
+                      initialDate: viewModel.createState.startDate!,
+                    );
+                    if (picked == null) return;
+                    if (!viewModel.updateStartDate(picked) && context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('시작일이 종료일 다음 날로 지정될 수 없습니다.'),
+                          duration: Duration(seconds: 2),
+                        ),
+                      );
+                    }
+                  },
                   child: Text(
                     "${viewModel.createState.startDate}".split(' ')[0],
                     style: TextStyles.mediumTextBold
@@ -154,7 +169,21 @@ class CreateScreen extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(
                           vertical: 10, horizontal: 20),
                     ),
-                    onPressed: () => viewModel.selectEndDate(context),
+                    onPressed: () async {
+                      final picked = await datePicker(
+                        context: context,
+                        initialDate: viewModel.createState.startDate!,
+                      );
+                      if (picked == null) return;
+                      if (!viewModel.updateEndDate(picked) && context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('시작일이 종료일 다음 날로 지정될 수 없습니다.'),
+                            duration: Duration(seconds: 2),
+                          ),
+                        );
+                      }
+                    },
                     child: Text(
                       "${viewModel.createState.endDate}".split(' ')[0],
                       style: TextStyles.mediumTextBold

@@ -72,7 +72,6 @@ class CreateViewModel extends ChangeNotifier {
         newDays = <String>[];
         break;
       case 'weekly':
-        newStart = DateTime.now();
         newEnd = newStart.add(const Duration(days: 30));
     }
     _createState = _createState.copyWith(
@@ -105,34 +104,6 @@ class CreateViewModel extends ChangeNotifier {
     _createState = _createState.copyWith(endDate: newEnd);
     notifyListeners();
     return true;
-  }
-
-  Future<void> selectStartDate(BuildContext context) async {
-    final picked = await datePicker(
-        context: context, initialDate: _createState.startDate!);
-    if (picked == null) return;
-    if (!updateStartDate(picked)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('시작일이 종료일 다음 날로 지정될 수 없습니다.'),
-          duration: Duration(seconds: 2),
-        ),
-      );
-    }
-  }
-
-  Future<void> selectEndDate(BuildContext context) async {
-    final picked =
-        await datePicker(context: context, initialDate: _createState.endDate!);
-    if (picked == null) return;
-    if (!updateEndDate(picked)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('종료일이 시작일 이전 날로 지정될 수 없습니다.'),
-          duration: Duration(seconds: 2),
-        ),
-      );
-    }
   }
 
   void updateSelectedDays(String day) {
@@ -177,4 +148,8 @@ class CreateViewModel extends ChangeNotifier {
     messageController.dispose();
     super.dispose();
   }
+
+  // warning 삭제
+  // 푸시 생성후 리스트 새로고침(뒤로가기)
+  //
 }
