@@ -67,6 +67,11 @@ class PushViewModel with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> deletePushSchedule(String id) async {
+    await _pushRepository.deletePushSchedule(id);
+    _loadPushList();
+  }
+
   @override
   void dispose() {
     controller.dispose();

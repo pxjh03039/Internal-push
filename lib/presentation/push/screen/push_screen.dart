@@ -91,6 +91,9 @@ class PushScreen extends StatelessWidget {
                         viewModel.pushState.pushSchedule[index];
                     return PushScheduleCard(
                       pushSchedule: item,
+                      onDelete: () async {
+                        await viewModel.deletePushSchedule(item.id);
+                      },
                     );
                   },
                 ),

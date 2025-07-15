@@ -5,7 +5,12 @@ import 'package:push_test_app/ui/text_styles.dart';
 
 class PushScheduleCard extends StatelessWidget {
   final PushSchedule pushSchedule;
-  const PushScheduleCard({super.key, required this.pushSchedule});
+  final VoidCallback? onDelete;
+  const PushScheduleCard({
+    super.key,
+    required this.pushSchedule,
+    this.onDelete,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +26,19 @@ class PushScheduleCard extends StatelessWidget {
                 const Icon(Icons.access_time, size: 16),
                 const SizedBox(width: 4),
                 Text(pushSchedule.scheduleAt, style: TextStyles.smallTextBold),
+                const Spacer(flex: 1),
+                IconButton(
+                  constraints: const BoxConstraints(
+                    minWidth: 16,
+                    minHeight: 16,
+                  ),
+                  icon: Image.asset(
+                    'image/delete.png',
+                    width: 20,
+                    height: 20,
+                  ),
+                  onPressed: onDelete,
+                ),
               ],
             ),
             const SizedBox(height: 4),
