@@ -24,7 +24,7 @@ String isPlatform() {
   } else {
     platform = "Unknown";
   }
-  debugLog("Platform: $platform");
+  // debugLog("Platform: $platform");
   return platform;
 }
 

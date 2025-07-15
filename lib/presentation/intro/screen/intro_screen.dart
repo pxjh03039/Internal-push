@@ -14,6 +14,20 @@ class IntroScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<IntroViewModel>();
+
+    Future<void> handleRegister() async {
+      final success = await viewModel.tryRegister();
+      if (!context.mounted) return;
+
+      if (success) {
+        context.push(RoutePath.profile);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("닉네임이 비었습니다.")),
+        );
+      }
+    }
+
     return Scaffold(
       body: SingleChildScrollView(
         child: ConstrainedBox(
@@ -67,11 +81,12 @@ class IntroScreen extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: TextInputFiled(
-                        placeHolder: "닉네임을 입력해주세요.",
+                        placeHolder: "아이디를 입력해주세요.",
                         controller: viewModel.titleController,
                         textColor: ColorStyle.white,
-                        onSubmitted: (value) {
-                          viewModel.titleController.text = value;
+                        isFocuse: true,
+                        onSubmitted: (_) async {
+                          await handleRegister();
                         },
                       ),
                     ),
@@ -81,28 +96,7 @@ class IntroScreen extends StatelessWidget {
                       child: MediumButton(
                         label: '등록',
                         onPressed: () async {
-                          try {
-                            if (viewModel.titleController.text.isNotEmpty) {
-                              if (!viewModel.introState.isRegistered) {
-                                await viewModel.registerToken();
-                              }
-                              if (context.mounted) {
-                                context.push(RoutePath.profile);
-                              }
-                            } else {
-                              ScaffoldMessenger.of(context)
-                                  .clearSnackBars(); // 기존 스낵바 제거
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text("닉네임이 비었습니다.")),
-                              );
-                            }
-                          } catch (e) {
-                            if (context.mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text("토큰 등록에 실패했습니다.")),
-                              );
-                            }
-                          }
+                          await handleRegister();
                         },
                       ),
                     ),

@@ -8,6 +8,7 @@ class TextInputFiled extends StatelessWidget {
   final TextEditingController controller;
   final void Function(String value)? onSubmitted;
   final Color? textColor;
+  final bool? isFocuse;
 
   const TextInputFiled({
     super.key,
@@ -15,6 +16,7 @@ class TextInputFiled extends StatelessWidget {
     required this.controller,
     this.onSubmitted,
     this.textColor,
+    this.isFocuse = false,
   });
 
   @override
@@ -25,6 +27,7 @@ class TextInputFiled extends StatelessWidget {
         style: TextStyles.mediumTextRegular.copyWith(
           color: textColor ?? ColorStyle.black,
         ),
+        autofocus: isFocuse!,
         controller: controller,
         onSubmitted: onSubmitted,
         decoration: InputDecoration(

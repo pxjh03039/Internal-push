@@ -9,9 +9,11 @@ part 'intro_state.g.dart';
 class IntroState with _$IntroState {
   final bool isRegistered;
   final String titleController;
+  final List<String> getUserGroup;
   const IntroState({
     this.isRegistered = false,
     this.titleController = '',
+    this.getUserGroup = const [],
   });
 
   factory IntroState.fromJson(Map<String, dynamic> json) =>

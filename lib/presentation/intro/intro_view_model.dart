@@ -9,7 +9,6 @@ class IntroViewModel with ChangeNotifier {
 
   IntroViewModel({required UserRepository userRepository})
       : _userRepository = userRepository {
-    testGetDeviceId();
     isUserTokenRegistered();
   }
 
@@ -21,17 +20,18 @@ class IntroViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> testGetDeviceId() async {
-    String token = await getToken();
-    String userId = await getDeviceId();
-    debugLog('token: $token, userId: $userId');
+  Future<void> getUserGroup() async {
+    _introState = _introState.copyWith(
+        getUserGroup: await _userRepository.getUserGroup());
     notifyListeners();
   }
 
-  Future<void> registerToken() async {
+  Future<void> registerOrUpdateUser() async {
     String token = await getToken();
     String userId = await getDeviceId();
-    await _userRepository.registerToken(token, userId);
+    debugLog('registerOrUpdateUser 호출, token: $token, userId: $userId');
+    await _userRepository.registerOrUpdateUser(
+        token, userId, titleController.text);
   }
 
   Future<void> updateUserToken() async {
@@ -59,10 +59,19 @@ class IntroViewModel with ChangeNotifier {
   Future<void> isUserTokenRegistered() async {
     String userId = await getDeviceId();
     var isRegistered = await _userRepository.isUserTokenRegistered(userId);
-    debugLog('isUserTokenRegistered: $isRegistered');
     _introState = _introState.copyWith(
       isRegistered: isRegistered,
     );
     notifyListeners();
+  }
+
+  Future<bool> tryRegister() async {
+    if (titleController.text.isEmpty) return false;
+
+    if (!introState.isRegistered) {
+      await registerOrUpdateUser();
+    }
+
+    return true;
   }
 }

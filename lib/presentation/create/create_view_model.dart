@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:push_test_app/core/util/develop/develop_tool.dart';
 import 'package:push_test_app/domain/model/push_schedule.dart';

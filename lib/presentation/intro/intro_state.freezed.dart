@@ -17,6 +17,7 @@ T _$identity<T>(T value) => value;
 mixin _$IntroState {
   bool get isRegistered;
   String get titleController;
+  List<String> get getUserGroup;
 
   /// Create a copy of IntroState
   /// with the given fields replaced by the non-null parameter values.
@@ -33,16 +34,19 @@ mixin _$IntroState {
             (identical(other.isRegistered, isRegistered) ||
                 other.isRegistered == isRegistered) &&
             (identical(other.titleController, titleController) ||
-                other.titleController == titleController));
+                other.titleController == titleController) &&
+            const DeepCollectionEquality()
+                .equals(other.getUserGroup, getUserGroup));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, isRegistered, titleController);
+  int get hashCode => Object.hash(runtimeType, isRegistered, titleController,
+      const DeepCollectionEquality().hash(getUserGroup));
 
   @override
   String toString() {
-    return 'IntroState(isRegistered: $isRegistered, titleController: $titleController)';
+    return 'IntroState(isRegistered: $isRegistered, titleController: $titleController, getUserGroup: $getUserGroup)';
   }
 }
 
@@ -52,7 +56,8 @@ abstract mixin class $IntroStateCopyWith<$Res> {
           IntroState value, $Res Function(IntroState) _then) =
       _$IntroStateCopyWithImpl;
   @useResult
-  $Res call({bool isRegistered, String titleController});
+  $Res call(
+      {bool isRegistered, String titleController, List<String> getUserGroup});
 }
 
 /// @nodoc
@@ -69,6 +74,7 @@ class _$IntroStateCopyWithImpl<$Res> implements $IntroStateCopyWith<$Res> {
   $Res call({
     Object? isRegistered = null,
     Object? titleController = null,
+    Object? getUserGroup = null,
   }) {
     return _then(IntroState(
       isRegistered: null == isRegistered
@@ -79,6 +85,10 @@ class _$IntroStateCopyWithImpl<$Res> implements $IntroStateCopyWith<$Res> {
           ? _self.titleController
           : titleController // ignore: cast_nullable_to_non_nullable
               as String,
+      getUserGroup: null == getUserGroup
+          ? _self.getUserGroup
+          : getUserGroup // ignore: cast_nullable_to_non_nullable
+              as List<String>,
     ));
   }
 }
