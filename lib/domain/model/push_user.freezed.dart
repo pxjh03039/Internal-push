@@ -17,8 +17,7 @@ T _$identity<T>(T value) => value;
 mixin _$PushUser {
   String get id;
   List<String>? get group;
-  Map<String, dynamic> get platform;
-  List<String> get pushKey;
+  Map<String, dynamic> get registerIds;
 
   /// Create a copy of PushUser
   /// with the given fields replaced by the non-null parameter values.
@@ -34,8 +33,8 @@ mixin _$PushUser {
             other is PushUser &&
             (identical(other.id, id) || other.id == id) &&
             const DeepCollectionEquality().equals(other.group, group) &&
-            const DeepCollectionEquality().equals(other.platform, platform) &&
-            const DeepCollectionEquality().equals(other.pushKey, pushKey));
+            const DeepCollectionEquality()
+                .equals(other.registerIds, registerIds));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -44,12 +43,11 @@ mixin _$PushUser {
       runtimeType,
       id,
       const DeepCollectionEquality().hash(group),
-      const DeepCollectionEquality().hash(platform),
-      const DeepCollectionEquality().hash(pushKey));
+      const DeepCollectionEquality().hash(registerIds));
 
   @override
   String toString() {
-    return 'PushUser(id: $id, group: $group, platform: $platform, pushKey: $pushKey)';
+    return 'PushUser(id: $id, group: $group, registerIds: $registerIds)';
   }
 }
 
@@ -58,11 +56,7 @@ abstract mixin class $PushUserCopyWith<$Res> {
   factory $PushUserCopyWith(PushUser value, $Res Function(PushUser) _then) =
       _$PushUserCopyWithImpl;
   @useResult
-  $Res call(
-      {String id,
-      List<String>? group,
-      Map<String, dynamic> platform,
-      List<String> pushKey});
+  $Res call({String id, List<String>? group, Map<String, dynamic> registerIds});
 }
 
 /// @nodoc
@@ -79,8 +73,7 @@ class _$PushUserCopyWithImpl<$Res> implements $PushUserCopyWith<$Res> {
   $Res call({
     Object? id = null,
     Object? group = freezed,
-    Object? platform = null,
-    Object? pushKey = null,
+    Object? registerIds = null,
   }) {
     return _then(PushUser(
       id: null == id
@@ -91,14 +84,10 @@ class _$PushUserCopyWithImpl<$Res> implements $PushUserCopyWith<$Res> {
           ? _self.group
           : group // ignore: cast_nullable_to_non_nullable
               as List<String>?,
-      platform: null == platform
-          ? _self.platform
-          : platform // ignore: cast_nullable_to_non_nullable
+      registerIds: null == registerIds
+          ? _self.registerIds
+          : registerIds // ignore: cast_nullable_to_non_nullable
               as Map<String, dynamic>,
-      pushKey: null == pushKey
-          ? _self.pushKey
-          : pushKey // ignore: cast_nullable_to_non_nullable
-              as List<String>,
     ));
   }
 }

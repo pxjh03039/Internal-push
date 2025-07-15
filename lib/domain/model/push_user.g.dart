@@ -10,14 +10,11 @@ PushUser _$PushUserFromJson(Map<String, dynamic> json) => PushUser(
       id: json['id'] as String,
       group:
           (json['group'] as List<dynamic>?)?.map((e) => e as String).toList(),
-      platform: json['platform'] as Map<String, dynamic>,
-      pushKey:
-          (json['pushKey'] as List<dynamic>).map((e) => e as String).toList(),
+      registerIds: json['registerIds'] as Map<String, dynamic>,
     );
 
 Map<String, dynamic> _$PushUserToJson(PushUser instance) => <String, dynamic>{
       'id': instance.id,
       'group': instance.group,
-      'platform': instance.platform,
-      'pushKey': instance.pushKey,
+      'registerIds': instance.registerIds,
     };

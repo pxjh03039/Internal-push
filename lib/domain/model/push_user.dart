@@ -9,13 +9,11 @@ part 'push_user.g.dart';
 class PushUser with _$PushUser {
   final String id;
   final List<String>? group;
-  final Map<String, dynamic> platform;
-  final List<String> pushKey;
+  final Map<String, dynamic> registerIds;
   const PushUser({
     required this.id,
     this.group,
-    required this.platform,
-    required this.pushKey,
+    required this.registerIds,
   });
 
   factory PushUser.fromJson(Map<String, dynamic> json) =>

@@ -1,8 +1,41 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+Future<void> saveRegisterInfo({String? key, dynamic value}) async {
+  final prefs = await SharedPreferences.getInstance();
+
+  if (value is Map<String, dynamic>) {
+    final jsonString = jsonEncode(value);
+    await prefs.setString(key!, jsonString); // Map → JSON String 저장
+  } else if (value is String) {
+    await prefs.setString(key!, value); // 그냥 String 저장
+  } else {
+    throw Exception(
+        "Unsupported type: Only Map<String, dynamic> or String allowed.");
+  }
+}
+
+Future<dynamic> loadRegisterInfo(String key) async {
+  final prefs = await SharedPreferences.getInstance();
+  final value = prefs.getString(key);
+
+  if (value == null) return null;
+
+  try {
+    final decoded = jsonDecode(value);
+    if (decoded is Map<String, dynamic>) {
+      return decoded;
+    }
+    return value; // 그냥 String일 경우
+  } catch (_) {
+    return value; // JSON 파싱 실패 → 그냥 String으로 반환
+  }
+}
 
 void debugLog(dynamic value) {
   if (kIsWeb) {

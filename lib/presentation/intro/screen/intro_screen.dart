@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:push_test_app/core/presentation/components/medium_button.dart';
 import 'package:push_test_app/core/presentation/components/text_input_filed.dart';
+import 'package:push_test_app/core/util/develop/develop_tool.dart';
 import 'package:push_test_app/presentation/intro/intro_view_model.dart';
 import 'package:push_test_app/router/route_path.dart';
 import 'package:push_test_app/ui/color_style.dart';
@@ -20,6 +21,7 @@ class IntroScreen extends StatelessWidget {
       if (!context.mounted) return;
 
       if (success) {
+        saveRegisterInfo(key: 'id', value: viewModel.titleController.text);
         context.push(RoutePath.profile);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(

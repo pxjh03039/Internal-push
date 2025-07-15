@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:push_test_app/presentation/profile/profile_view_model.dart';
 import 'package:push_test_app/ui/color_style.dart';
 import 'package:push_test_app/ui/text_styles.dart';
 
@@ -7,6 +9,7 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final viewModel = context.watch<ProfileViewModel>();
     return Scaffold(
       body: SafeArea(
           child: Align(
@@ -51,7 +54,13 @@ class ProfileScreen extends StatelessWidget {
                         'data2',
                         style: TextStyles.smallerTextRegular
                             .copyWith(color: ColorStyle.gray3),
-                      )
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      ElevatedButton(
+                          onPressed: viewModel.getuserInfo,
+                          child: const Text('Edit'))
                     ],
                   )
                 ],

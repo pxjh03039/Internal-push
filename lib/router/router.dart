@@ -1,9 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import 'package:push_test_app/core/di/di_setup.dart';
 import 'package:push_test_app/presentation/create/screen/create_root.dart';
 import 'package:push_test_app/presentation/intro/screen/intro_root.dart';
 import 'package:push_test_app/presentation/main/main_screen.dart';
 import 'package:push_test_app/presentation/profile/profile_screen.dart';
+import 'package:push_test_app/presentation/profile/profile_view_model.dart';
 import 'package:push_test_app/presentation/push/screen/push_root.dart';
 import 'package:push_test_app/router/route_path.dart';
 
@@ -55,7 +58,11 @@ final router = GoRouter(
             GoRoute(
               path: RoutePath.profile,
               builder: (context, state) {
-                return const ProfileScreen();
+                return ChangeNotifierProvider(
+                  create: (context) =>
+                      ProfileViewModel(userRepository: getIt()),
+                  child: const ProfileScreen(),
+                );
               },
             ),
           ],

@@ -6,6 +6,7 @@ import 'package:push_test_app/domain/repository/push_repository.dart';
 import 'package:push_test_app/domain/repository/user_repository.dart';
 import 'package:push_test_app/presentation/create/create_view_model.dart';
 import 'package:push_test_app/presentation/intro/intro_view_model.dart';
+import 'package:push_test_app/presentation/profile/profile_view_model.dart';
 import 'package:push_test_app/presentation/push/push_view_model.dart';
 
 final getIt = GetIt.instance;
@@ -24,4 +25,7 @@ void diSetup() {
 
   getIt.registerFactory<IntroViewModel>(
       () => IntroViewModel(userRepository: getIt()));
+
+  getIt.registerFactory<ProfileViewModel>(
+      () => ProfileViewModel(userRepository: getIt()));
 }

@@ -34,10 +34,11 @@ class IntroViewModel with ChangeNotifier {
         token, userId, titleController.text);
   }
 
-  Future<void> updateUserToken() async {
+  Future<String?> updateUserToken() async {
     String token = await getToken();
     String userId = await getDeviceId();
-    await _userRepository.updateToken(token, userId);
+    String? id = await _userRepository.updateToken(token, userId);
+
     // 상태 갱신 (예: 토큰 등록 상태 다시 체크)
     var isRegistered = await _userRepository.isUserTokenRegistered(userId);
 
@@ -45,11 +46,12 @@ class IntroViewModel with ChangeNotifier {
     notifyListeners();
 
     debugLog('updateUserToken 완료, isRegistered: $isRegistered');
+    return id;
   }
 
   Future<void> deleteToken() async {
     String userId = await getDeviceId();
-    await _userRepository.deleteToken(userId);
+    await _userRepository.deleteToken(userId, titleController.text);
   }
 
   Future<String> getToken() async {

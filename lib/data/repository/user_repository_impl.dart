@@ -1,32 +1,23 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:push_test_app/core/util/develop/develop_tool.dart';
+import 'package:push_test_app/domain/model/push_user.dart';
 import 'package:push_test_app/domain/repository/user_repository.dart';
 
 class UserRepositoryImpl implements UserRepository {
-  @override
-  Future<void> deleteToken(String userId) async {
-    try {
-      await FirebaseDatabase.instance.ref("userTokens/$userId").remove();
-    } catch (e) {
-      // 예외 처리 필요 시 추가
-      debugLog('Failed to delete token for $userId: $e');
-      rethrow;
-    }
-  }
+  final db = FirebaseDatabase.instance;
 
   @override
   Future<String> getToken() async {
-    final fcmToken = await FirebaseMessaging.instance.getToken();
-    return fcmToken ?? '';
+    return await FirebaseMessaging.instance.getToken() ?? '';
   }
 
   @override
   Future<void> registerToken(String token, String userId) async {
-    String platform = isPlatform();
+    final platform = isPlatform();
     final now = DateTime.now().toIso8601String();
-    debugLog('Registering token for user $userId: $token on $platform at $now');
-    FirebaseDatabase.instance.ref("userTokens/$userId").set({
+
+    await db.ref("userTokens/$userId").set({
       "fcmToken": token,
       "platform": platform,
       "updatedAt": now,
@@ -35,93 +26,8 @@ class UserRepositoryImpl implements UserRepository {
 
   @override
   Future<bool> isUserTokenRegistered(String userId) async {
-    final snapshot =
-        await FirebaseDatabase.instance.ref("userTokens/$userId").get();
+    final snapshot = await db.ref("userTokens/$userId").get();
     return snapshot.exists;
-  }
-
-  @override
-  Future<void> updateToken(String token, String userId) async {
-    try {
-      final db = FirebaseDatabase.instance;
-      final now = DateTime.now().toIso8601String();
-      final platform = isPlatform();
-
-      debugLog('🔄 Updating token for $userId on $platform');
-
-      // ✅ 먼저 userTokens 인덱스 갱신
-      await db.ref("userTokens/$userId").update({
-        "fcmToken": token,
-        "platform": platform,
-        "updatedAt": now,
-      });
-
-      // ✅ userInfos 전체 조회하여 userId가 있는 곳 찾기
-      final allUsersSnap = await db.ref("userInfos").get();
-      if (allUsersSnap.exists) {
-        final allUsers = Map<String, dynamic>.from(allUsersSnap.value as Map);
-
-        for (final entry in allUsers.entries) {
-          final userKey = entry.key;
-          final userData = Map<String, dynamic>.from(entry.value);
-
-          if (userData.containsKey("platform")) {
-            final platformMap = Map<String, dynamic>.from(userData["platform"]);
-
-            bool updated = false;
-
-            for (final platformKey in platformMap.keys) {
-              final rawPlatform =
-                  Map<String, dynamic>.from(platformMap[platformKey]);
-
-              if (rawPlatform["userId"] == userId) {
-                // ✅ 해당 플랫폼만 pushKey, updatedAt 갱신 (userId는 그대로 유지)
-                rawPlatform["pushKey"] = token;
-                rawPlatform["updatedAt"] = now;
-                platformMap[platformKey] = rawPlatform;
-
-                updated = true;
-                break;
-              }
-            }
-
-            if (updated) {
-              final updatedUser = {
-                "id": userData["id"],
-                "group": userData["group"] ?? [],
-                "platform": platformMap,
-              };
-
-              await db.ref("userInfos/$userKey").set(updatedUser);
-              debugLog("📝 userInfos/$userKey → 플랫폼 토큰 업데이트 완료");
-              return;
-            }
-          }
-        }
-      }
-
-      debugLog("⚠️ userId '$userId'에 해당하는 userInfos 내 플랫폼 정보가 없음");
-    } catch (e) {
-      debugLog('❌ Failed to update token for $userId: $e');
-      rethrow;
-    }
-  }
-
-  @override
-  Future<List<String>> getUserGroup() async {
-    try {
-      final snapShot = await FirebaseDatabase.instance.ref("userGroup").get();
-      if (snapShot.exists) {
-        final dataMap = Map<String, dynamic>.from(snapShot.value as Map);
-        return dataMap.values.map((value) => value.toString()).toList();
-      } else {
-        debugLog('No user groups found.');
-        return [];
-      }
-    } catch (e) {
-      debugLog('Failed to get userGroup: $e');
-      return [];
-    }
   }
 
   @override
@@ -130,43 +36,109 @@ class UserRepositoryImpl implements UserRepository {
     String userId,
     String id,
   ) async {
-    final db = FirebaseDatabase.instance;
     final now = DateTime.now().toIso8601String();
-    final registerIds = userId;
+    final platform = isPlatform();
+    final userRef = db.ref("userInfos/$id");
 
     await cleanUpDuplicatedUserId(userId: userId, correctId: id);
 
-    final userRef = db.ref("userInfos/$id");
-    final snapshot = await userRef.get();
-
-    final newPlatform = {
+    final newData = {
       "userId": userId,
       "pushKey": token,
       "updatedAt": now,
-      "platform": isPlatform(),
+      "platform": platform,
     };
 
+    final snapshot = await userRef.get();
+
     if (snapshot.exists) {
-      await userRef.update({
-        "registerIds/$registerIds": newPlatform,
-      });
+      await userRef.child("registerIds/$userId").set(newData);
     } else {
-      final newUser = {
-        "id": id,
-        "group": [],
-        "registerIds": {
-          registerIds: newPlatform,
-        },
-      };
-      await userRef.set(newUser);
+      final newUser = PushUser(
+        id: id,
+        group: [],
+        registerIds: {userId: newData},
+      );
+      await userRef.set(newUser.toJson());
     }
 
     await db.ref("userTokens/$userId").set({
       "id": id,
-      "registerIds": registerIds,
+      "registerIds": userId,
       "fcmToken": token,
       "updatedAt": now,
     });
+  }
+
+  @override
+  Future<String?> updateToken(String token, String userId) async {
+    final now = DateTime.now().toIso8601String();
+    final platform = isPlatform();
+
+    // 🔄 userTokens 갱신
+    await db.ref("userTokens/$userId").update({
+      "fcmToken": token,
+      "platform": platform,
+      "updatedAt": now,
+    });
+
+    // 🔍 token 기준으로 사용자 id 조회 및 업데이트
+    final allUsersSnap = await db.ref("userInfos").get();
+    if (!allUsersSnap.exists) return null;
+
+    final allUsers = Map<String, dynamic>.from(allUsersSnap.value as Map);
+
+    for (final entry in allUsers.entries) {
+      final userKey = entry.key;
+      final userData = Map<String, dynamic>.from(entry.value);
+
+      if (userData.containsKey("registerIds")) {
+        final registerIds = Map<String, dynamic>.from(userData["registerIds"]);
+
+        if (registerIds.containsKey(userId)) {
+          final regData = Map<String, dynamic>.from(registerIds[userId]);
+
+          // ✅ pushKey, updatedAt, platform 업데이트
+          regData["pushKey"] = token;
+          regData["updatedAt"] = now;
+          regData["platform"] = platform;
+
+          // 🔄 Firebase 반영
+          registerIds[userId] = regData;
+          await db.ref("userInfos/$userKey/registerIds").set(registerIds);
+
+          debugLog("📝 userInfos/$userKey → registerIds.$userId 토큰 업데이트 완료");
+          return userKey;
+        }
+      }
+    }
+
+    debugLog("⚠️ userId '$userId'에 해당하는 registerIds 없음");
+    return null;
+  }
+
+  @override
+  Future<void> deleteToken(String userId, String id) async {
+    try {
+      await db.ref("userTokens/$userId").remove();
+      debugLog("🧹 userTokens/$userId 삭제 완료");
+
+      final userRef = db.ref("userInfos/$id");
+      final userSnap = await userRef.get();
+      if (!userSnap.exists) return;
+
+      await userRef.child("registerIds/$userId").remove();
+      debugLog("🧹 userInfos/$id/registerIds/$userId 삭제 완료");
+
+      final registerIdsSnap = await userRef.child("registerIds").get();
+      if (!registerIdsSnap.exists || (registerIdsSnap.value as Map).isEmpty) {
+        await userRef.remove();
+        debugLog("🧹 userInfos/$id 전체 삭제 (registerIds 없음)");
+      }
+    } catch (e) {
+      debugLog("❌ deleteToken 실패: $e");
+      rethrow;
+    }
   }
 
   @override
@@ -174,49 +146,70 @@ class UserRepositoryImpl implements UserRepository {
     required String userId,
     required String correctId,
   }) async {
-    final db = FirebaseDatabase.instance;
-    final tokenRef = db.ref("userTokens/$userId");
-    final tokenSnap = await tokenRef.get();
+    final tokenSnap = await db.ref("userTokens/$userId").get();
+    if (!tokenSnap.exists) return;
 
-    if (tokenSnap.exists) {
-      final data = Map<String, dynamic>.from(tokenSnap.value as Map);
-      final existingId = data['id'];
+    final existingId = (tokenSnap.value as Map)['id'];
+    if (existingId == correctId) return;
 
-      if (existingId != correctId) {
-        debugLog(
-            "⚠️ 중복된 userId 발견: '$userId'는 '$existingId'에 등록됨. '$correctId'로 이동 처리.");
+    final allUsersSnap = await db.ref("userInfos").get();
+    if (!allUsersSnap.exists) return;
 
-        // userInfos 전체 탐색하여 잘못된 userId가 등록된 platform 제거
-        final allUsersSnap = await db.ref("userInfos").get();
-        if (allUsersSnap.exists) {
-          final allUsers = Map<String, dynamic>.from(allUsersSnap.value as Map);
-          for (final entry in allUsers.entries) {
-            final userKey = entry.key;
-            final userValue = Map<String, dynamic>.from(entry.value);
+    final allUsers = Map<String, dynamic>.from(allUsersSnap.value as Map);
+    for (final entry in allUsers.entries) {
+      final userKey = entry.key;
+      final userData = Map<String, dynamic>.from(entry.value);
 
-            if (userValue.containsKey('platform')) {
-              final platformMap =
-                  Map<String, dynamic>.from(userValue['platform']);
-              for (final platformKey in platformMap.keys) {
-                final rawPlatformData =
-                    Map<String, dynamic>.from(platformMap[platformKey]);
-
-                if (rawPlatformData['userId'] == userId) {
-                  await db
-                      .ref("userInfos/$userKey/platform/$platformKey")
-                      .remove();
-                  debugLog(
-                      "🧹 잘못된 platform 제거 → userInfos/$userKey/platform/$platformKey");
-                }
-              }
-            }
-          }
+      if (userData.containsKey("registerIds")) {
+        final registerIds = Map<String, dynamic>.from(userData["registerIds"]);
+        if (registerIds.containsKey(userId)) {
+          await db.ref("userInfos/$userKey/registerIds/$userId").remove();
+          debugLog("🧹 중복 제거: $userKey → registerIds/$userId 삭제");
         }
-
-        // userTokens 인덱스 삭제
-        await tokenRef.remove();
-        debugLog("🧹 userTokens/$userId 제거 완료");
       }
+    }
+
+    await db.ref("userTokens/$userId").remove();
+    debugLog("🧹 userTokens/$userId 제거 완료 (중복)");
+  }
+
+  @override
+  Future<Map<String, dynamic>> getRegisterInfo(String userId, String id) async {
+    final userRef = db.ref("userInfos/$id");
+    final snapshot = await userRef.get();
+
+    if (!snapshot.exists) {
+      throw Exception("❌ 사용자 '$id' 정보가 없습니다.");
+    }
+
+    final userData = Map<String, dynamic>.from(snapshot.value as Map);
+
+    // registerIds 필드 파싱
+    if (!userData.containsKey("registerIds")) {
+      throw Exception("❌ 사용자 '$id'의 registerIds 필드가 없습니다.");
+    }
+
+    final registerIds = Map<String, dynamic>.from(userData["registerIds"]);
+
+    if (!registerIds.containsKey(userId)) {
+      throw Exception("❌ userId '$userId'에 대한 정보가 없습니다.");
+    }
+
+    return Map<String, dynamic>.from(registerIds[userId]);
+  }
+
+  @override
+  Future<List<String>> getUserGroup() async {
+    try {
+      final snap = await db.ref("userGroup").get();
+      if (!snap.exists) return [];
+      return Map<String, dynamic>.from(snap.value as Map)
+          .values
+          .map((e) => e.toString())
+          .toList();
+    } catch (e) {
+      debugLog('getUserGroup 오류: $e');
+      return [];
     }
   }
 }
