@@ -184,7 +184,10 @@ class UserRepositoryImpl implements UserRepository {
 
     final userData = Map<String, dynamic>.from(snapshot.value as Map);
 
-    // registerIds 필드 파싱
+    final groupsRaw = userData["groups"];
+    final groups =
+        groupsRaw is Map ? Map<String, bool>.from(groupsRaw) : <String, bool>{};
+
     if (!userData.containsKey("registerIds")) {
       throw Exception("❌ 사용자 '$id'의 registerIds 필드가 없습니다.");
     }
@@ -194,8 +197,11 @@ class UserRepositoryImpl implements UserRepository {
     if (!registerIds.containsKey(userId)) {
       throw Exception("❌ userId '$userId'에 대한 정보가 없습니다.");
     }
-
-    return Map<String, dynamic>.from(registerIds[userId]);
+    final registerInfo = Map<String, dynamic>.from(registerIds[userId]);
+    return {
+      ...registerInfo,
+      "groups": groups,
+    };
   }
 
   @override
@@ -211,5 +217,10 @@ class UserRepositoryImpl implements UserRepository {
       debugLog('getUserGroup 오류: $e');
       return [];
     }
+  }
+
+  @override
+  Future<void> updateGroup(String id, String group, bool value) async {
+    await db.ref("userInfos/$id/groups/$group").set(value);
   }
 }
