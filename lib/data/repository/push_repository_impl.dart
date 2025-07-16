@@ -67,4 +67,19 @@ class PushRepositoryImpl implements PushRepository {
       });
     }
   }
+
+  @override
+  Stream<List<PushSchedule>> listenPushSchedules() {
+    return _dbRef.onValue.map((DatabaseEvent event) {
+      final snap = event.snapshot;
+      if (!snap.exists || snap.value == null) {
+        return <PushSchedule>[];
+      }
+
+      final dataMap = Map<String, dynamic>.from(snap.value as Map);
+      return dataMap.values
+          .map((v) => PushSchedule.fromJson(Map<String, dynamic>.from(v)))
+          .toList();
+    });
+  }
 }

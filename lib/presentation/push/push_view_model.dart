@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:push_test_app/core/util/develop/develop_tool.dart';
+import 'package:push_test_app/domain/model/push_schedule.dart';
 import 'package:push_test_app/domain/repository/push_repository.dart';
 import 'package:push_test_app/presentation/push/push_action.dart';
 import 'package:push_test_app/presentation/push/push_state.dart';
@@ -16,6 +17,7 @@ enum PushField {
 class PushViewModel with ChangeNotifier {
   final _eventController = BehaviorSubject<PushAction>();
   Stream<PushAction> get eventStream => _eventController.stream;
+  late final StreamSubscription<List<PushSchedule>> _schedulesSub;
 
   final PushRepository _pushRepository;
 
@@ -25,7 +27,12 @@ class PushViewModel with ChangeNotifier {
     controller.addListener(() {
       _onTextChanged(controller.text);
     });
-    _loadPushList();
+    // _loadPushList();
+
+    _schedulesSub = _pushRepository.listenPushSchedules().listen((schedules) {
+      _pushState = _pushState.copyWith(pushSchedule: schedules);
+      notifyListeners();
+    });
   }
 
   PushState _pushState = const PushState();
@@ -74,6 +81,7 @@ class PushViewModel with ChangeNotifier {
 
   @override
   void dispose() {
+    _schedulesSub.cancel();
     controller.dispose();
     super.dispose();
   }

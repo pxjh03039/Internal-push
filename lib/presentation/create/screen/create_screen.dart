@@ -103,7 +103,7 @@ class CreateScreen extends StatelessWidget {
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: SmallMultiSelectButtonGroup(
-                    options: viewModel.WEEKLY,
+                    options: viewModel.weeklyList,
                     selectedValues: viewModel.createState.selectedDays,
                     onChanged: viewModel.updateSelectedDays,
                   ),

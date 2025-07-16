@@ -3,14 +3,13 @@ import 'package:push_test_app/core/util/develop/develop_tool.dart';
 import 'package:push_test_app/domain/model/push_schedule.dart';
 import 'package:push_test_app/domain/repository/push_repository.dart';
 import 'package:push_test_app/presentation/create/create_state.dart';
-import 'package:push_test_app/util/date_picker_helper.dart';
 
 class CreateViewModel extends ChangeNotifier {
   final PushRepository _pushRepository;
 
   final TextEditingController titleController = TextEditingController();
   final TextEditingController messageController = TextEditingController();
-  final List<String> WEEKLY = ['일', '월', '화', '수', '목', '금', '토'];
+  final List<String> weeklyList = ['일', '월', '화', '수', '목', '금', '토'];
 
   CreateState _createState = CreateState(
     selectedTime: Duration(
@@ -113,7 +112,7 @@ class CreateViewModel extends ChangeNotifier {
     } else {
       days.add(day);
     }
-    days.sort((a, b) => WEEKLY.indexOf(a).compareTo(WEEKLY.indexOf(b))); // 정렬
+    days.sort((a, b) => weeklyList.indexOf(a).compareTo(weeklyList.indexOf(b)));
 
     _createState = _createState.copyWith(selectedDays: days);
     notifyListeners();

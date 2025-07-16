@@ -75,4 +75,9 @@ class MockPushRepositoryImpl implements PushRepository {
   Future<void> registerToken() {
     throw UnimplementedError();
   }
+
+  @override
+  Stream<List<PushSchedule>> listenPushSchedules() {
+    throw UnimplementedError();
+  }
 }
