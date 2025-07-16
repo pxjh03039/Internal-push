@@ -18,6 +18,7 @@ class PushViewModel with ChangeNotifier {
   final _eventController = BehaviorSubject<PushAction>();
   Stream<PushAction> get eventStream => _eventController.stream;
   late final StreamSubscription<List<PushSchedule>> _schedulesSub;
+  List<PushSchedule> _allSchedules = [];
 
   final PushRepository _pushRepository;
 
@@ -30,8 +31,8 @@ class PushViewModel with ChangeNotifier {
     // _loadPushList();
 
     _schedulesSub = _pushRepository.listenPushSchedules().listen((schedules) {
-      _pushState = _pushState.copyWith(pushSchedule: schedules);
-      notifyListeners();
+      _allSchedules = schedules;
+      _applyFilters();
     });
   }
 
@@ -71,12 +72,27 @@ class PushViewModel with ChangeNotifier {
 
   void _onTextChanged(String text) {
     _pushState = pushState.copyWith(query: text);
-    notifyListeners();
+    _applyFilters();
   }
 
   Future<void> deletePushSchedule(String id) async {
     await _pushRepository.deletePushSchedule(id);
     _loadPushList();
+  }
+
+  void _applyFilters() {
+    final searchText = _pushState.query.trim().toLowerCase();
+    final filteredScheduleList = searchText.isEmpty
+        ? _allSchedules
+        : _allSchedules.where((schedule) {
+            final searchTitle = schedule.title.toLowerCase();
+            final searchContents = schedule.message.toLowerCase();
+            return searchTitle.contains(searchText) ||
+                searchContents.contains(searchText);
+          }).toList();
+
+    _pushState = _pushState.copyWith(pushSchedule: filteredScheduleList);
+    notifyListeners();
   }
 
   @override
