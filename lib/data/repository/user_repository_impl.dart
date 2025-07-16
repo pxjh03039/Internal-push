@@ -203,10 +203,10 @@ class UserRepositoryImpl implements UserRepository {
     try {
       final snap = await db.ref("userGroup").get();
       if (!snap.exists) return [];
-      return Map<String, dynamic>.from(snap.value as Map)
-          .values
-          .map((e) => e.toString())
-          .toList();
+
+      // snap.value가 List<dynamic>이라고 가정하고 직접 캐스팅
+      final List<dynamic> rawList = snap.value as List;
+      return rawList.map((e) => e.toString()).toList();
     } catch (e) {
       debugLog('getUserGroup 오류: $e');
       return [];
