@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:push_test_app/core/di/di_setup.dart';
 import 'package:push_test_app/domain/model/push_schedule.dart';
 import 'package:push_test_app/presentation/create/screen/create_root.dart';
+import 'package:push_test_app/presentation/message/screen/message_root.dart';
 import 'package:push_test_app/presentation/update/screen/update_root.dart';
 import 'package:push_test_app/presentation/intro/screen/intro_root.dart';
 import 'package:push_test_app/presentation/main/main_screen.dart';
@@ -68,6 +69,30 @@ final router = GoRouter(
         StatefulShellBranch(
           routes: [
             GoRoute(
+              path: RoutePath.message,
+              builder: (context, state) {
+                return const MessageRoot();
+              },
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: RoutePath.message,
+              builder: (context, state) {
+                return ChangeNotifierProvider(
+                  create: (context) =>
+                      ProfileViewModel(userRepository: getIt()),
+                  child: const MessageRoot(),
+                );
+              },
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
               path: RoutePath.profile,
               builder: (context, state) {
                 return ChangeNotifierProvider(
@@ -78,7 +103,7 @@ final router = GoRouter(
               },
             ),
           ],
-        ),
+        )
         // StatefulShellBranch(
         //   routes: [
         //     GoRoute(

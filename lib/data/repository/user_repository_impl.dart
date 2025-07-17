@@ -223,4 +223,15 @@ class UserRepositoryImpl implements UserRepository {
   Future<void> updateGroup(String id, String group, bool value) async {
     await db.ref("userInfos/$id/groups/$group").set(value);
   }
+
+  @override
+  Future<List<String>> getUserNames() async {
+    // userInfos 경로에서 사용자 이름들 키값을 배열로 가져오는 예
+    final snapshot = await db.ref('userInfos').get();
+    if (!snapshot.exists) return [];
+
+    final data = snapshot.value as Map<dynamic, dynamic>;
+    final userNames = data.keys.map((key) => key.toString()).toList();
+    return userNames;
+  }
 }

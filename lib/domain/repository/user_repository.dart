@@ -1,4 +1,5 @@
 abstract class UserRepository {
+  Future<List<String>> getUserNames();
   Future<void> updateGroup(String id, String group, bool value);
   Future<Map<String, dynamic>> getRegisterInfo(String userId, String id);
   Future<String> getToken();

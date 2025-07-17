@@ -18,11 +18,11 @@ ProfileState _$ProfileStateFromJson(Map<String, dynamic> json) => ProfileState(
       checkboxList: (json['checkboxList'] as List<dynamic>?)
               ?.map((e) => e as bool)
               .toList() ??
-          const [false, false, false],
+          const [],
       labelList: (json['labelList'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
-          const ['클라이언트', '테스트', '점심'],
+          const [],
     );
 
 Map<String, dynamic> _$ProfileStateToJson(ProfileState instance) =>

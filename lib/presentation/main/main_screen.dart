@@ -51,17 +51,43 @@ class MainScreen extends StatelessWidget {
                 onPressed: () => onDestinationSelected(0),
               ),
 
+              IconButton(
+                icon: currentSelected == 1
+                    ? const Icon(
+                        Icons.message,
+                        size: 24,
+                      )
+                    : const Icon(
+                        Icons.message_outlined,
+                        size: 24,
+                      ),
+                onPressed: () => onDestinationSelected(2),
+              ),
+
               const SizedBox(width: 40), // 중앙 버튼 공간
 
               IconButton(
+                icon: currentSelected == 2
+                    ? const Icon(
+                        Icons.not_interested,
+                        size: 24,
+                      )
+                    : const Icon(
+                        Icons.not_interested_outlined,
+                        size: 24,
+                      ),
+                onPressed: () => onDestinationSelected(2),
+              ),
+
+              IconButton(
                 icon: Image.asset(
-                  currentSelected == 1
+                  currentSelected == 3
                       ? 'assets/image/nav_profile_selected.png'
                       : 'assets/image/nav_profile.png',
                   width: 24,
                   height: 24,
                 ),
-                onPressed: () => onDestinationSelected(1),
+                onPressed: () => onDestinationSelected(3),
               ),
             ],
           ),
