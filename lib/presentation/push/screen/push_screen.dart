@@ -1,5 +1,6 @@
 // import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:push_test_app/core/presentation/components/push_schedule_card.dart';
 import 'package:push_test_app/core/presentation/components/search_input_filed.dart';
@@ -7,6 +8,7 @@ import 'package:push_test_app/core/presentation/components/small_text_button_gro
 import 'package:push_test_app/domain/model/push_schedule.dart';
 import 'package:push_test_app/presentation/push/push_action.dart';
 import 'package:push_test_app/presentation/push/push_view_model.dart';
+import 'package:push_test_app/router/route_path.dart';
 import 'package:push_test_app/ui/color_style.dart';
 import 'package:push_test_app/ui/text_styles.dart';
 
@@ -93,6 +95,9 @@ class PushScreen extends StatelessWidget {
                       pushSchedule: item,
                       onDelete: () async {
                         await viewModel.deletePushSchedule(item.id);
+                      },
+                      onUpdate: (item) {
+                        context.push(RoutePath.update, extra: item);
                       },
                     );
                   },

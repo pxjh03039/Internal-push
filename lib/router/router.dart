@@ -2,7 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:push_test_app/core/di/di_setup.dart';
+import 'package:push_test_app/domain/model/push_schedule.dart';
 import 'package:push_test_app/presentation/create/screen/create_root.dart';
+import 'package:push_test_app/presentation/update/screen/update_root.dart';
 import 'package:push_test_app/presentation/intro/screen/intro_root.dart';
 import 'package:push_test_app/presentation/main/main_screen.dart';
 import 'package:push_test_app/presentation/profile/profile_screen.dart';
@@ -28,6 +30,13 @@ final router = GoRouter(
     GoRoute(
       path: RoutePath.create,
       builder: (context, state) => const CreateRoot(),
+    ),
+    GoRoute(
+      path: '/update',
+      builder: (context, state) {
+        final param = state.extra as PushSchedule;
+        return UpdateRoot(scheduleId: param.id, schedule: param);
+      },
     ),
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) {

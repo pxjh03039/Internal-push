@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:push_test_app/domain/model/push_schedule.dart';
 import 'package:push_test_app/ui/color_style.dart';
 import 'package:push_test_app/ui/text_styles.dart';
@@ -6,10 +7,12 @@ import 'package:push_test_app/ui/text_styles.dart';
 class PushScheduleCard extends StatelessWidget {
   final PushSchedule pushSchedule;
   final VoidCallback? onDelete;
+  final void Function(PushSchedule)? onUpdate;
   const PushScheduleCard({
     super.key,
     required this.pushSchedule,
     this.onDelete,
+    this.onUpdate,
   });
 
   @override
@@ -88,6 +91,22 @@ class PushScheduleCard extends StatelessWidget {
               padding: EdgeInsets.zero,
               icon: Image.asset(
                 'image/delete.png',
+                width: 18,
+                height: 18,
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: -1,
+            right: -2,
+            child: IconButton(
+              onPressed: () {
+                onUpdate!(pushSchedule);
+              },
+              iconSize: 22,
+              padding: EdgeInsets.zero,
+              icon: Image.asset(
+                'image/update.png',
                 width: 18,
                 height: 18,
               ),
