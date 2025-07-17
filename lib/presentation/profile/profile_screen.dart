@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:push_test_app/core/presentation/components/checkbox_item.dart';
 import 'package:push_test_app/core/presentation/components/switch_item.dart';
 import 'package:push_test_app/presentation/profile/profile_view_model.dart';
 import 'package:push_test_app/ui/color_style.dart';

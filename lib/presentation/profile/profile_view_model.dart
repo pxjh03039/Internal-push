@@ -88,7 +88,7 @@ class ProfileViewModel with ChangeNotifier {
   void getUserData() async {
     final userId = await getDeviceId();
     final id = await loadRegisterInfo('id');
-    final userInfo = await loadRegisterInfo('userInfo');
+    // final userInfo = await loadRegisterInfo('userInfo');
     _profileState = _profileState.copyWith(id: id, userId: userId);
     notifyListeners();
   }

@@ -13,8 +13,7 @@ firebase.initializeApp({
 const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage(function (payload) {
-  // 이미 브라우저가 notification 띄울 거면, 따로 안 띄움
-  if (!payload.notification) {
+  if (!payload.notification) { // notification 필드 없을 때만 띄움
     const notificationTitle = payload.data?.title || '📬 새 알림';
     const notificationOptions = {
       body: payload.data?.body || '',
