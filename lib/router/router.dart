@@ -10,7 +10,10 @@ import 'package:push_test_app/presentation/profile/profile_view_model.dart';
 import 'package:push_test_app/presentation/push/screen/push_root.dart';
 import 'package:push_test_app/router/route_path.dart';
 
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 final router = GoRouter(
+  navigatorKey: navigatorKey,
   initialLocation: RoutePath.intro,
   routes: [
     GoRoute(

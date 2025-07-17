@@ -8,6 +8,7 @@ import 'package:push_test_app/core/di/di_setup.dart';
 import 'package:push_test_app/router/router.dart';
 import 'firebase_options.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:push_test_app/core/util/develop/develop_tool.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,6 +34,15 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     requestNotificationPermissions();
+
+    // 포그라운드 메시지 수신 리스너 등록
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      final notification = message.notification;
+      if (notification != null) {
+        showCustomPopup(
+            notification.title ?? "알림", notification.body ?? "내용 없음");
+      }
+    });
   }
 
   Future<void> requestNotificationPermissions() async {

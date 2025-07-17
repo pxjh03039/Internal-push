@@ -57,6 +57,8 @@ dependencies:
   hive: ^2.2.3
   hive_flutter: ^1.1.0
 
+  flutter_local_notifications: 19.3.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -77,6 +79,13 @@ dev_dependencies:
 # following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter packages.
+
+dependency_overrides:
+  flutter_local_notifications_linux:
+    git:
+      url: https://github.com/MaikuB/flutter_local_notifications.git
+      path: flutter_local_notifications_linux
+
 flutter:
 
   # The following line ensures that the Material Icons font is

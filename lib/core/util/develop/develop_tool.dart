@@ -4,7 +4,9 @@ import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:push_test_app/router/router.dart';
 
 Future<void> saveRegisterInfo(
     {required String key, required dynamic value}) async {
@@ -89,4 +91,22 @@ Future<String> getDeviceId() async {
   } else {
     return "unknown_platform";
   }
+}
+
+void showCustomPopup(String title, String body) {
+  final context = navigatorKey.currentContext;
+  if (context == null) return; // 전역 context 유효성 검사
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: Text(title),
+      content: Text(body),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text("확인"),
+        ),
+      ],
+    ),
+  );
 }
