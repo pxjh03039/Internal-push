@@ -28,7 +28,7 @@ class CreateScreen extends StatelessWidget {
               child: CupertinoTimerPicker(
                 mode: CupertinoTimerPickerMode.hm,
                 initialTimerDuration: viewModel.createState.selectedTime,
-                minuteInterval: 5,
+                minuteInterval: 30,
                 onTimerDurationChanged: (Duration value) {
                   viewModel.updateSelectedTime(value);
                 },

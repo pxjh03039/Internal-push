@@ -14,7 +14,7 @@ class CreateViewModel extends ChangeNotifier {
   CreateState _createState = CreateState(
     selectedTime: Duration(
       hours: DateTime.now().hour,
-      minutes: (DateTime.now().minute ~/ 5) * 5,
+      minutes: (DateTime.now().minute ~/ 30) * 30,
     ),
     selectedTarget: 'All',
     selectedRepeat: 'none',
