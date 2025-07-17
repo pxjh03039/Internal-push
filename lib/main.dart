@@ -7,6 +7,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:push_test_app/core/di/di_setup.dart';
 import 'package:push_test_app/router/router.dart';
 import 'firebase_options.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,6 +15,7 @@ Future<void> main() async {
   await FirebaseMessaging.instance.setAutoInitEnabled(true);
   final fcmToken = await FirebaseMessaging.instance.getToken();
   diSetup();
+  await Hive.initFlutter();
   log("FCM Token: $fcmToken");
 
   runApp(const MyApp());

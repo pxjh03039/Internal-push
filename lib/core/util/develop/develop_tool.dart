@@ -4,37 +4,44 @@ import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:hive/hive.dart';
 
-Future<void> saveRegisterInfo({String? key, dynamic value}) async {
-  final prefs = await SharedPreferences.getInstance();
+Future<void> saveRegisterInfo(
+    {required String key, required dynamic value}) async {
+  var box = await Hive.openBox('registerBox');
+
+  if (value == null) throw Exception('value is null');
 
   if (value is Map<String, dynamic>) {
-    final jsonString = jsonEncode(value);
-    await prefs.setString(key!, jsonString); // Map → JSON String 저장
+    // Map은 JSON 문자열로 저장
+    await box.put(key, jsonEncode(value));
   } else if (value is String) {
-    await prefs.setString(key!, value); // 그냥 String 저장
+    await box.put(key, value);
   } else {
     throw Exception(
-        "Unsupported type: Only Map<String, dynamic> or String allowed.");
+        'Unsupported type: Only Map<String, dynamic> or String allowed.');
   }
 }
 
 Future<dynamic> loadRegisterInfo(String key) async {
-  final prefs = await SharedPreferences.getInstance();
-  final value = prefs.getString(key);
+  var box = await Hive.openBox('registerBox');
+  final value = box.get(key);
 
   if (value == null) return null;
 
-  try {
-    final decoded = jsonDecode(value);
-    if (decoded is Map<String, dynamic>) {
-      return decoded;
+  if (value is String) {
+    try {
+      final decoded = jsonDecode(value);
+      if (decoded is Map<String, dynamic>) {
+        return decoded;
+      }
+    } catch (_) {
+      // JSON 파싱 실패 → 그냥 문자열 반환
     }
-    return value; // 그냥 String일 경우
-  } catch (_) {
-    return value; // JSON 파싱 실패 → 그냥 String으로 반환
+    return value;
   }
+
+  return value;
 }
 
 void debugLog(dynamic value) {
