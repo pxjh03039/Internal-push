@@ -22,7 +22,8 @@ class IntroScreen extends StatelessWidget {
 
       if (success) {
         saveRegisterInfo(key: 'id', value: viewModel.titleController.text);
-        context.push(RoutePath.profile);
+        viewModel.getuserInfo();
+        context.push(RoutePath.push);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("닉네임이 비었습니다.")),

@@ -26,9 +26,9 @@ class IntroRoot extends StatelessWidget {
               String? newUserId = await viewModel.updateUserToken();
               debugLog('newUserId: $newUserId');
               saveRegisterInfo(key: 'id', value: newUserId);
-
+              await viewModel.getuserInfo();
               if (context.mounted) {
-                context.go(RoutePath.profile);
+                context.go(RoutePath.push);
               }
             });
             return const SizedBox();

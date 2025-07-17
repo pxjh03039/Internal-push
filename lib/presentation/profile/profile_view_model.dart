@@ -16,7 +16,6 @@ class ProfileViewModel with ChangeNotifier {
   // 모든 초기 데이터 로딩을 통합하는 단일 메서드
   Future<void> _initializeProfileData() async {
     try {
-      await getuserInfo();
       await getUserGroup();
       final userId = await getDeviceId();
       final id = await loadRegisterInfo('id');

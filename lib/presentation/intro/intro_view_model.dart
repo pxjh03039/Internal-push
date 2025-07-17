@@ -26,6 +26,13 @@ class IntroViewModel with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> getuserInfo() async {
+    final id = await loadRegisterInfo('id');
+    final userId = await getDeviceId();
+    final userInfo = await _userRepository.getRegisterInfo(userId, id);
+    await saveRegisterInfo(key: 'userInfo', value: userInfo);
+  }
+
   Future<void> registerOrUpdateUser() async {
     String token = await getToken();
     String userId = await getDeviceId();
