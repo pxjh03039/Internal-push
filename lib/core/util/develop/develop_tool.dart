@@ -105,9 +105,14 @@ void showCustomPopup(String title, String body) {
     builder: (context) => AlertDialog(
       title: Text(title),
       content: SizedBox(
-          child: Row(
+          child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(body),
+          Text(
+            body,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
           IconButton(
               onPressed: () {
                 _clipboard.copyText(body);
