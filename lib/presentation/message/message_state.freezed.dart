@@ -18,6 +18,7 @@ mixin _$MessageState {
   String get pushTitle;
   String get pushContents;
   List<String> get userNames;
+  bool get isLoading;
 
   /// Create a copy of MessageState
   /// with the given fields replaced by the non-null parameter values.
@@ -36,17 +37,19 @@ mixin _$MessageState {
                 other.pushTitle == pushTitle) &&
             (identical(other.pushContents, pushContents) ||
                 other.pushContents == pushContents) &&
-            const DeepCollectionEquality().equals(other.userNames, userNames));
+            const DeepCollectionEquality().equals(other.userNames, userNames) &&
+            (identical(other.isLoading, isLoading) ||
+                other.isLoading == isLoading));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, pushTitle, pushContents,
-      const DeepCollectionEquality().hash(userNames));
+      const DeepCollectionEquality().hash(userNames), isLoading);
 
   @override
   String toString() {
-    return 'MessageState(pushTitle: $pushTitle, pushContents: $pushContents, userNames: $userNames)';
+    return 'MessageState(pushTitle: $pushTitle, pushContents: $pushContents, userNames: $userNames, isLoading: $isLoading)';
   }
 }
 
@@ -56,7 +59,11 @@ abstract mixin class $MessageStateCopyWith<$Res> {
           MessageState value, $Res Function(MessageState) _then) =
       _$MessageStateCopyWithImpl;
   @useResult
-  $Res call({String pushTitle, String pushContents, List<String> userNames});
+  $Res call(
+      {String pushTitle,
+      String pushContents,
+      List<String> userNames,
+      bool isLoading});
 }
 
 /// @nodoc
@@ -74,6 +81,7 @@ class _$MessageStateCopyWithImpl<$Res> implements $MessageStateCopyWith<$Res> {
     Object? pushTitle = null,
     Object? pushContents = null,
     Object? userNames = null,
+    Object? isLoading = null,
   }) {
     return _then(MessageState(
       pushTitle: null == pushTitle
@@ -88,6 +96,10 @@ class _$MessageStateCopyWithImpl<$Res> implements $MessageStateCopyWith<$Res> {
           ? _self.userNames
           : userNames // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      isLoading: null == isLoading
+          ? _self.isLoading
+          : isLoading // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }

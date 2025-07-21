@@ -9,6 +9,7 @@ class MessageViewModel with ChangeNotifier {
   final UserRepository _userRepository;
 
   MessageState _messageState = const MessageState();
+  MessageState get messageState => _messageState;
 
   final TextEditingController pushTitleController = TextEditingController();
   final TextEditingController pushMessageController = TextEditingController();
@@ -49,10 +50,19 @@ class MessageViewModel with ChangeNotifier {
     notifyListeners();
   }
 
+  bool validatePushContents() {
+    return _messageState.pushContents.trim().isEmpty;
+  }
+
   Future<void> onClickPushSend() async {
-    _messageRepository.pushSendMessage(
-        title: _messageState.pushTitle,
+    _messageState = _messageState.copyWith(isLoading: true);
+    notifyListeners();
+    await _messageRepository.pushSendMessage(
+        title: "푸시 메시지",
         contents: _messageState.pushContents,
         ids: _messageState.userNames);
+    _messageState = _messageState.copyWith(isLoading: false);
+    notifyListeners();
+    pushMessageController.clear();
   }
 }

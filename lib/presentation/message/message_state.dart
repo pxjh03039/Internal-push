@@ -10,8 +10,13 @@ class MessageState with _$MessageState {
   final String pushTitle;
   final String pushContents;
   final List<String> userNames;
-  const MessageState(
-      {this.pushTitle = "", this.pushContents = "", this.userNames = const []});
+  final bool isLoading;
+  const MessageState({
+    this.pushTitle = "",
+    this.pushContents = "",
+    this.userNames = const [],
+    this.isLoading = false,
+  });
 
   factory MessageState.fromJson(Map<String, dynamic> json) =>
       _$MessageStateFromJson(json);

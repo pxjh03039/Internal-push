@@ -18,8 +18,18 @@ Future<void> main() async {
   diSetup();
   await Hive.initFlutter();
   log("FCM Token: $fcmToken");
-
+  // 포그라운드 메시지 수신 리스너 등록
+  setupFCMListener();
   runApp(const MyApp());
+}
+
+void setupFCMListener() {
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    final notification = message.notification;
+    if (notification != null) {
+      showCustomPopup(notification.title ?? "알림", notification.body ?? "내용 없음");
+    }
+  });
 }
 
 class MyApp extends StatefulWidget {
@@ -34,15 +44,6 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     requestNotificationPermissions();
-
-    // 포그라운드 메시지 수신 리스너 등록
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      final notification = message.notification;
-      if (notification != null) {
-        showCustomPopup(
-            notification.title ?? "알림", notification.body ?? "내용 없음");
-      }
-    });
   }
 
   Future<void> requestNotificationPermissions() async {
