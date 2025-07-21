@@ -41,13 +41,15 @@ class MainScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               IconButton(
-                icon: Image.asset(
-                  currentSelected == 0
-                      ? 'assets/image/nav_home_selected.png'
-                      : 'assets/image/nav_home.png',
-                  width: 24,
-                  height: 24,
-                ),
+                icon: currentSelected == 0
+                    ? const Icon(
+                        Icons.home,
+                        size: 30,
+                      )
+                    : const Icon(
+                        Icons.home_outlined,
+                        size: 30,
+                      ),
                 onPressed: () => onDestinationSelected(0),
               ),
 
@@ -80,13 +82,15 @@ class MainScreen extends StatelessWidget {
               ),
 
               IconButton(
-                icon: Image.asset(
-                  currentSelected == 3
-                      ? 'assets/image/nav_profile_selected.png'
-                      : 'assets/image/nav_profile.png',
-                  width: 24,
-                  height: 24,
-                ),
+                icon: currentSelected == 3
+                    ? const Icon(
+                        Icons.person,
+                        size: 30,
+                      )
+                    : const Icon(
+                        Icons.person_outline,
+                        size: 30,
+                      ),
                 onPressed: () => onDestinationSelected(3),
               ),
             ],

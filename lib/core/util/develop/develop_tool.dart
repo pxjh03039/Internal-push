@@ -129,6 +129,19 @@ void showCustomPopup(String title, String body) {
       )),
       actions: [
         TextButton(
+          onPressed: () {
+            _clipboard.copyText(body);
+            ScaffoldMessenger.of(context).clearSnackBars();
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              content: Text('저장 되었습니다.'),
+              behavior: SnackBarBehavior.floating,
+              backgroundColor: ColorStyle.primary100,
+              duration: Duration(seconds: 1),
+            ));
+          },
+          child: const Text("복사"),
+        ),
+        TextButton(
           onPressed: () => Navigator.pop(context),
           child: const Text("확인"),
         ),
