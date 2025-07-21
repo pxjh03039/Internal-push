@@ -20,107 +20,103 @@ class ProfileScreen extends StatelessWidget {
         centerTitle: true,
       ),
       body: SafeArea(
-          child: Align(
+          child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 30),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(
-              height: 12,
+              height: 20,
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(
-                    width: 99,
-                    height: 99,
-                    child: CircleAvatar(
-                      backgroundImage:
-                          AssetImage('assets/image/profile_sample.png'),
-                    ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(
+                  width: 99,
+                  height: 99,
+                  child: CircleAvatar(
+                    backgroundImage:
+                        AssetImage('assets/image/profile_sample.png'),
                   ),
-                  const SizedBox(
-                    width: 17,
+                ),
+                const SizedBox(
+                  width: 17,
+                ),
+                Expanded(
+                  child: Column(
+                    children: [
+                      Text(
+                        viewModel.profileState.id,
+                        style: TextStyles.normalTextBold,
+                      ),
+                      const SizedBox(
+                        height: 11,
+                      ),
+                      Text(
+                        viewModel.profileState.userId,
+                        style: TextStyles.smallerTextRegular
+                            .copyWith(color: ColorStyle.gray3),
+                      ),
+                    ],
                   ),
-                  Expanded(
-                    child: Column(
-                      children: [
-                        Text(
-                          viewModel.profileState.id,
-                          style: TextStyles.normalTextBold,
-                        ),
-                        const SizedBox(
-                          height: 11,
-                        ),
-                        Text(
-                          viewModel.profileState.userId,
-                          style: TextStyles.smallerTextRegular
-                              .copyWith(color: ColorStyle.gray3),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start, // 이 부분 추가
-                children: [
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  const Divider(),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  const Text(
-                    '그룹 관리',
-                    style: TextStyles.normalTextBold,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  viewModel.profileState.labelList.isEmpty
-                      ? const Center(
-                          child: CircularProgressIndicator(),
-                        )
-                      : GridView.builder(
-                          shrinkWrap: true,
-                          physics:
-                              const NeverScrollableScrollPhysics(), // 부모가 스크롤 가능하면 이중 스크롤 방지
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 1, // 한 줄에 표시할 항목 개수
-                            crossAxisSpacing: 5.0, // 가로 간격
-                            mainAxisSpacing: 5.0, // 세로 간격
-                            childAspectRatio: 8.0, // 항목의 너비/높이 비율을 조정하여 크기 조절
-                          ),
-                          itemCount: viewModel.profileState.labelList.length,
-                          itemBuilder: (context, index) {
-                            return SwitchItem(
-                              index: index,
-                              isChecked:
-                                  viewModel.profileState.checkboxList[index],
-                              label: viewModel.profileState.labelList[index],
-                              onChanged: (idx, value) async {
-                                if (viewModel.profileState.checkboxList[idx] !=
-                                    value) {
-                                  viewModel.toggleGroup(idx: idx, value: value);
-                                }
-                              },
-                            );
-                          },
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start, // 이 부분 추가
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                const Divider(),
+                const SizedBox(
+                  height: 10,
+                ),
+                const Text(
+                  '그룹 관리',
+                  style: TextStyles.normalTextBold,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                viewModel.profileState.labelList.isEmpty
+                    ? const Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : GridView.builder(
+                        shrinkWrap: true,
+                        physics:
+                            const NeverScrollableScrollPhysics(), // 부모가 스크롤 가능하면 이중 스크롤 방지
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 1, // 한 줄에 표시할 항목 개수
+                          crossAxisSpacing: 5.0, // 가로 간격
+                          mainAxisSpacing: 5.0, // 세로 간격
+                          childAspectRatio: 8.0, // 항목의 너비/높이 비율을 조정하여 크기 조절
                         ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                ],
-              ),
+                        itemCount: viewModel.profileState.labelList.length,
+                        itemBuilder: (context, index) {
+                          return SwitchItem(
+                            index: index,
+                            isChecked:
+                                viewModel.profileState.checkboxList[index],
+                            label: viewModel.profileState.labelList[index],
+                            onChanged: (idx, value) async {
+                              if (viewModel.profileState.checkboxList[idx] !=
+                                  value) {
+                                viewModel.toggleGroup(idx: idx, value: value);
+                              }
+                            },
+                          );
+                        },
+                      ),
+                const SizedBox(
+                  height: 20,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+              ],
             )
           ],
         ),

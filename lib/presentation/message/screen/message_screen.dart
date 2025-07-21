@@ -16,7 +16,7 @@ class MessageScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          '푸시발송',
+          'Message',
           style: TextStyles.mediumTextBold,
         ),
         centerTitle: true,
@@ -28,6 +28,9 @@ class MessageScreen extends StatelessWidget {
               ? const CircularProgressIndicator()
               : Column(
                   children: [
+                    const SizedBox(
+                      height: 20,
+                    ),
                     DropdownSearch<String>.multiSelection(
                       items: (f, cs) => viewModel.messageState.userNames,
                       selectedItems: viewModel

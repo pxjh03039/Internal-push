@@ -26,6 +26,13 @@ class PushScreen extends StatelessWidget {
       },
       behavior: HitTestBehavior.opaque,
       child: Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            'Home',
+            style: TextStyles.mediumTextBold,
+          ),
+          centerTitle: true,
+        ),
         body: SafeArea(
             child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30),
@@ -34,13 +41,6 @@ class PushScreen extends StatelessWidget {
             children: [
               const SizedBox(
                 height: 20,
-              ),
-              const Text(
-                'Hello \${uuid}',
-                style: TextStyles.largeTextBold,
-              ),
-              const SizedBox(
-                height: 15,
               ),
               Row(
                 children: [
