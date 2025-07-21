@@ -18,6 +18,7 @@ mixin _$MessageState {
   String get pushTitle;
   String get pushContents;
   List<String> get userNames;
+  List<String> get selectedUsers;
   bool get isLoading;
 
   /// Create a copy of MessageState
@@ -38,18 +39,25 @@ mixin _$MessageState {
             (identical(other.pushContents, pushContents) ||
                 other.pushContents == pushContents) &&
             const DeepCollectionEquality().equals(other.userNames, userNames) &&
+            const DeepCollectionEquality()
+                .equals(other.selectedUsers, selectedUsers) &&
             (identical(other.isLoading, isLoading) ||
                 other.isLoading == isLoading));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, pushTitle, pushContents,
-      const DeepCollectionEquality().hash(userNames), isLoading);
+  int get hashCode => Object.hash(
+      runtimeType,
+      pushTitle,
+      pushContents,
+      const DeepCollectionEquality().hash(userNames),
+      const DeepCollectionEquality().hash(selectedUsers),
+      isLoading);
 
   @override
   String toString() {
-    return 'MessageState(pushTitle: $pushTitle, pushContents: $pushContents, userNames: $userNames, isLoading: $isLoading)';
+    return 'MessageState(pushTitle: $pushTitle, pushContents: $pushContents, userNames: $userNames, selectedUsers: $selectedUsers, isLoading: $isLoading)';
   }
 }
 
@@ -63,6 +71,7 @@ abstract mixin class $MessageStateCopyWith<$Res> {
       {String pushTitle,
       String pushContents,
       List<String> userNames,
+      List<String> selectedUsers,
       bool isLoading});
 }
 
@@ -81,6 +90,7 @@ class _$MessageStateCopyWithImpl<$Res> implements $MessageStateCopyWith<$Res> {
     Object? pushTitle = null,
     Object? pushContents = null,
     Object? userNames = null,
+    Object? selectedUsers = null,
     Object? isLoading = null,
   }) {
     return _then(MessageState(
@@ -95,6 +105,10 @@ class _$MessageStateCopyWithImpl<$Res> implements $MessageStateCopyWith<$Res> {
       userNames: null == userNames
           ? _self.userNames
           : userNames // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      selectedUsers: null == selectedUsers
+          ? _self.selectedUsers
+          : selectedUsers // ignore: cast_nullable_to_non_nullable
               as List<String>,
       isLoading: null == isLoading
           ? _self.isLoading

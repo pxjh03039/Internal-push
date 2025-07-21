@@ -1,8 +1,10 @@
 import 'package:get_it/get_it.dart';
+import 'package:push_test_app/data/clipboard/clipboard_service_impl.dart';
 import 'package:push_test_app/data/repository/message_repository_impl.dart';
 // import 'package:push_test_app/data/repository/mock_push_repository_impl.dart';
 import 'package:push_test_app/data/repository/push_repository_impl.dart';
 import 'package:push_test_app/data/repository/user_repository_impl.dart';
+import 'package:push_test_app/domain/clipboard/clipboard_service.dart';
 import 'package:push_test_app/domain/repository/message_repository.dart';
 import 'package:push_test_app/domain/repository/push_repository.dart';
 import 'package:push_test_app/domain/repository/user_repository.dart';
@@ -20,6 +22,8 @@ void diSetup() {
   getIt.registerSingleton<PushRepository>(PushRepositoryImpl());
   getIt.registerSingleton<UserRepository>(UserRepositoryImpl());
   getIt.registerSingleton<MessageRepository>(MessageRepositoryImpl());
+
+  getIt.registerSingleton<ClipboardService>(ClipboardServiceImpl());
 
   // ViewModel
   getIt.registerFactory<PushViewModel>(

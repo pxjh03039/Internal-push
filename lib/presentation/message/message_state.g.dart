@@ -13,6 +13,10 @@ MessageState _$MessageStateFromJson(Map<String, dynamic> json) => MessageState(
               ?.map((e) => e as String)
               .toList() ??
           const [],
+      selectedUsers: (json['selectedUsers'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
       isLoading: json['isLoading'] as bool? ?? false,
     );
 
@@ -21,5 +25,6 @@ Map<String, dynamic> _$MessageStateToJson(MessageState instance) =>
       'pushTitle': instance.pushTitle,
       'pushContents': instance.pushContents,
       'userNames': instance.userNames,
+      'selectedUsers': instance.selectedUsers,
       'isLoading': instance.isLoading,
     };

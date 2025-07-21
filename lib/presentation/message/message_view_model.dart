@@ -33,6 +33,12 @@ class MessageViewModel with ChangeNotifier {
     }
   }
 
+  void setSelectedUsers(List<String> selectedUsers) {
+    _messageState = _messageState.copyWith(selectedUsers: selectedUsers);
+    debugLog(_messageState.selectedUsers);
+    notifyListeners();
+  }
+
   void setUserNames() async {
     List<String> userNames = await _userRepository.getUserNames();
     _messageState = _messageState.copyWith(userNames: userNames);
@@ -51,7 +57,8 @@ class MessageViewModel with ChangeNotifier {
   }
 
   bool validatePushContents() {
-    return _messageState.pushContents.trim().isEmpty;
+    return _messageState.pushContents.trim().isEmpty ||
+        _messageState.selectedUsers.isEmpty;
   }
 
   Future<void> onClickPushSend() async {
@@ -60,7 +67,7 @@ class MessageViewModel with ChangeNotifier {
     await _messageRepository.pushSendMessage(
         title: "푸시 메시지",
         contents: _messageState.pushContents,
-        ids: _messageState.userNames);
+        ids: _messageState.selectedUsers);
     _messageState = _messageState.copyWith(isLoading: false);
     notifyListeners();
     pushMessageController.clear();

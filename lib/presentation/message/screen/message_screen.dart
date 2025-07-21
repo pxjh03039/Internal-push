@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:push_test_app/core/presentation/components/text_input_filed.dart';
 import 'package:push_test_app/presentation/message/message_view_model.dart';
 import 'package:push_test_app/ui/color_style.dart';
+import 'package:dropdown_search/dropdown_search.dart';
+import 'package:push_test_app/ui/text_styles.dart';
 
 class MessageScreen extends StatelessWidget {
   const MessageScreen({super.key});
@@ -14,6 +16,7 @@ class MessageScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('푸시발송'),
+        centerTitle: true,
       ),
       body: Center(
         child: Padding(
@@ -22,6 +25,45 @@ class MessageScreen extends StatelessWidget {
               ? const CircularProgressIndicator()
               : Column(
                   children: [
+                    DropdownSearch<String>.multiSelection(
+                      items: (f, cs) => viewModel.messageState.userNames,
+                      selectedItems: viewModel
+                          .messageState.selectedUsers, // 초기 선택값 (List<String>)
+                      onChanged: (List<String> selected) {
+                        // 선택된 항목이 변경될 때마다 호출
+                        viewModel.setSelectedUsers(selected);
+                      },
+                      decoratorProps: DropDownDecoratorProps(
+                        decoration: InputDecoration(
+                          hintText: "사용자를 선택해주세요",
+                          hintStyle: TextStyles.smallTextRegular
+                              .copyWith(color: ColorStyle.gray3),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                      ),
+                      dropdownBuilder: (context, selectedItems) {
+                        return Wrap(
+                          spacing: 6.0,
+                          runSpacing: -8.0,
+                          children: selectedItems.map((item) {
+                            return Chip(
+                              backgroundColor: ColorStyle.primary40,
+                              label: Text(
+                                item,
+                                style: TextStyles.smallTextBold,
+                              ),
+                              onDeleted: () {
+                                final updated = List<String>.from(selectedItems)
+                                  ..remove(item);
+                                viewModel.setSelectedUsers(updated);
+                              },
+                            );
+                          }).toList(),
+                        );
+                      },
+                    ),
                     const Spacer(),
                     Row(
                       children: [
@@ -57,7 +99,7 @@ class MessageScreen extends StatelessWidget {
                             decoration: BoxDecoration(
                               color: viewModel.validatePushContents()
                                   ? ColorStyle.primary40
-                                  : ColorStyle.primary80,
+                                  : ColorStyle.primary60,
                               shape: BoxShape.circle,
                             ),
                             child: Align(
