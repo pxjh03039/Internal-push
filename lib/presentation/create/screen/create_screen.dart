@@ -30,7 +30,7 @@ class CreateScreen extends StatelessWidget {
                 initialTimerDuration: viewModel.createState.selectedTime,
                 minuteInterval: 30,
                 onTimerDurationChanged: (Duration value) {
-                  viewModel.updateSelectedTime(value);
+                  viewModel.createSelectedTime(value);
                 },
               ),
             ),
@@ -72,7 +72,7 @@ class CreateScreen extends StatelessWidget {
               options: const ['All', 'User'],
               selectedTarget: viewModel.createState.selectedTarget,
               onChanged: (String value) {
-                viewModel.updateTarget(value);
+                viewModel.createTarget(value);
               },
             ),
             const SizedBox(height: 20),
@@ -87,7 +87,7 @@ class CreateScreen extends StatelessWidget {
                 options: const ['none', 'daily', 'weekly'],
                 selectedTarget: viewModel.createState.selectedRepeat,
                 onChanged: (String value) {
-                  viewModel.updateRepeat(value);
+                  viewModel.createRepeat(value);
                 }),
             const SizedBox(height: 20),
 
@@ -105,7 +105,7 @@ class CreateScreen extends StatelessWidget {
                   child: SmallMultiSelectButtonGroup(
                     options: viewModel.weeklyList,
                     selectedValues: viewModel.createState.selectedDays,
-                    onChanged: viewModel.updateSelectedDays,
+                    onChanged: viewModel.createSelectedDays,
                   ),
                 ),
               ),
@@ -136,7 +136,7 @@ class CreateScreen extends StatelessWidget {
                       initialDate: viewModel.createState.startDate!,
                     );
                     if (picked == null) return;
-                    if (!viewModel.updateStartDate(picked) && context.mounted) {
+                    if (!viewModel.createStartDate(picked) && context.mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text('시작일이 종료일 다음 날로 지정될 수 없습니다.'),
@@ -175,7 +175,7 @@ class CreateScreen extends StatelessWidget {
                         initialDate: viewModel.createState.startDate!,
                       );
                       if (picked == null) return;
-                      if (!viewModel.updateEndDate(picked) && context.mounted) {
+                      if (!viewModel.createEndDate(picked) && context.mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text('시작일이 종료일 다음 날로 지정될 수 없습니다.'),

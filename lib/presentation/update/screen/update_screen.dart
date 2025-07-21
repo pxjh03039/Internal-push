@@ -26,9 +26,10 @@ class UpdateScreen extends StatelessWidget {
             SizedBox(
               height: 200,
               child: CupertinoTimerPicker(
+                key: ValueKey(viewModel.updateState.selectedTime),
                 mode: CupertinoTimerPickerMode.hm,
                 initialTimerDuration: viewModel.updateState.selectedTime,
-                minuteInterval: 5,
+                minuteInterval: 30,
                 onTimerDurationChanged: (Duration value) {
                   viewModel.updateSelectedTime(value);
                 },

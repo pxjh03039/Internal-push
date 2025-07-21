@@ -9,81 +9,66 @@ import 'package:push_test_app/presentation/update/update_state.dart';
 class UpdateViewModel extends ChangeNotifier {
   final PushRepository _pushRepository;
   final String scheduleId;
-  final PushSchedule schedule;
 
-  // Controllers for text fields
   final TextEditingController titleController = TextEditingController();
   final TextEditingController messageController = TextEditingController();
-
-  // Weekday options
   final List<String> weeklyList = ['일', '월', '화', '수', '목', '금', '토'];
-
-  // Internal UI state
-  UpdateState _updateState = UpdateState(
-    title: '',
-    message: '',
-    selectedTime: Duration(
-      hours: DateTime.now().hour,
-      minutes: (DateTime.now().minute ~/ 5) * 5,
-    ),
-    selectedTarget: 'All',
-    selectedRepeat: 'none',
-    selectedDays: const [],
-    startDate: DateTime.now(),
-    endDate: DateTime.now(),
-  );
-  UpdateState get updateState => _updateState;
 
   UpdateViewModel({
     required PushRepository pushRepository,
     required this.scheduleId,
-    required this.schedule,
   }) : _pushRepository = pushRepository {
-    // Listen to controller changes
     titleController.addListener(() {
-      _updateState = _updateState.copyWith(title: titleController.text);
-      notifyListeners();
+      updateTitle(titleController.text);
     });
     messageController.addListener(() {
-      _updateState = _updateState.copyWith(message: messageController.text);
-      notifyListeners();
+      updateMessage(messageController.text);
     });
-    debugLog(schedule);
-    // Load the existing schedule
-    // _loadInitialSchedule();
+    _loadInitialSchedule();
   }
+
+  UpdateState _updateState = const UpdateState();
+  UpdateState get updateState => _updateState;
 
   Future<void> _loadInitialSchedule() async {
     try {
-      final list = await _pushRepository.getPushSchedule(scheduleId);
-      if (list.isEmpty) return;
-      final sched = list.first;
+      final getSchedule = await _pushRepository.getPushSchedule(scheduleId);
+      if (getSchedule.isEmpty) return;
 
-      // parse time string "HH:mm"
-      final parts = sched.scheduleAt.split(':');
+      final loadSchedule = getSchedule.first;
+
+      final parts = loadSchedule.scheduleAt.split(':');
       final hours = int.tryParse(parts[0]) ?? 0;
       final mins = int.tryParse(parts[1]) ?? 0;
 
-      // update state
-      _updateState = UpdateState(
-        title: sched.title,
-        message: sched.message,
+      _updateState = _updateState.copyWith(
+        title: loadSchedule.title,
+        message: loadSchedule.message,
         selectedTime: Duration(hours: hours, minutes: mins),
-        selectedTarget: sched.target,
-        selectedRepeat: sched.repeat,
-        selectedDays: sched.scheduleDays ?? const [],
-        startDate: DateTime.parse(sched.startTime),
-        endDate: DateTime.parse(sched.endTime),
+        selectedTarget: loadSchedule.target,
+        selectedRepeat: loadSchedule.repeat,
+        selectedDays: loadSchedule.scheduleDays ?? <String>[],
+        startDate: DateTime.parse(loadSchedule.startTime),
+        endDate: DateTime.parse(loadSchedule.endTime),
       );
 
-      // set controllers
-      titleController.text = sched.title;
-      messageController.text = sched.message;
+      titleController.text = loadSchedule.title;
+      messageController.text = loadSchedule.message;
 
       notifyListeners();
     } catch (e) {
-      debugLog('Failed to load schedule $scheduleId: $e');
+      debugLog('Failed to load schedule $scheduleId');
     }
+  }
+
+  void updateTitle(String newTitle) {
+    _updateState = _updateState.copyWith(title: newTitle);
+    notifyListeners();
+  }
+
+  void updateMessage(String newMessage) {
+    _updateState = _updateState.copyWith(message: newMessage);
+    notifyListeners();
   }
 
   void updateSelectedTime(Duration newTime) {
@@ -172,11 +157,12 @@ class UpdateViewModel extends ChangeNotifier {
       message: _updateState.message,
       platform: "AOS",
       userId: "Test001",
-      scheduleAt: _formatDuration(_updateState.selectedTime),
+      scheduleAt:
+          _formatTime(_updateState.selectedTime).toString().substring(0, 5),
       target: _updateState.selectedTarget,
-      startTime: _formatDate(_updateState.startDate!),
+      startTime: _updateState.startDate!.toIso8601String().substring(0, 10),
       repeat: _updateState.selectedRepeat,
-      endTime: _formatDate(_updateState.endDate!),
+      endTime: _updateState.endDate!.toIso8601String().substring(0, 10),
       isSent: false,
       scheduleDays: _updateState.selectedDays,
     );
@@ -185,13 +171,13 @@ class UpdateViewModel extends ChangeNotifier {
     await _pushRepository.updatePushSchedule(data);
   }
 
-  String _formatDuration(Duration d) {
+  String _formatTime(Duration d) {
     final h = d.inHours.toString().padLeft(2, '0');
     final m = (d.inMinutes % 60).toString().padLeft(2, '0');
+    debugLog(h);
+    debugLog(m);
     return '$h:$m';
   }
-
-  String _formatDate(DateTime dt) => dt.toIso8601String().substring(0, 10);
 
   @override
   void dispose() {

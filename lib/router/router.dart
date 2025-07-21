@@ -39,7 +39,7 @@ final router = GoRouter(
       path: '/update',
       builder: (context, state) {
         final param = state.extra as PushSchedule;
-        return UpdateRoot(scheduleId: param.id, schedule: param);
+        return UpdateRoot(scheduleId: param.id);
       },
     ),
     StatefulShellRoute.indexedStack(

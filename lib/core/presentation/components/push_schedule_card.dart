@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:push_test_app/domain/model/push_schedule.dart';
 import 'package:push_test_app/ui/color_style.dart';
 import 'package:push_test_app/ui/text_styles.dart';
@@ -90,7 +89,7 @@ class PushScheduleCard extends StatelessWidget {
               iconSize: 22,
               padding: EdgeInsets.zero,
               icon: Image.asset(
-                'image/delete.png',
+                'assets/image/delete.png',
                 width: 18,
                 height: 18,
               ),
@@ -106,7 +105,7 @@ class PushScheduleCard extends StatelessWidget {
               iconSize: 22,
               padding: EdgeInsets.zero,
               icon: Image.asset(
-                'image/update.png',
+                'assets/image/update.png',
                 width: 18,
                 height: 18,
               ),

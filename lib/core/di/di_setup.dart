@@ -3,7 +3,6 @@ import 'package:push_test_app/data/repository/message_repository_impl.dart';
 // import 'package:push_test_app/data/repository/mock_push_repository_impl.dart';
 import 'package:push_test_app/data/repository/push_repository_impl.dart';
 import 'package:push_test_app/data/repository/user_repository_impl.dart';
-import 'package:push_test_app/domain/model/push_schedule.dart';
 import 'package:push_test_app/domain/repository/message_repository.dart';
 import 'package:push_test_app/domain/repository/push_repository.dart';
 import 'package:push_test_app/domain/repository/user_repository.dart';
@@ -29,11 +28,10 @@ void diSetup() {
   getIt.registerFactory<CreateViewModel>(
       () => CreateViewModel(pushRepository: getIt()));
 
-  getIt.registerFactoryParam<UpdateViewModel, String, PushSchedule>(
-    (scheduleId, schedule) => UpdateViewModel(
+  getIt.registerFactoryParam<UpdateViewModel, String, void>(
+    (scheduleId, _) => UpdateViewModel(
       pushRepository: getIt(),
       scheduleId: scheduleId,
-      schedule: schedule,
     ),
   );
 

@@ -11,6 +11,20 @@ class CreateViewModel extends ChangeNotifier {
   final TextEditingController messageController = TextEditingController();
   final List<String> weeklyList = ['일', '월', '화', '수', '목', '금', '토'];
 
+  CreateViewModel({
+    required PushRepository pushRepository,
+  }) : _pushRepository = pushRepository {
+    titleController.text = _createState.title;
+    messageController.text = _createState.message;
+
+    titleController.addListener(() {
+      createTitle(titleController.text);
+    });
+    messageController.addListener(() {
+      createMessage(messageController.text);
+    });
+  }
+
   CreateState _createState = CreateState(
     selectedTime: Duration(
       hours: DateTime.now().hour,
@@ -24,40 +38,28 @@ class CreateViewModel extends ChangeNotifier {
 
   CreateState get createState => _createState;
 
-  CreateViewModel({required PushRepository pushRepository})
-      : _pushRepository = pushRepository {
-    titleController.text = _createState.title;
-    messageController.text = _createState.message;
-
-    titleController.addListener(() {
-      updateTitle(titleController.text);
-    });
-    messageController.addListener(() {
-      updateMessage(messageController.text);
-    });
-  }
-
-  void updateSelectedTime(Duration newTime) {
+  void createSelectedTime(Duration newTime) {
     _createState = _createState.copyWith(selectedTime: newTime);
+    debugLog(_createState.selectedTime);
     notifyListeners();
   }
 
-  void updateTitle(String newTitle) {
+  void createTitle(String newTitle) {
     _createState = _createState.copyWith(title: newTitle);
     notifyListeners();
   }
 
-  void updateMessage(String newMessage) {
+  void createMessage(String newMessage) {
     _createState = _createState.copyWith(message: newMessage);
     notifyListeners();
   }
 
-  void updateTarget(String newTarget) {
+  void createTarget(String newTarget) {
     _createState = _createState.copyWith(selectedTarget: newTarget);
     notifyListeners();
   }
 
-  void updateRepeat(String newRepeat) {
+  void createRepeat(String newRepeat) {
     DateTime newStart = _createState.startDate!;
     DateTime newEnd = _createState.endDate!;
     List<String> newDays = _createState.selectedDays;
@@ -82,7 +84,7 @@ class CreateViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  bool updateStartDate(DateTime newStart) {
+  bool createStartDate(DateTime newStart) {
     if (_createState.selectedRepeat != 'none' &&
         newStart.isAfter(_createState.endDate!)) {
       return false;
@@ -96,7 +98,7 @@ class CreateViewModel extends ChangeNotifier {
     return true;
   }
 
-  bool updateEndDate(DateTime newEnd) {
+  bool createEndDate(DateTime newEnd) {
     if (newEnd.isBefore(_createState.startDate!)) {
       return false;
     }
@@ -105,7 +107,7 @@ class CreateViewModel extends ChangeNotifier {
     return true;
   }
 
-  void updateSelectedDays(String day) {
+  void createSelectedDays(String day) {
     final days = List<String>.from(_createState.selectedDays);
     if (days.contains(day)) {
       days.remove(day);
@@ -124,12 +126,13 @@ class CreateViewModel extends ChangeNotifier {
     }
 
     final data = PushSchedule(
-      id: "",
+      id: "", // 서버에서 기본키 생성
       title: _createState.title,
       message: _createState.message,
       platform: "AOS",
       userId: "Test001",
-      scheduleAt: _createState.selectedTime.toString().substring(0, 5),
+      scheduleAt:
+          _formatTime(_createState.selectedTime).toString().substring(0, 5),
       target: _createState.selectedTarget,
       startTime: _createState.startDate!.toIso8601String().substring(0, 10),
       repeat: _createState.selectedRepeat,
@@ -141,14 +144,18 @@ class CreateViewModel extends ChangeNotifier {
     await _pushRepository.createPushSchedule(data);
   }
 
+  String _formatTime(Duration d) {
+    final h = d.inHours.toString().padLeft(2, '0');
+    final m = (d.inMinutes % 60).toString().padLeft(2, '0');
+    debugLog(h);
+    debugLog(m);
+    return '$h:$m';
+  }
+
   @override
   void dispose() {
     titleController.dispose();
     messageController.dispose();
     super.dispose();
   }
-
-  // warning 삭제
-  // 푸시 생성후 리스트 새로고침(뒤로가기)
-  //
 }
