@@ -78,7 +78,7 @@ class MainScreen extends StatelessWidget {
                         Icons.not_interested_outlined,
                         size: 24,
                       ),
-                onPressed: () => onDestinationSelected(2),
+                onPressed: null,
               ),
 
               IconButton(

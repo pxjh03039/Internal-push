@@ -12,17 +12,17 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final viewModel = context.watch<ProfileViewModel>();
     return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'Profile',
+          style: TextStyles.mediumTextBold,
+        ),
+        centerTitle: true,
+      ),
       body: SafeArea(
           child: Align(
         child: Column(
           children: [
-            const SizedBox(
-              height: 10,
-            ),
-            const Text(
-              'Profile',
-              style: TextStyles.mediumTextBold,
-            ),
             const SizedBox(
               height: 12,
             ),

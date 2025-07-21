@@ -15,7 +15,10 @@ class MessageScreen extends StatelessWidget {
     final FocusNode focusNode = FocusNode();
     return Scaffold(
       appBar: AppBar(
-        title: const Text('푸시발송'),
+        title: const Text(
+          '푸시발송',
+          style: TextStyles.mediumTextBold,
+        ),
         centerTitle: true,
       ),
       body: Center(
