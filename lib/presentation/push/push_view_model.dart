@@ -28,11 +28,10 @@ class PushViewModel with ChangeNotifier {
     controller.addListener(() {
       _onTextChanged(controller.text);
     });
-    // _loadPushList();
 
     _schedulesSub = _pushRepository.listenPushSchedules().listen((schedules) {
       _allSchedules = schedules;
-      _applyFilters();
+      _loadSchedules();
     });
   }
 
@@ -56,43 +55,40 @@ class PushViewModel with ChangeNotifier {
         }(),
     };
     _eventController.add(action);
-    notifyListeners();
-  }
-
-  void _loadPushList() async {
-    controller.text = pushState.query;
-
-    _pushState = pushState.copyWith(
-        pushSchedule: await _pushRepository.getPushSchedules());
-    // var data = await _pushRepository.getPushSchedule("push002");
-    debugLog(_pushState.toString());
-
-    notifyListeners();
+    _loadSchedules();
   }
 
   void _onTextChanged(String text) {
     _pushState = pushState.copyWith(query: text);
-    _applyFilters();
+    _loadSchedules();
   }
 
   Future<void> deletePushSchedule(String id) async {
     await _pushRepository.deletePushSchedule(id);
-    _loadPushList();
+    _loadSchedules();
   }
 
-  void _applyFilters() {
-    final searchText = _pushState.query.trim().toLowerCase();
-    final filteredScheduleList = searchText.isEmpty
-        ? _allSchedules
-        : _allSchedules.where((schedule) {
-            final searchTitle = schedule.title.toLowerCase();
-            final searchContents = schedule.message.toLowerCase();
-            return searchTitle.contains(searchText) ||
-                searchContents.contains(searchText);
-          }).toList();
+  void _loadSchedules() {
+    final filterSchedules = _allSchedules.where((schedule) {
+      return _matchesSearch(schedule) && _matchesRepeat(schedule);
+    }).toList();
 
-    _pushState = _pushState.copyWith(pushSchedule: filteredScheduleList);
+    _pushState = _pushState.copyWith(pushSchedule: filterSchedules);
     notifyListeners();
+  }
+
+  bool _matchesSearch(PushSchedule schedule) {
+    final searchText = _pushState.query.trim().toLowerCase();
+    if (searchText.isEmpty) return true;
+    final title = schedule.title.toLowerCase();
+    final message = schedule.message.toLowerCase();
+    return title.contains(searchText) || message.contains(searchText);
+  }
+
+  bool _matchesRepeat(PushSchedule schedule) {
+    final repeatFilter = _pushState.selectRepeat;
+    if (repeatFilter == 'All') return true;
+    return schedule.repeat == repeatFilter;
   }
 
   @override

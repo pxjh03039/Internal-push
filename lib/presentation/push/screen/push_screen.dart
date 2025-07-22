@@ -54,22 +54,23 @@ class PushScreen extends StatelessWidget {
                       },
                     ),
                   ),
-                  const SizedBox(width: 20),
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: ColorStyle.primary100),
-                    child: const Icon(Icons.tune, color: ColorStyle.white),
-                  ),
+                  // 검색 필터 버튼 임시 제거
+                  // const SizedBox(width: 20),
+                  // Container(
+                  //   width: 40,
+                  //   height: 40,
+                  //   decoration: BoxDecoration(
+                  //       borderRadius: BorderRadius.circular(10),
+                  //       color: ColorStyle.primary100),
+                  //   child: const Icon(Icons.tune, color: ColorStyle.white),
+                  // ),
                 ],
               ),
               const SizedBox(
                 height: 15,
               ),
               SmallTextButtonGroup(
-                options: const ['none', 'daily', 'weekly'],
+                options: const ['All', 'none', 'daily', 'weekly'],
                 selectedTarget: viewModel.pushState.selectRepeat,
                 onChanged: (value) {
                   viewModel.onAction(
