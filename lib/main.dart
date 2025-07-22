@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:push_test_app/core/di/di_setup.dart';
 import 'package:push_test_app/router/router.dart';
@@ -20,6 +21,7 @@ Future<void> main() async {
   log("FCM Token: $fcmToken");
   // 포그라운드 메시지 수신 리스너 등록
   setupFCMListener();
+  await requestNotificationPermissions();
   runApp(const MyApp());
 }
 
@@ -30,6 +32,29 @@ void setupFCMListener() {
       showCustomPopup(notification.title ?? "알림", notification.body ?? "내용 없음");
     }
   });
+}
+
+Future<void> requestNotificationPermissions() async {
+  try {
+    await FirebaseMessaging.instance.requestPermission(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+  } on PlatformException catch (e) {
+    if (e.code == 'permission-blocked' ||
+        e.message?.contains('permission-blocked') == true) {
+      // 권한이 차단되어 팝업이 안 뜸
+      // 사용자에게 설정 화면 안내
+      openAppSettings();
+    } else {
+      // 다른 에러 처리
+      debugLog('FirebaseMessaging permission error: $e');
+    }
+  } catch (e) {
+    // 그 외 에러 처리
+    debugLog('Unknown error on permission request: $e');
+  }
 }
 
 class MyApp extends StatefulWidget {
@@ -43,21 +68,13 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    requestNotificationPermissions();
-  }
 
-  Future<void> requestNotificationPermissions() async {
-    // Firebase 메시지 권한 요청
-    await FirebaseMessaging.instance.requestPermission(
-      badge: true,
-      alert: true,
-      sound: true,
-    );
-
-    // 추가로 permission_handler 패키지 사용 시:
-    if (await Permission.notification.isDenied) {
-      await Permission.notification.request();
-    }
+    // 렌더링 완료 후 요청
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (context.mounted) {
+        await requestNotificationPermissions();
+      }
+    });
   }
 
   @override
