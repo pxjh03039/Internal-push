@@ -40,7 +40,9 @@ class PushScheduleCard extends StatelessWidget {
                     const Icon(Icons.calendar_month, size: 16),
                     const SizedBox(width: 4),
                     Text(
-                        "${pushSchedule.startTime.substring(5)} ~ ${pushSchedule.endTime.substring(5)}",
+                        pushSchedule.repeat != 'none'
+                            ? '${pushSchedule.startTime.substring(5)} ~ ${pushSchedule.endTime.substring(5)}'
+                            : pushSchedule.startTime.substring(5),
                         style: TextStyles.smallTextRegular),
                   ],
                 ),
