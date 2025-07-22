@@ -4,4 +4,9 @@ abstract interface class MessageRepository {
     required String contents,
     required List<String> ids,
   });
+  Future<void> pushSendGroupMessage({
+    required String title,
+    required String contents,
+    required List<String> groups,
+  });
 }

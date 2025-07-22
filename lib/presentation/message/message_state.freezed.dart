@@ -20,6 +20,8 @@ mixin _$MessageState {
   List<String> get userNames;
   List<String> get selectedUsers;
   bool get isLoading;
+  List<String> get userGroup;
+  List<String> get selectedGroups;
 
   /// Create a copy of MessageState
   /// with the given fields replaced by the non-null parameter values.
@@ -42,7 +44,10 @@ mixin _$MessageState {
             const DeepCollectionEquality()
                 .equals(other.selectedUsers, selectedUsers) &&
             (identical(other.isLoading, isLoading) ||
-                other.isLoading == isLoading));
+                other.isLoading == isLoading) &&
+            const DeepCollectionEquality().equals(other.userGroup, userGroup) &&
+            const DeepCollectionEquality()
+                .equals(other.selectedGroups, selectedGroups));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -53,11 +58,13 @@ mixin _$MessageState {
       pushContents,
       const DeepCollectionEquality().hash(userNames),
       const DeepCollectionEquality().hash(selectedUsers),
-      isLoading);
+      isLoading,
+      const DeepCollectionEquality().hash(userGroup),
+      const DeepCollectionEquality().hash(selectedGroups));
 
   @override
   String toString() {
-    return 'MessageState(pushTitle: $pushTitle, pushContents: $pushContents, userNames: $userNames, selectedUsers: $selectedUsers, isLoading: $isLoading)';
+    return 'MessageState(pushTitle: $pushTitle, pushContents: $pushContents, userNames: $userNames, selectedUsers: $selectedUsers, isLoading: $isLoading, userGroup: $userGroup, selectedGroups: $selectedGroups)';
   }
 }
 
@@ -72,6 +79,8 @@ abstract mixin class $MessageStateCopyWith<$Res> {
       String pushContents,
       List<String> userNames,
       List<String> selectedUsers,
+      List<String> userGroup,
+      List<String> selectedGroups,
       bool isLoading});
 }
 
@@ -91,6 +100,8 @@ class _$MessageStateCopyWithImpl<$Res> implements $MessageStateCopyWith<$Res> {
     Object? pushContents = null,
     Object? userNames = null,
     Object? selectedUsers = null,
+    Object? userGroup = null,
+    Object? selectedGroups = null,
     Object? isLoading = null,
   }) {
     return _then(MessageState(
@@ -109,6 +120,14 @@ class _$MessageStateCopyWithImpl<$Res> implements $MessageStateCopyWith<$Res> {
       selectedUsers: null == selectedUsers
           ? _self.selectedUsers
           : selectedUsers // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      userGroup: null == userGroup
+          ? _self.userGroup
+          : userGroup // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      selectedGroups: null == selectedGroups
+          ? _self.selectedGroups
+          : selectedGroups // ignore: cast_nullable_to_non_nullable
               as List<String>,
       isLoading: null == isLoading
           ? _self.isLoading

@@ -29,13 +29,37 @@ class MessageViewModel with ChangeNotifier {
       pushMessageController.addListener(() {
         updateMessage(pushMessageController.text);
       });
-      setUserNames();
+      initData();
     }
+  }
+
+  void initData() {
+    _messageState = _messageState.copyWith(isLoading: true);
+    notifyListeners();
+    setUserNames();
+    getUserGroup();
+    _messageState = _messageState.copyWith(isLoading: false);
+    notifyListeners();
+  }
+
+  Future<void> getUserGroup() async {
+    final group = await _userRepository.getUserGroup();
+    _messageState = _messageState.copyWith(
+      userGroup: group,
+    );
+
+    notifyListeners();
   }
 
   void setSelectedUsers(List<String> selectedUsers) {
     _messageState = _messageState.copyWith(selectedUsers: selectedUsers);
     debugLog(_messageState.selectedUsers);
+    notifyListeners();
+  }
+
+  void setSelectedGroups(List<String> selectedGroups) {
+    _messageState = _messageState.copyWith(selectedGroups: selectedGroups);
+    debugLog(_messageState.selectedGroups);
     notifyListeners();
   }
 
@@ -57,17 +81,27 @@ class MessageViewModel with ChangeNotifier {
   }
 
   bool validatePushContents() {
-    return _messageState.pushContents.trim().isEmpty ||
-        _messageState.selectedUsers.isEmpty;
+    return (_messageState.pushContents.trim().isNotEmpty &&
+            _messageState.selectedUsers.isNotEmpty) ||
+        (_messageState.pushContents.trim().isNotEmpty &&
+            _messageState.selectedGroups.isNotEmpty);
   }
 
   Future<void> onClickPushSend() async {
     _messageState = _messageState.copyWith(isLoading: true);
     notifyListeners();
-    await _messageRepository.pushSendMessage(
-        title: "푸시 메시지",
-        contents: _messageState.pushContents,
-        ids: _messageState.selectedUsers);
+    if (_messageState.selectedUsers.isNotEmpty) {
+      await _messageRepository.pushSendMessage(
+          title: "유저 푸시 메시지",
+          contents: _messageState.pushContents,
+          ids: _messageState.selectedUsers);
+    }
+    if (_messageState.selectedGroups.isNotEmpty) {
+      await _messageRepository.pushSendGroupMessage(
+          title: "구룹 푸시 메시지",
+          contents: _messageState.pushContents,
+          groups: _messageState.selectedGroups);
+    }
     _messageState = _messageState.copyWith(isLoading: false);
     notifyListeners();
     pushMessageController.clear();

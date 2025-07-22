@@ -12,11 +12,15 @@ class MessageState with _$MessageState {
   final List<String> userNames;
   final List<String> selectedUsers;
   final bool isLoading;
+  final List<String> userGroup;
+  final List<String> selectedGroups;
   const MessageState({
     this.pushTitle = "",
     this.pushContents = "",
     this.userNames = const [],
     this.selectedUsers = const [],
+    this.userGroup = const [],
+    this.selectedGroups = const [],
     this.isLoading = false,
   });
 

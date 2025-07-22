@@ -70,6 +70,46 @@ class MessageScreen extends StatelessWidget {
                         );
                       },
                     ),
+                    const SizedBox(height: 10),
+                    DropdownSearch<String>.multiSelection(
+                      items: (f, cs) => viewModel.messageState.userGroup,
+                      selectedItems: viewModel
+                          .messageState.selectedGroups, // 초기 선택값 (List<String>)
+                      onChanged: (List<String> selected) {
+                        // 선택된 항목이 변경될 때마다 호출
+                        viewModel.setSelectedGroups(selected);
+                      },
+                      decoratorProps: DropDownDecoratorProps(
+                        decoration: InputDecoration(
+                          hintText: "구룹을 선택해주세요",
+                          hintStyle: TextStyles.smallTextRegular
+                              .copyWith(color: ColorStyle.gray3),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                      ),
+                      dropdownBuilder: (context, selectedItems) {
+                        return Wrap(
+                          spacing: 6.0,
+                          runSpacing: -8.0,
+                          children: selectedItems.map((item) {
+                            return Chip(
+                              backgroundColor: ColorStyle.primary40,
+                              label: Text(
+                                item,
+                                style: TextStyles.smallTextBold,
+                              ),
+                              onDeleted: () {
+                                final updated = List<String>.from(selectedItems)
+                                  ..remove(item);
+                                viewModel.setSelectedGroups(updated);
+                              },
+                            );
+                          }).toList(),
+                        );
+                      },
+                    ),
                     const Spacer(),
                     Row(
                       children: [
@@ -80,6 +120,8 @@ class MessageScreen extends StatelessWidget {
                             controller: viewModel.pushMessageController,
                             onSubmitted: (_) {
                               if (viewModel.validatePushContents()) {
+                                viewModel.onClickPushSend();
+                              } else {
                                 // ScaffoldMessenger.of(context)
                                 //     .clearSnackBars(); // 기존 스낵바 제거
                                 // ScaffoldMessenger.of(context)
@@ -89,8 +131,6 @@ class MessageScreen extends StatelessWidget {
                                 //   backgroundColor: ColorStyle.primary100,
                                 //   duration: Duration(seconds: 1),
                                 // ));
-                              } else {
-                                viewModel.onClickPushSend();
                               }
                               focusNode.requestFocus();
                             },
@@ -104,8 +144,8 @@ class MessageScreen extends StatelessWidget {
                             height: 50,
                             decoration: BoxDecoration(
                               color: viewModel.validatePushContents()
-                                  ? ColorStyle.primary40
-                                  : ColorStyle.primary60,
+                                  ? ColorStyle.primary60
+                                  : ColorStyle.primary40,
                               shape: BoxShape.circle,
                             ),
                             child: Align(
@@ -113,6 +153,8 @@ class MessageScreen extends StatelessWidget {
                               child: IconButton(
                                 onPressed: () {
                                   if (viewModel.validatePushContents()) {
+                                    viewModel.onClickPushSend();
+                                  } else {
                                     // ScaffoldMessenger.of(context)
                                     //     .clearSnackBars(); // 기존 스낵바 제거
                                     // ScaffoldMessenger.of(context)
@@ -122,8 +164,6 @@ class MessageScreen extends StatelessWidget {
                                     //   backgroundColor: ColorStyle.primary100,
                                     //   duration: Duration(seconds: 1),
                                     // ));
-                                  } else {
-                                    viewModel.onClickPushSend();
                                   }
                                 },
                                 icon: const Icon(

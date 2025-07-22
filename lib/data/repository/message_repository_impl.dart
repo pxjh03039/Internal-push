@@ -13,4 +13,13 @@ class MessageRepositoryImpl implements MessageRepository {
     await dio.post('https://sendpush-iadldraf3a-uc.a.run.app/broadcast/users',
         data: {'title': title, 'body': contents, 'ids': ids});
   }
+
+  @override
+  Future<void> pushSendGroupMessage(
+      {required String title,
+      required String contents,
+      required List<String> groups}) async {
+    await dio.post('https://sendpush-iadldraf3a-uc.a.run.app/broadcast/group',
+        data: {'title': title, 'body': contents, 'groups': groups});
+  }
 }

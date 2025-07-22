@@ -16,6 +16,7 @@ class ProfileViewModel with ChangeNotifier {
   // 모든 초기 데이터 로딩을 통합하는 단일 메서드
   Future<void> _initializeProfileData() async {
     try {
+      await getuserInfo();
       await getUserGroup();
       final userId = await getDeviceId();
       final id = await loadRegisterInfo('id');
@@ -67,11 +68,19 @@ class ProfileViewModel with ChangeNotifier {
   Future<void> getUserGroup() async {
     final group = await _userRepository.getUserGroup();
     final selecedUserGroups = await loadRegisterInfo('userInfo');
-    final Map<String, bool> userGroupsMap = (selecedUserGroups['groups'] is Map)
-        ? Map<String, bool>.from(selecedUserGroups['groups'])
-        : <String, bool>{};
+
+    final Map<String, bool> userGroupsMap = {};
+    final rawGroups = selecedUserGroups?['groups'];
+
+    if (rawGroups is Map) {
+      rawGroups.forEach((key, value) {
+        userGroupsMap[key.toString()] = value == true;
+      });
+    }
+
     final List<bool> checkboxList = group.map((groupName) {
-      return userGroupsMap[groupName] ?? false;
+      final trimmedName = groupName.trim();
+      return userGroupsMap[trimmedName] ?? false;
     }).toList();
 
     debugLog(checkboxList.toString());
