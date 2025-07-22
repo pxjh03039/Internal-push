@@ -16,6 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$IntroState {
   bool get isRegistered;
+  bool get isLoading;
   String get titleController;
   List<String> get getUserGroup;
 
@@ -33,6 +34,8 @@ mixin _$IntroState {
             other is IntroState &&
             (identical(other.isRegistered, isRegistered) ||
                 other.isRegistered == isRegistered) &&
+            (identical(other.isLoading, isLoading) ||
+                other.isLoading == isLoading) &&
             (identical(other.titleController, titleController) ||
                 other.titleController == titleController) &&
             const DeepCollectionEquality()
@@ -41,12 +44,12 @@ mixin _$IntroState {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, isRegistered, titleController,
-      const DeepCollectionEquality().hash(getUserGroup));
+  int get hashCode => Object.hash(runtimeType, isRegistered, isLoading,
+      titleController, const DeepCollectionEquality().hash(getUserGroup));
 
   @override
   String toString() {
-    return 'IntroState(isRegistered: $isRegistered, titleController: $titleController, getUserGroup: $getUserGroup)';
+    return 'IntroState(isRegistered: $isRegistered, isLoading: $isLoading, titleController: $titleController, getUserGroup: $getUserGroup)';
   }
 }
 
@@ -57,7 +60,10 @@ abstract mixin class $IntroStateCopyWith<$Res> {
       _$IntroStateCopyWithImpl;
   @useResult
   $Res call(
-      {bool isRegistered, String titleController, List<String> getUserGroup});
+      {bool isLoading,
+      bool isRegistered,
+      String titleController,
+      List<String> getUserGroup});
 }
 
 /// @nodoc
@@ -72,11 +78,16 @@ class _$IntroStateCopyWithImpl<$Res> implements $IntroStateCopyWith<$Res> {
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? isLoading = null,
     Object? isRegistered = null,
     Object? titleController = null,
     Object? getUserGroup = null,
   }) {
     return _then(IntroState(
+      isLoading: null == isLoading
+          ? _self.isLoading
+          : isLoading // ignore: cast_nullable_to_non_nullable
+              as bool,
       isRegistered: null == isRegistered
           ? _self.isRegistered
           : isRegistered // ignore: cast_nullable_to_non_nullable

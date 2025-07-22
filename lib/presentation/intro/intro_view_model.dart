@@ -12,7 +12,7 @@ class IntroViewModel with ChangeNotifier {
     isUserTokenRegistered();
   }
 
-  IntroState _introState = const IntroState();
+  IntroState _introState = const IntroState(isLoading: true);
   IntroState get introState => _introState;
 
   void setInputNickname(String nickname) {
@@ -24,13 +24,6 @@ class IntroViewModel with ChangeNotifier {
     _introState = _introState.copyWith(
         getUserGroup: await _userRepository.getUserGroup());
     notifyListeners();
-  }
-
-  Future<void> getuserInfo() async {
-    final id = await loadRegisterInfo('id');
-    final userId = await getDeviceId();
-    final userInfo = await _userRepository.getRegisterInfo(userId, id);
-    await saveRegisterInfo(key: 'userInfo', value: userInfo);
   }
 
   Future<void> registerOrUpdateUser() async {
@@ -47,9 +40,12 @@ class IntroViewModel with ChangeNotifier {
     String? id = await _userRepository.updateToken(token, userId);
 
     // 상태 갱신 (예: 토큰 등록 상태 다시 체크)
+    _introState = _introState.copyWith(isLoading: true);
+    notifyListeners();
     var isRegistered = await _userRepository.isUserTokenRegistered(userId);
 
-    _introState = _introState.copyWith(isRegistered: isRegistered);
+    _introState =
+        _introState.copyWith(isRegistered: isRegistered, isLoading: false);
     notifyListeners();
 
     debugLog('updateUserToken 완료, isRegistered: $isRegistered');
@@ -67,10 +63,13 @@ class IntroViewModel with ChangeNotifier {
 
   Future<void> isUserTokenRegistered() async {
     String userId = await getDeviceId();
+    _introState = _introState.copyWith(isLoading: true);
+    notifyListeners();
     var isRegistered = await _userRepository.isUserTokenRegistered(userId);
     _introState = _introState.copyWith(
       isRegistered: isRegistered,
     );
+    _introState = _introState.copyWith(isLoading: false);
     notifyListeners();
   }
 

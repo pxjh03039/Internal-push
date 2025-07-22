@@ -234,4 +234,40 @@ class UserRepositoryImpl implements UserRepository {
     final userNames = data.keys.map((key) => key.toString()).toList();
     return userNames;
   }
+
+  @override
+  Future<void> deleteUser(String id, String userId) async {
+    try {
+      final userTokensRef = db.ref("userTokens/$userId");
+      final userInfoRef = db.ref("userInfos/$id");
+
+      // 1. userTokens에서 userId 삭제
+      await userTokensRef.remove();
+      debugLog("🧹 userTokens/$userId 삭제 완료");
+
+      // 2. userInfos에서 해당 사용자 정보 가져오기
+      final userSnapshot = await userInfoRef.get();
+      if (!userSnapshot.exists) {
+        debugLog("⚠️ userInfos/$id 없음, 종료");
+        return;
+      }
+
+      // 3. registerIds에서 userId 제거
+      await userInfoRef.child("registerIds/$userId").remove();
+      debugLog("🧹 userInfos/$id/registerIds/$userId 삭제 완료");
+
+      // 4. registerIds가 비었는지 확인하고 전체 삭제
+      final registerIdsSnapshot = await userInfoRef.child("registerIds").get();
+      final isEmpty = !registerIdsSnapshot.exists ||
+          (registerIdsSnapshot.value as Map).isEmpty;
+
+      if (isEmpty) {
+        await userInfoRef.remove();
+        debugLog("🧹 userInfos/$id 전체 삭제 (registerIds 없음)");
+      }
+    } catch (e) {
+      debugLog("❌ deleteUser 실패: $e");
+      rethrow;
+    }
+  }
 }

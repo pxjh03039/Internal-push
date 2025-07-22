@@ -18,12 +18,14 @@ class IntroScreen extends StatelessWidget {
 
     Future<void> handleRegister() async {
       final success = await viewModel.tryRegister();
+
+      debugLog('success $success');
       if (!context.mounted) return;
 
       if (success) {
         saveRegisterInfo(key: 'id', value: viewModel.titleController.text);
-        viewModel.getuserInfo();
-        context.push(RoutePath.push);
+        debugLog('success 진행됨 $success');
+        context.go(RoutePath.profile);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("닉네임이 비었습니다.")),

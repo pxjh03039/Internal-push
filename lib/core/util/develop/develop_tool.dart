@@ -114,18 +114,6 @@ void showCustomPopup(String title, String body) {
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
-            IconButton(
-                onPressed: () {
-                  _clipboard.copyText(body);
-                  ScaffoldMessenger.of(context).clearSnackBars();
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                    content: Text('저장 되었습니다.'),
-                    behavior: SnackBarBehavior.floating,
-                    backgroundColor: ColorStyle.primary100,
-                    duration: Duration(seconds: 1),
-                  ));
-                },
-                icon: const Icon(Icons.copy_rounded))
           ],
         ),
       ),

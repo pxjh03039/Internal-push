@@ -8,9 +8,11 @@ part 'intro_state.g.dart';
 @JsonSerializable()
 class IntroState with _$IntroState {
   final bool isRegistered;
+  final bool isLoading;
   final String titleController;
   final List<String> getUserGroup;
   const IntroState({
+    this.isLoading = false,
     this.isRegistered = false,
     this.titleController = '',
     this.getUserGroup = const [],

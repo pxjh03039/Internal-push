@@ -7,6 +7,7 @@ part of 'intro_state.dart';
 // **************************************************************************
 
 IntroState _$IntroStateFromJson(Map<String, dynamic> json) => IntroState(
+      isLoading: json['isLoading'] as bool? ?? false,
       isRegistered: json['isRegistered'] as bool? ?? false,
       titleController: json['titleController'] as String? ?? '',
       getUserGroup: (json['getUserGroup'] as List<dynamic>?)
@@ -18,6 +19,7 @@ IntroState _$IntroStateFromJson(Map<String, dynamic> json) => IntroState(
 Map<String, dynamic> _$IntroStateToJson(IntroState instance) =>
     <String, dynamic>{
       'isRegistered': instance.isRegistered,
+      'isLoading': instance.isLoading,
       'titleController': instance.titleController,
       'getUserGroup': instance.getUserGroup,
     };

@@ -105,4 +105,10 @@ class ProfileViewModel with ChangeNotifier {
       {required String id, required String group, required bool value}) async {
     _userRepository.updateGroup(id, group, value);
   }
+
+  Future<void> onDeleteUser() async {
+    final id = await loadRegisterInfo('id');
+    final userId = await getDeviceId();
+    _userRepository.deleteUser(id, userId);
+  }
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:push_test_app/core/presentation/components/switch_item.dart';
+import 'package:push_test_app/presentation/intro/screen/intro_root.dart';
 import 'package:push_test_app/presentation/profile/profile_view_model.dart';
 import 'package:push_test_app/ui/color_style.dart';
 import 'package:push_test_app/ui/text_styles.dart';
@@ -18,6 +20,57 @@ class ProfileScreen extends StatelessWidget {
           style: TextStyles.mediumTextBold,
         ),
         centerTitle: true,
+        actions: [
+          TextButton(
+            onPressed: () {
+              // 버튼 클릭 시 동작
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text(
+                      '회원탈퇴',
+                      style: TextStyles.mediumTextBold,
+                    ),
+                    content: const Text(
+                      '정말로 회원탈퇴하시겠습니까?',
+                      style: TextStyles.smallTextRegular,
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () async {
+                          await viewModel.onDeleteUser();
+                          if (context.mounted) {
+                            Navigator.of(context).pop(); // 다이얼로그 닫기
+                            context.go('/intro');
+                          }
+                        },
+                        child: const Text(
+                          "확인",
+                          style: TextStyles.mediumTextRegular,
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop(); // 다이얼로그 닫기
+                        },
+                        child: const Text(
+                          "취소",
+                          style: TextStyles.mediumTextRegular,
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+            child: Text(
+              '탈퇴',
+              style: TextStyles.mediumTextRegular
+                  .copyWith(color: ColorStyle.error),
+            ),
+          ),
+        ],
       ),
       body: SafeArea(
           child: Padding(
