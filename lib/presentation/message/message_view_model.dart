@@ -1,12 +1,17 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:push_test_app/core/util/develop/develop_tool.dart';
+import 'package:push_test_app/domain/model/receive_push_data.dart';
 import 'package:push_test_app/domain/repository/message_repository.dart';
 import 'package:push_test_app/domain/repository/user_repository.dart';
+import 'package:push_test_app/domain/send_push/receive_push_save_service.dart';
 import 'package:push_test_app/presentation/message/message_state.dart';
 
 class MessageViewModel with ChangeNotifier {
   final MessageRepository _messageRepository;
   final UserRepository _userRepository;
+  final ReceivePushSaveService _receivePushSaveService;
 
   MessageState _messageState = const MessageState();
   MessageState get messageState => _messageState;
@@ -14,11 +19,15 @@ class MessageViewModel with ChangeNotifier {
   final TextEditingController pushTitleController = TextEditingController();
   final TextEditingController pushMessageController = TextEditingController();
 
-  MessageViewModel(
-      {required MessageRepository messageRepository,
-      required UserRepository userRepository})
-      : _messageRepository = messageRepository,
-        _userRepository = userRepository {
+  StreamSubscription<List<ReceivePushData>>? _pushSubscription;
+
+  MessageViewModel({
+    required MessageRepository messageRepository,
+    required UserRepository userRepository,
+    required ReceivePushSaveService receivePushSaveService,
+  })  : _messageRepository = messageRepository,
+        _userRepository = userRepository,
+        _receivePushSaveService = receivePushSaveService {
     {
       pushTitleController.text = _messageState.pushTitle;
       pushMessageController.text = _messageState.pushContents;
@@ -38,8 +47,20 @@ class MessageViewModel with ChangeNotifier {
     notifyListeners();
     setUserNames();
     getUserGroup();
+    _subscribeToPushMessages();
     _messageState = _messageState.copyWith(isLoading: false);
     notifyListeners();
+  }
+
+  void _subscribeToPushMessages() {
+    _pushSubscription =
+        _receivePushSaveService.messageStream.listen((messages) {
+      // 메시지 리스트가 바뀔 때마다 상태에 반영
+      // 예를 들어, MessageState에 새로운 필드를 추가해서 저장하거나 UI에 반영
+      _messageState = _messageState.copyWith(receivedPushMessages: messages);
+      notifyListeners();
+      debugLog("푸시 메시지 수신: 총 ${messages.length}건");
+    });
   }
 
   Future<void> getUserGroup() async {
@@ -105,5 +126,13 @@ class MessageViewModel with ChangeNotifier {
     _messageState = _messageState.copyWith(isLoading: false);
     notifyListeners();
     pushMessageController.clear();
+  }
+
+  @override
+  void dispose() {
+    _pushSubscription?.cancel();
+    pushTitleController.dispose();
+    pushMessageController.dispose();
+    super.dispose();
   }
 }

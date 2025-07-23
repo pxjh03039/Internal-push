@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:push_test_app/core/presentation/components/text_input_filed.dart';
+import 'package:push_test_app/domain/model/receive_push_data.dart';
 import 'package:push_test_app/presentation/message/message_view_model.dart';
 import 'package:push_test_app/ui/color_style.dart';
 import 'package:dropdown_search/dropdown_search.dart';
@@ -109,6 +110,22 @@ class MessageScreen extends StatelessWidget {
                           }).toList(),
                         );
                       },
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Column(
+                      children: viewModel.messageState.receivedPushMessages
+                          .map((ReceivePushData e) => Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(e.receivedAt.toString()),
+                                  Text(e.title!),
+                                  Text(e.body!),
+                                ],
+                              ))
+                          .toList(),
                     ),
                     const Spacer(),
                     Row(

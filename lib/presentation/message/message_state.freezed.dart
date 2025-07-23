@@ -22,6 +22,7 @@ mixin _$MessageState {
   bool get isLoading;
   List<String> get userGroup;
   List<String> get selectedGroups;
+  List<ReceivePushData> get receivedPushMessages;
 
   /// Create a copy of MessageState
   /// with the given fields replaced by the non-null parameter values.
@@ -47,7 +48,9 @@ mixin _$MessageState {
                 other.isLoading == isLoading) &&
             const DeepCollectionEquality().equals(other.userGroup, userGroup) &&
             const DeepCollectionEquality()
-                .equals(other.selectedGroups, selectedGroups));
+                .equals(other.selectedGroups, selectedGroups) &&
+            const DeepCollectionEquality()
+                .equals(other.receivedPushMessages, receivedPushMessages));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -60,11 +63,12 @@ mixin _$MessageState {
       const DeepCollectionEquality().hash(selectedUsers),
       isLoading,
       const DeepCollectionEquality().hash(userGroup),
-      const DeepCollectionEquality().hash(selectedGroups));
+      const DeepCollectionEquality().hash(selectedGroups),
+      const DeepCollectionEquality().hash(receivedPushMessages));
 
   @override
   String toString() {
-    return 'MessageState(pushTitle: $pushTitle, pushContents: $pushContents, userNames: $userNames, selectedUsers: $selectedUsers, isLoading: $isLoading, userGroup: $userGroup, selectedGroups: $selectedGroups)';
+    return 'MessageState(pushTitle: $pushTitle, pushContents: $pushContents, userNames: $userNames, selectedUsers: $selectedUsers, isLoading: $isLoading, userGroup: $userGroup, selectedGroups: $selectedGroups, receivedPushMessages: $receivedPushMessages)';
   }
 }
 
@@ -75,7 +79,8 @@ abstract mixin class $MessageStateCopyWith<$Res> {
       _$MessageStateCopyWithImpl;
   @useResult
   $Res call(
-      {String pushTitle,
+      {List<ReceivePushData> receivedPushMessages,
+      String pushTitle,
       String pushContents,
       List<String> userNames,
       List<String> selectedUsers,
@@ -96,6 +101,7 @@ class _$MessageStateCopyWithImpl<$Res> implements $MessageStateCopyWith<$Res> {
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? receivedPushMessages = null,
     Object? pushTitle = null,
     Object? pushContents = null,
     Object? userNames = null,
@@ -105,6 +111,10 @@ class _$MessageStateCopyWithImpl<$Res> implements $MessageStateCopyWith<$Res> {
     Object? isLoading = null,
   }) {
     return _then(MessageState(
+      receivedPushMessages: null == receivedPushMessages
+          ? _self.receivedPushMessages
+          : receivedPushMessages // ignore: cast_nullable_to_non_nullable
+              as List<ReceivePushData>,
       pushTitle: null == pushTitle
           ? _self.pushTitle
           : pushTitle // ignore: cast_nullable_to_non_nullable

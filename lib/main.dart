@@ -6,6 +6,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:push_test_app/core/di/di_setup.dart';
+import 'package:push_test_app/domain/model/receive_push_data.dart';
+import 'package:push_test_app/domain/send_push/receive_push_save_service.dart';
 import 'package:push_test_app/router/router.dart';
 import 'firebase_options.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -30,6 +32,50 @@ void setupFCMListener() {
     final notification = message.notification;
     if (notification != null) {
       showCustomPopup(notification.title ?? "알림", notification.body ?? "내용 없음");
+    }
+  });
+
+  final receivePush = getIt<ReceivePushSaveService>();
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    final pushMessage = ReceivePushData.fromJson({
+      'messageId': message.messageId,
+      'title': message.notification?.title,
+      'body': message.notification?.body,
+      'data': message.data,
+      'receivedAt': DateTime.now().toIso8601String(),
+    });
+
+    debugLog('pushMessage ${pushMessage.toString()}');
+    receivePush.addPush(pushMessage);
+  });
+
+  FirebaseMessaging.onMessageOpenedApp.listen((message) {
+    final pushMessage = ReceivePushData.fromJson({
+      'messageId': message.messageId,
+      'title': message.notification?.title,
+      'body': message.notification?.body,
+      'data': message.data,
+      'receivedAt': DateTime.now().toIso8601String(),
+    });
+
+    debugLog('pushMessage ${pushMessage.toString()}');
+    receivePush.addPush(pushMessage);
+  });
+
+  FirebaseMessaging.instance.getInitialMessage().then((RemoteMessage? message) {
+    if (message != null) {
+      final pushMessage = ReceivePushData.fromJson({
+        'messageId': message.messageId,
+        'title': message.notification?.title,
+        'body': message.notification?.body,
+        'data': message.data,
+        'receivedAt': DateTime.now().toIso8601String(),
+      });
+
+      debugLog('pushMessage ${pushMessage.toString()}');
+      receivePush.addPush(pushMessage);
+    } else {
+      debugLog('초기 메시지 없음');
     }
   });
 }

@@ -41,14 +41,11 @@ class IntroViewModel with ChangeNotifier {
 
     // 상태 갱신 (예: 토큰 등록 상태 다시 체크)
     _introState = _introState.copyWith(isLoading: true);
-    notifyListeners();
-    var isRegistered = await _userRepository.isUserTokenRegistered(userId);
+    // notifyListeners();
 
-    _introState =
-        _introState.copyWith(isRegistered: isRegistered, isLoading: false);
-    notifyListeners();
+    _introState = _introState.copyWith(isLoading: false);
+    // notifyListeners();
 
-    debugLog('updateUserToken 완료, isRegistered: $isRegistered');
     return id;
   }
 

@@ -4,10 +4,12 @@ import 'package:push_test_app/data/repository/message_repository_impl.dart';
 // import 'package:push_test_app/data/repository/mock_push_repository_impl.dart';
 import 'package:push_test_app/data/repository/push_repository_impl.dart';
 import 'package:push_test_app/data/repository/user_repository_impl.dart';
+import 'package:push_test_app/data/send_push/receive_push_save_service_impl.dart';
 import 'package:push_test_app/domain/clipboard/clipboard_service.dart';
 import 'package:push_test_app/domain/repository/message_repository.dart';
 import 'package:push_test_app/domain/repository/push_repository.dart';
 import 'package:push_test_app/domain/repository/user_repository.dart';
+import 'package:push_test_app/domain/send_push/receive_push_save_service.dart';
 import 'package:push_test_app/presentation/create/create_view_model.dart';
 import 'package:push_test_app/presentation/intro/intro_view_model.dart';
 import 'package:push_test_app/presentation/message/message_view_model.dart';
@@ -24,6 +26,9 @@ void diSetup() {
   getIt.registerSingleton<MessageRepository>(MessageRepositoryImpl());
 
   getIt.registerSingleton<ClipboardService>(ClipboardServiceImpl());
+
+  getIt.registerLazySingleton<ReceivePushSaveService>(
+      () => ReceivePushSaveServiceImpl());
 
   // ViewModel
   getIt.registerFactory<PushViewModel>(
@@ -45,6 +50,8 @@ void diSetup() {
   getIt.registerFactory<ProfileViewModel>(
       () => ProfileViewModel(userRepository: getIt()));
 
-  getIt.registerFactory<MessageViewModel>(() =>
-      MessageViewModel(messageRepository: getIt(), userRepository: getIt()));
+  getIt.registerFactory<MessageViewModel>(() => MessageViewModel(
+      messageRepository: getIt(),
+      userRepository: getIt(),
+      receivePushSaveService: getIt()));
 }

@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:push_test_app/domain/model/receive_push_data.dart';
 
 part 'message_state.freezed.dart';
 part 'message_state.g.dart';
@@ -14,7 +15,9 @@ class MessageState with _$MessageState {
   final bool isLoading;
   final List<String> userGroup;
   final List<String> selectedGroups;
+  final List<ReceivePushData> receivedPushMessages;
   const MessageState({
+    this.receivedPushMessages = const [],
     this.pushTitle = "",
     this.pushContents = "",
     this.userNames = const [],

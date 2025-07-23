@@ -7,6 +7,10 @@ part of 'message_state.dart';
 // **************************************************************************
 
 MessageState _$MessageStateFromJson(Map<String, dynamic> json) => MessageState(
+      receivedPushMessages: (json['receivedPushMessages'] as List<dynamic>?)
+              ?.map((e) => ReceivePushData.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
       pushTitle: json['pushTitle'] as String? ?? "",
       pushContents: json['pushContents'] as String? ?? "",
       userNames: (json['userNames'] as List<dynamic>?)
@@ -37,4 +41,5 @@ Map<String, dynamic> _$MessageStateToJson(MessageState instance) =>
       'isLoading': instance.isLoading,
       'userGroup': instance.userGroup,
       'selectedGroups': instance.selectedGroups,
+      'receivedPushMessages': instance.receivedPushMessages,
     };

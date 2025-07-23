@@ -9,7 +9,6 @@ import 'package:push_test_app/domain/model/push_schedule.dart';
 import 'package:push_test_app/presentation/push/push_action.dart';
 import 'package:push_test_app/presentation/push/push_view_model.dart';
 import 'package:push_test_app/router/route_path.dart';
-import 'package:push_test_app/ui/color_style.dart';
 import 'package:push_test_app/ui/text_styles.dart';
 
 class PushScreen extends StatelessWidget {
