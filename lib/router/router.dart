@@ -1,8 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:push_test_app/core/di/di_setup.dart';
+import 'package:push_test_app/core/util/develop/develop_tool.dart';
 import 'package:push_test_app/domain/model/push_schedule.dart';
+import 'package:push_test_app/domain/model/receive_push_data.dart';
+import 'package:push_test_app/domain/send_push/receive_push_save_service.dart';
 import 'package:push_test_app/presentation/create/screen/create_root.dart';
 import 'package:push_test_app/presentation/message/screen/message_root.dart';
 import 'package:push_test_app/presentation/update/screen/update_root.dart';
@@ -71,9 +76,45 @@ final router = GoRouter(
             GoRoute(
               path: RoutePath.message,
               builder: (context, state) {
+                debugLog('1??듫어왕?');
+                final rawParams = state.uri.queryParameters;
+
+                final id = Uri.decodeComponent(rawParams['id'] ?? '');
+                final title = Uri.decodeComponent(rawParams['title'] ?? '');
+                final body = Uri.decodeComponent(rawParams['body'] ?? '');
+                final dataRaw = rawParams['data'];
+
+                Map<String, dynamic> data = {};
+                if (dataRaw != null && dataRaw.isNotEmpty) {
+                  try {
+                    data = jsonDecode(Uri.decodeComponent(dataRaw));
+                  } catch (e) {
+                    debugPrint('🔥 Failed to decode data param: $e');
+                  }
+                }
+
+                final receivePush = getIt<ReceivePushSaveService>();
+
+                final pushMessage = ReceivePushData.fromJson({
+                  'messageId': id,
+                  'title': title,
+                  'body': body,
+                  'data': data, // 🔥 전체 쿼리 파라미터를 data로 보관
+                  'receivedAt': DateTime.now().toIso8601String(),
+                });
+
+                /// 이 방식은 프레임 렌더링이 끝난 후 실행됨
+                // WidgetsBinding.instance.addPostFrameCallback((_) async {
+                debugLog('pushMessage $pushMessage');
+                if (id.isNotEmpty) {
+                  debugLog('pushMessage2 $pushMessage');
+                  receivePush.addPush(pushMessage);
+                }
+                // });
+
                 return const MessageRoot();
               },
-            ),
+            )
           ],
         ),
         StatefulShellBranch(

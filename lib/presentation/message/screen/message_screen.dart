@@ -114,18 +114,24 @@ class MessageScreen extends StatelessWidget {
                     const SizedBox(
                       height: 20,
                     ),
-                    Column(
-                      children: viewModel.messageState.receivedPushMessages
-                          .map((ReceivePushData e) => Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(e.receivedAt.toString()),
-                                  Text(e.title!),
-                                  Text(e.body!),
-                                ],
-                              ))
-                          .toList(),
+                    Expanded(
+                      child: ListView(
+                        children: viewModel.messageState.receivedPushMessages
+                            .map((ReceivePushData e) => Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 4),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(e.receivedAt.toString()),
+                                      Text(e.title ?? ''),
+                                      Text(e.body ?? ''),
+                                    ],
+                                  ),
+                                ))
+                            .toList(),
+                      ),
                     ),
                     const Spacer(),
                     Row(

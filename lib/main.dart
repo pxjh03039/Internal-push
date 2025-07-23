@@ -29,18 +29,17 @@ Future<void> main() async {
 
 void setupFCMListener() {
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    final notification = message.notification;
-    if (notification != null) {
-      showCustomPopup(notification.title ?? "알림", notification.body ?? "내용 없음");
-    }
+    final pushData = message.data;
+    showCustomPopup(pushData['title'] ?? "알림",
+        pushData['body'] ?? "내용 없음"); // data 필드에서 title과 body 추출
   });
 
   final receivePush = getIt<ReceivePushSaveService>();
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
     final pushMessage = ReceivePushData.fromJson({
       'messageId': message.messageId,
-      'title': message.notification?.title,
-      'body': message.notification?.body,
+      'title': message.data['title'],
+      'body': message.data['body'],
       'data': message.data,
       'receivedAt': DateTime.now().toIso8601String(),
     });
@@ -52,8 +51,8 @@ void setupFCMListener() {
   FirebaseMessaging.onMessageOpenedApp.listen((message) {
     final pushMessage = ReceivePushData.fromJson({
       'messageId': message.messageId,
-      'title': message.notification?.title,
-      'body': message.notification?.body,
+      'title': message.data['title'],
+      'body': message.data['body'],
       'data': message.data,
       'receivedAt': DateTime.now().toIso8601String(),
     });
@@ -66,8 +65,8 @@ void setupFCMListener() {
     if (message != null) {
       final pushMessage = ReceivePushData.fromJson({
         'messageId': message.messageId,
-        'title': message.notification?.title,
-        'body': message.notification?.body,
+        'title': message.data['title'],
+        'body': message.data['body'],
         'data': message.data,
         'receivedAt': DateTime.now().toIso8601String(),
       });
