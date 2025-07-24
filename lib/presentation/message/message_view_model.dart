@@ -44,12 +44,25 @@ class MessageViewModel with ChangeNotifier {
 
   void initData() {
     _messageState = _messageState.copyWith(isLoading: true);
+    setUserInfo();
     notifyListeners();
     setUserNames();
     getUserGroup();
     _subscribeToPushMessages();
+    _getPushMessageHistory();
     _messageState = _messageState.copyWith(isLoading: false);
     notifyListeners();
+  }
+
+  void setUserInfo() async {
+    String id = await loadRegisterInfo('id');
+    _messageState = _messageState.copyWith(id: id);
+  }
+
+  void _getPushMessageHistory() async {
+    String id = await loadRegisterInfo('id');
+    final res = await _messageRepository.getPushMessageHistory(id: id);
+    _messageState = _messageState.copyWith(getPushMessages: res);
   }
 
   void _subscribeToPushMessages() {

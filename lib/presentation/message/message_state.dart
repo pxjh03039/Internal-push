@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:push_test_app/domain/model/push_message.dart';
 import 'package:push_test_app/domain/model/receive_push_data.dart';
 
 part 'message_state.freezed.dart';
@@ -8,6 +9,7 @@ part 'message_state.g.dart';
 @freezed
 @JsonSerializable()
 class MessageState with _$MessageState {
+  final String id;
   final String pushTitle;
   final String pushContents;
   final List<String> userNames;
@@ -16,7 +18,10 @@ class MessageState with _$MessageState {
   final List<String> userGroup;
   final List<String> selectedGroups;
   final List<ReceivePushData> receivedPushMessages;
+  final List<PushMessage> getPushMessages;
   const MessageState({
+    this.id = "",
+    this.getPushMessages = const [],
     this.receivedPushMessages = const [],
     this.pushTitle = "",
     this.pushContents = "",

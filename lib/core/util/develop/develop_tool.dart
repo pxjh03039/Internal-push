@@ -12,6 +12,18 @@ import 'package:push_test_app/ui/color_style.dart';
 
 final _clipboard = ClipboardServiceImpl();
 
+String formatToMMDD(int timestamp) {
+  final date = DateTime.fromMillisecondsSinceEpoch(timestamp, isUtc: true)
+      .toLocal(); // 한국 시간 변환
+
+  // final month = date.month.toString().padLeft(2, '0');
+  // final day = date.day.toString().padLeft(2, '0');
+  final hour = date.hour.toString().padLeft(2, '0');
+  final minute = date.minute.toString().padLeft(2, '0');
+
+  return '$hour:$minute';
+}
+
 Future<void> saveRegisterInfo(
     {required String key, required dynamic value}) async {
   var box = await Hive.openBox('registerBox');

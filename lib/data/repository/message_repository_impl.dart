@@ -1,3 +1,4 @@
+import 'package:push_test_app/domain/model/push_message.dart';
 import 'package:push_test_app/domain/repository/message_repository.dart';
 
 import 'package:dio/dio.dart';
@@ -23,5 +24,16 @@ class MessageRepositoryImpl implements MessageRepository {
       required List<String> groups}) async {
     await dio.post('https://sendpush-iadldraf3a-uc.a.run.app/broadcast/group',
         data: {'title': title, 'body': contents, 'groups': groups, 'id': id});
+  }
+
+  @override
+  Future<List<PushMessage>> getPushMessageHistory({required String id}) async {
+    final response = await dio.post(
+        'https://sendpush-iadldraf3a-uc.a.run.app/push/history',
+        data: {'id': id});
+    final List<dynamic> responseList = response.data as List<dynamic>;
+    return responseList
+        .map((e) => PushMessage.fromJson(e as Map<String, dynamic>))
+        .toList();
   }
 }

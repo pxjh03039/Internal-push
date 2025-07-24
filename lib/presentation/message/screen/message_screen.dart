@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:push_test_app/core/presentation/components/text_input_filed.dart';
-import 'package:push_test_app/domain/model/receive_push_data.dart';
+import 'package:push_test_app/core/util/develop/develop_tool.dart';
+import 'package:push_test_app/domain/model/push_message.dart';
 import 'package:push_test_app/presentation/message/message_view_model.dart';
 import 'package:push_test_app/ui/color_style.dart';
 import 'package:dropdown_search/dropdown_search.dart';
@@ -112,28 +113,73 @@ class MessageScreen extends StatelessWidget {
                       },
                     ),
                     const SizedBox(
-                      height: 20,
+                      height: 10,
                     ),
                     Expanded(
-                      child: ListView(
-                        children: viewModel.messageState.receivedPushMessages
-                            .map((ReceivePushData e) => Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 4),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(e.receivedAt.toString()),
-                                      Text(e.title ?? ''),
-                                      Text(e.body ?? ''),
-                                    ],
-                                  ),
-                                ))
-                            .toList(),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              height: 450,
+                              child: ListView(
+                                reverse: true,
+                                children: viewModel.messageState.getPushMessages
+                                    .map((PushMessage e) {
+                                  bool isSent =
+                                      e.senderId == viewModel.messageState.id;
+                                  return Align(
+                                    alignment: isSent
+                                        ? Alignment.centerRight
+                                        : Alignment.centerLeft,
+                                    child: Container(
+                                      constraints: const BoxConstraints(
+                                        minWidth: 100,
+                                        maxWidth: 250, // 최대 너비 지정
+                                      ),
+                                      padding: const EdgeInsets.all(8),
+                                      margin: const EdgeInsets.symmetric(
+                                          vertical: 4),
+                                      decoration: BoxDecoration(
+                                        color: isSent
+                                            ? ColorStyle.primary60
+                                            : Colors.grey[200],
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment: isSent
+                                            ? CrossAxisAlignment.end
+                                            : CrossAxisAlignment.start,
+                                        children: [
+                                          if (!isSent)
+                                            Text(
+                                              e.senderId,
+                                              style: TextStyles.smallerTextBold,
+                                            ),
+                                          Text(
+                                            e.body,
+                                            style: TextStyles.smallTextBold
+                                                .copyWith(color: Colors.black),
+                                          ),
+                                          const SizedBox(height: 4),
+                                          Text(
+                                            formatToMMDD(e.timestamp),
+                                            style:
+                                                TextStyles.smallerTextRegular,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                     ),
-                    const Spacer(),
+                    const SizedBox(
+                      height: 10,
+                    ),
                     Row(
                       children: [
                         Expanded(

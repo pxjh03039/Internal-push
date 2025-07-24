@@ -15,6 +15,7 @@ T _$identity<T>(T value) => value;
 
 /// @nodoc
 mixin _$MessageState {
+  String get id;
   String get pushTitle;
   String get pushContents;
   List<String> get userNames;
@@ -23,6 +24,7 @@ mixin _$MessageState {
   List<String> get userGroup;
   List<String> get selectedGroups;
   List<ReceivePushData> get receivedPushMessages;
+  List<PushMessage> get getPushMessages;
 
   /// Create a copy of MessageState
   /// with the given fields replaced by the non-null parameter values.
@@ -37,6 +39,7 @@ mixin _$MessageState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is MessageState &&
+            (identical(other.id, id) || other.id == id) &&
             (identical(other.pushTitle, pushTitle) ||
                 other.pushTitle == pushTitle) &&
             (identical(other.pushContents, pushContents) ||
@@ -50,13 +53,16 @@ mixin _$MessageState {
             const DeepCollectionEquality()
                 .equals(other.selectedGroups, selectedGroups) &&
             const DeepCollectionEquality()
-                .equals(other.receivedPushMessages, receivedPushMessages));
+                .equals(other.receivedPushMessages, receivedPushMessages) &&
+            const DeepCollectionEquality()
+                .equals(other.getPushMessages, getPushMessages));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType,
+      id,
       pushTitle,
       pushContents,
       const DeepCollectionEquality().hash(userNames),
@@ -64,11 +70,12 @@ mixin _$MessageState {
       isLoading,
       const DeepCollectionEquality().hash(userGroup),
       const DeepCollectionEquality().hash(selectedGroups),
-      const DeepCollectionEquality().hash(receivedPushMessages));
+      const DeepCollectionEquality().hash(receivedPushMessages),
+      const DeepCollectionEquality().hash(getPushMessages));
 
   @override
   String toString() {
-    return 'MessageState(pushTitle: $pushTitle, pushContents: $pushContents, userNames: $userNames, selectedUsers: $selectedUsers, isLoading: $isLoading, userGroup: $userGroup, selectedGroups: $selectedGroups, receivedPushMessages: $receivedPushMessages)';
+    return 'MessageState(id: $id, pushTitle: $pushTitle, pushContents: $pushContents, userNames: $userNames, selectedUsers: $selectedUsers, isLoading: $isLoading, userGroup: $userGroup, selectedGroups: $selectedGroups, receivedPushMessages: $receivedPushMessages, getPushMessages: $getPushMessages)';
   }
 }
 
@@ -79,7 +86,9 @@ abstract mixin class $MessageStateCopyWith<$Res> {
       _$MessageStateCopyWithImpl;
   @useResult
   $Res call(
-      {List<ReceivePushData> receivedPushMessages,
+      {String id,
+      List<PushMessage> getPushMessages,
+      List<ReceivePushData> receivedPushMessages,
       String pushTitle,
       String pushContents,
       List<String> userNames,
@@ -101,6 +110,8 @@ class _$MessageStateCopyWithImpl<$Res> implements $MessageStateCopyWith<$Res> {
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = null,
+    Object? getPushMessages = null,
     Object? receivedPushMessages = null,
     Object? pushTitle = null,
     Object? pushContents = null,
@@ -111,6 +122,14 @@ class _$MessageStateCopyWithImpl<$Res> implements $MessageStateCopyWith<$Res> {
     Object? isLoading = null,
   }) {
     return _then(MessageState(
+      id: null == id
+          ? _self.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      getPushMessages: null == getPushMessages
+          ? _self.getPushMessages
+          : getPushMessages // ignore: cast_nullable_to_non_nullable
+              as List<PushMessage>,
       receivedPushMessages: null == receivedPushMessages
           ? _self.receivedPushMessages
           : receivedPushMessages // ignore: cast_nullable_to_non_nullable
