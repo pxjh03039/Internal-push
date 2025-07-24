@@ -150,13 +150,13 @@ class UpdateViewModel extends ChangeNotifier {
     if (_updateState.title.isEmpty || _updateState.message.isEmpty) {
       throw Exception('제목과 메시지를 입력해주세요');
     }
-
+    String userId = await getDeviceId();
     final data = PushSchedule(
       id: scheduleId,
       title: _updateState.title,
       message: _updateState.message,
       platform: "AOS",
-      userId: "Test001",
+      userId: userId,
       scheduleAt:
           _formatTime(_updateState.selectedTime).toString().substring(0, 5),
       target: _updateState.selectedTarget,

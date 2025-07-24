@@ -125,12 +125,14 @@ class CreateViewModel extends ChangeNotifier {
       throw Exception();
     }
 
+    String userId = await getDeviceId();
+
     final data = PushSchedule(
       id: "", // 서버에서 기본키 생성
       title: _createState.title,
       message: _createState.message,
       platform: "AOS",
-      userId: "Test001",
+      userId: userId,
       scheduleAt:
           _formatTime(_createState.selectedTime).toString().substring(0, 5),
       target: _createState.selectedTarget,
