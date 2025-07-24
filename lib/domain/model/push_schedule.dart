@@ -19,9 +19,11 @@ class PushSchedule with _$PushSchedule {
   final String repeat;
   final bool isSent;
   final List<String>? scheduleDays;
+  final String idName;
 
   const PushSchedule({
     required this.id,
+    required this.idName,
     required this.title,
     required this.message,
     required this.platform,

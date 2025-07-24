@@ -8,7 +8,7 @@ part of 'push_state.dart';
 
 PushState _$PushStateFromJson(Map<String, dynamic> json) => PushState(
       query: json['query'] as String? ?? '',
-      selectRepeat: json['selectRepeat'] as String? ?? 'none',
+      selectRepeat: json['selectRepeat'] as String? ?? 'All',
       pushSchedule: (json['pushSchedule'] as List<dynamic>?)
               ?.map((e) => PushSchedule.fromJson(e as Map<String, dynamic>))
               .toList() ??

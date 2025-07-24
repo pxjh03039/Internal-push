@@ -8,6 +8,7 @@ part of 'push_schedule.dart';
 
 PushSchedule _$PushScheduleFromJson(Map<String, dynamic> json) => PushSchedule(
       id: json['id'] as String,
+      idName: json['idName'] as String,
       title: json['title'] as String,
       message: json['message'] as String,
       platform: json['platform'] as String,
@@ -37,4 +38,5 @@ Map<String, dynamic> _$PushScheduleToJson(PushSchedule instance) =>
       'repeat': instance.repeat,
       'isSent': instance.isSent,
       'scheduleDays': instance.scheduleDays,
+      'idName': instance.idName,
     };

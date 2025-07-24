@@ -27,6 +27,7 @@ mixin _$PushSchedule {
   String get repeat;
   bool get isSent;
   List<String>? get scheduleDays;
+  String get idName;
 
   /// Create a copy of PushSchedule
   /// with the given fields replaced by the non-null parameter values.
@@ -56,7 +57,8 @@ mixin _$PushSchedule {
             (identical(other.repeat, repeat) || other.repeat == repeat) &&
             (identical(other.isSent, isSent) || other.isSent == isSent) &&
             const DeepCollectionEquality()
-                .equals(other.scheduleDays, scheduleDays));
+                .equals(other.scheduleDays, scheduleDays) &&
+            (identical(other.idName, idName) || other.idName == idName));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -74,11 +76,12 @@ mixin _$PushSchedule {
       endTime,
       repeat,
       isSent,
-      const DeepCollectionEquality().hash(scheduleDays));
+      const DeepCollectionEquality().hash(scheduleDays),
+      idName);
 
   @override
   String toString() {
-    return 'PushSchedule(id: $id, title: $title, message: $message, platform: $platform, userId: $userId, target: $target, scheduleAt: $scheduleAt, startTime: $startTime, endTime: $endTime, repeat: $repeat, isSent: $isSent, scheduleDays: $scheduleDays)';
+    return 'PushSchedule(id: $id, title: $title, message: $message, platform: $platform, userId: $userId, target: $target, scheduleAt: $scheduleAt, startTime: $startTime, endTime: $endTime, repeat: $repeat, isSent: $isSent, scheduleDays: $scheduleDays, idName: $idName)';
   }
 }
 
@@ -90,6 +93,7 @@ abstract mixin class $PushScheduleCopyWith<$Res> {
   @useResult
   $Res call(
       {String id,
+      String idName,
       String title,
       String message,
       String platform,
@@ -116,6 +120,7 @@ class _$PushScheduleCopyWithImpl<$Res> implements $PushScheduleCopyWith<$Res> {
   @override
   $Res call({
     Object? id = null,
+    Object? idName = null,
     Object? title = null,
     Object? message = null,
     Object? platform = null,
@@ -132,6 +137,10 @@ class _$PushScheduleCopyWithImpl<$Res> implements $PushScheduleCopyWith<$Res> {
       id: null == id
           ? _self.id
           : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      idName: null == idName
+          ? _self.idName
+          : idName // ignore: cast_nullable_to_non_nullable
               as String,
       title: null == title
           ? _self.title

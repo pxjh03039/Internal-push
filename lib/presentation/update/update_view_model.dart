@@ -151,8 +151,11 @@ class UpdateViewModel extends ChangeNotifier {
       throw Exception('제목과 메시지를 입력해주세요');
     }
     String userId = await getDeviceId();
+    String idName = await loadRegisterInfo('id');
+
     final data = PushSchedule(
       id: scheduleId,
+      idName: idName,
       title: _updateState.title,
       message: _updateState.message,
       platform: "AOS",
