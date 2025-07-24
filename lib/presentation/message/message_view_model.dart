@@ -109,18 +109,21 @@ class MessageViewModel with ChangeNotifier {
   }
 
   Future<void> onClickPushSend() async {
+    String userId = await getDeviceId();
     _messageState = _messageState.copyWith(isLoading: true);
     notifyListeners();
     if (_messageState.selectedUsers.isNotEmpty) {
       await _messageRepository.pushSendMessage(
           title: "유저 푸시 메시지",
           contents: _messageState.pushContents,
-          ids: _messageState.selectedUsers);
+          ids: _messageState.selectedUsers,
+          userId: userId);
     }
     if (_messageState.selectedGroups.isNotEmpty) {
       await _messageRepository.pushSendGroupMessage(
           title: "구룹 푸시 메시지",
           contents: _messageState.pushContents,
+          userId: userId,
           groups: _messageState.selectedGroups);
     }
     _messageState = _messageState.copyWith(isLoading: false);
