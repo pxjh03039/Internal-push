@@ -19,6 +19,8 @@ class MessageViewModel with ChangeNotifier {
   final TextEditingController pushTitleController = TextEditingController();
   final TextEditingController pushMessageController = TextEditingController();
 
+  final ScrollController scrollController = ScrollController();
+
   StreamSubscription<List<ReceivePushData>>? _pushSubscription;
 
   MessageViewModel({
@@ -54,6 +56,15 @@ class MessageViewModel with ChangeNotifier {
     notifyListeners();
   }
 
+  void scrollToBottom() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // 널 체크 및 hasClients 확인 후 스크롤
+      if (scrollController.hasClients) {
+        scrollController.jumpTo(scrollController.position.minScrollExtent);
+      }
+    });
+  }
+
   void setUserInfo() async {
     String id = await loadRegisterInfo('id');
     _messageState = _messageState.copyWith(id: id);
@@ -62,17 +73,17 @@ class MessageViewModel with ChangeNotifier {
   void _getPushMessageHistory() async {
     String id = await loadRegisterInfo('id');
     final res = await _messageRepository.getPushMessageHistory(id: id);
+    debugLog('push 확인');
+    debugLog(res);
     _messageState = _messageState.copyWith(getPushMessages: res);
+    notifyListeners();
+    scrollToBottom();
   }
 
   void _subscribeToPushMessages() {
     _pushSubscription =
         _receivePushSaveService.messageStream.listen((messages) {
-      // 메시지 리스트가 바뀔 때마다 상태에 반영
-      // 예를 들어, MessageState에 새로운 필드를 추가해서 저장하거나 UI에 반영
-      _messageState = _messageState.copyWith(receivedPushMessages: messages);
-      notifyListeners();
-      debugLog("푸시 메시지 수신: 총 ${messages.length}건");
+      _getPushMessageHistory();
     });
   }
 
@@ -141,6 +152,7 @@ class MessageViewModel with ChangeNotifier {
           groups: _messageState.selectedGroups);
     }
     _messageState = _messageState.copyWith(isLoading: false);
+    _getPushMessageHistory();
     notifyListeners();
     pushMessageController.clear();
   }

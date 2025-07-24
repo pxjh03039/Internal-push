@@ -14,7 +14,7 @@ class MessageScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<MessageViewModel>();
-    final FocusNode focusNode = FocusNode();
+    // final FocusNode focusNode = FocusNode();
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -201,7 +201,7 @@ class MessageScreen extends StatelessWidget {
                                 //   duration: Duration(seconds: 1),
                                 // ));
                               }
-                              focusNode.requestFocus();
+                              // focusNode.requestFocus();
                             },
                           ),
                         ),

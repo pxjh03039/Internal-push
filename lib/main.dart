@@ -44,7 +44,7 @@ void setupFCMListener() {
       'receivedAt': DateTime.now().toIso8601String(),
     });
 
-    debugLog('pushMessage ${pushMessage.toString()}');
+    // debugLog('pushMessage ${pushMessage.toString()}');
     receivePush.addPush(pushMessage);
   });
 
@@ -57,7 +57,7 @@ void setupFCMListener() {
       'receivedAt': DateTime.now().toIso8601String(),
     });
 
-    debugLog('pushMessage ${pushMessage.toString()}');
+    // debugLog('pushMessage ${pushMessage.toString()}');
     receivePush.addPush(pushMessage);
   });
 
@@ -71,7 +71,7 @@ void setupFCMListener() {
         'receivedAt': DateTime.now().toIso8601String(),
       });
 
-      debugLog('pushMessage ${pushMessage.toString()}');
+      // debugLog('pushMessage ${pushMessage.toString()}');
       receivePush.addPush(pushMessage);
     } else {
       debugLog('초기 메시지 없음');
