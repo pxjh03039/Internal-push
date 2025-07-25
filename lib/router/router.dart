@@ -76,7 +76,6 @@ final router = GoRouter(
             GoRoute(
               path: RoutePath.message,
               builder: (context, state) {
-                debugLog('1??듫어왕?');
                 final rawParams = state.uri.queryParameters;
 
                 final id = Uri.decodeComponent(rawParams['id'] ?? '');
@@ -105,12 +104,9 @@ final router = GoRouter(
 
                 /// 이 방식은 프레임 렌더링이 끝난 후 실행됨
                 // WidgetsBinding.instance.addPostFrameCallback((_) async {
-                debugLog('pushMessage $pushMessage');
                 if (id.isNotEmpty) {
-                  debugLog('pushMessage2 $pushMessage');
                   receivePush.addPush(pushMessage);
                 }
-                // });
 
                 return const MessageRoot();
               },
