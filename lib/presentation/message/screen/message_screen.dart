@@ -23,6 +23,53 @@ class MessageScreen extends StatelessWidget {
         ),
         centerTitle: true,
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.only(
+            left: 20,
+            right: 20,
+            bottom: MediaQuery.of(context).viewInsets.bottom + 30,
+            top: 10,
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: TextInputFiled(
+                  isFocuse: true,
+                  placeHolder: "메시지 입력",
+                  controller: viewModel.pushMessageController,
+                  onSubmitted: (_) {
+                    if (viewModel.validatePushContents()) {
+                      viewModel.onClickPushSend();
+                    }
+                  },
+                ),
+              ),
+              const SizedBox(width: 10),
+              Container(
+                width: 50,
+                height: 50,
+                decoration: BoxDecoration(
+                  color: viewModel.validatePushContents()
+                      ? ColorStyle.primary60
+                      : ColorStyle.primary40,
+                  shape: BoxShape.circle,
+                ),
+                child: IconButton(
+                  onPressed: () {
+                    if (viewModel.validatePushContents()) {
+                      viewModel.onClickPushSend();
+                    }
+                  },
+                  icon: const Icon(Icons.send_sharp, size: 25),
+                  padding: EdgeInsets.zero,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30),
@@ -116,137 +163,68 @@ class MessageScreen extends StatelessWidget {
                       height: 10,
                     ),
                     Expanded(
-                      child: SingleChildScrollView(
-                        child: Column(
-                          children: [
-                            SizedBox(
-                              height: 450,
-                              child: ListView(
-                                reverse: true,
-                                children: viewModel.messageState.getPushMessages
-                                    .map((PushMessage e) {
-                                  bool isSent =
-                                      e.senderId == viewModel.messageState.id;
-                                  return Align(
-                                    alignment: isSent
-                                        ? Alignment.centerRight
-                                        : Alignment.centerLeft,
-                                    child: Container(
-                                      constraints: const BoxConstraints(
-                                        minWidth: 100,
-                                        maxWidth: 250, // 최대 너비 지정
+                      child: ListView(
+                        reverse: true,
+                        children: viewModel.messageState.getPushMessages
+                            .map((PushMessage e) {
+                          bool isSent = e.senderId == viewModel.messageState.id;
+                          return GestureDetector(
+                            onTap: () {
+                              viewModel.copyClipboard(e.body);
+                              ScaffoldMessenger.of(context).clearSnackBars();
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(const SnackBar(
+                                content: Text('저장 되었습니다.'),
+                                behavior: SnackBarBehavior.floating,
+                                backgroundColor: ColorStyle.primary100,
+                                duration: Duration(milliseconds: 30),
+                              ));
+                            },
+                            child: Align(
+                              alignment: isSent
+                                  ? Alignment.centerRight
+                                  : Alignment.centerLeft,
+                              child: Container(
+                                constraints: const BoxConstraints(
+                                  minWidth: 100,
+                                  maxWidth: 250, // 최대 너비 지정
+                                ),
+                                padding: const EdgeInsets.all(8),
+                                margin: const EdgeInsets.symmetric(vertical: 4),
+                                decoration: BoxDecoration(
+                                  color: isSent
+                                      ? ColorStyle.primary60
+                                      : Colors.grey[200],
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: isSent
+                                      ? CrossAxisAlignment.end
+                                      : CrossAxisAlignment.start,
+                                  children: [
+                                    if (!isSent)
+                                      Text(
+                                        e.senderId,
+                                        style: TextStyles.smallerTextBold,
                                       ),
-                                      padding: const EdgeInsets.all(8),
-                                      margin: const EdgeInsets.symmetric(
-                                          vertical: 4),
-                                      decoration: BoxDecoration(
-                                        color: isSent
-                                            ? ColorStyle.primary60
-                                            : Colors.grey[200],
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                      child: Column(
-                                        crossAxisAlignment: isSent
-                                            ? CrossAxisAlignment.end
-                                            : CrossAxisAlignment.start,
-                                        children: [
-                                          if (!isSent)
-                                            Text(
-                                              e.senderId,
-                                              style: TextStyles.smallerTextBold,
-                                            ),
-                                          Text(
-                                            e.body,
-                                            style: TextStyles.smallTextBold
-                                                .copyWith(color: Colors.black),
-                                          ),
-                                          const SizedBox(height: 4),
-                                          Text(
-                                            formatToMMDD(e.timestamp),
-                                            style:
-                                                TextStyles.smallerTextRegular,
-                                          ),
-                                        ],
-                                      ),
+                                    Text(
+                                      e.body,
+                                      style: TextStyles.smallTextBold
+                                          .copyWith(color: Colors.black),
                                     ),
-                                  );
-                                }).toList(),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      formatToMMDD(e.timestamp),
+                                      style: TextStyles.smallerTextRegular,
+                                    ),
+                                  ],
+                                ),
                               ),
-                            )
-                          ],
-                        ),
+                            ),
+                          );
+                        }).toList(),
                       ),
                     ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: TextInputFiled(
-                            isFocuse: true,
-                            placeHolder: "메시지 입력",
-                            controller: viewModel.pushMessageController,
-                            onSubmitted: (_) {
-                              if (viewModel.validatePushContents()) {
-                                viewModel.onClickPushSend();
-                              } else {
-                                // ScaffoldMessenger.of(context)
-                                //     .clearSnackBars(); // 기존 스낵바 제거
-                                // ScaffoldMessenger.of(context)
-                                //     .showSnackBar(const SnackBar(
-                                //   content: Text('메시지가 비었습니다.'),
-                                //   behavior: SnackBarBehavior.floating,
-                                //   backgroundColor: ColorStyle.primary100,
-                                //   duration: Duration(seconds: 1),
-                                // ));
-                              }
-                              // focusNode.requestFocus();
-                            },
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Container(
-                            width: 50,
-                            height: 50,
-                            decoration: BoxDecoration(
-                              color: viewModel.validatePushContents()
-                                  ? ColorStyle.primary60
-                                  : ColorStyle.primary40,
-                              shape: BoxShape.circle,
-                            ),
-                            child: Align(
-                              alignment: const Alignment(0.4, 0),
-                              child: IconButton(
-                                onPressed: () {
-                                  if (viewModel.validatePushContents()) {
-                                    viewModel.onClickPushSend();
-                                  } else {
-                                    // ScaffoldMessenger.of(context)
-                                    //     .clearSnackBars(); // 기존 스낵바 제거
-                                    // ScaffoldMessenger.of(context)
-                                    //     .showSnackBar(const SnackBar(
-                                    //   content: Text('메시지가 비었습니다.'),
-                                    //   behavior: SnackBarBehavior.floating,
-                                    //   backgroundColor: ColorStyle.primary100,
-                                    //   duration: Duration(seconds: 1),
-                                    // ));
-                                  }
-                                },
-                                icon: const Icon(
-                                  Icons.send_sharp,
-                                  size: 25,
-                                ),
-                                padding: EdgeInsets.zero,
-                              ),
-                            ))
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 50,
-                    )
                   ],
                 ),
         ),

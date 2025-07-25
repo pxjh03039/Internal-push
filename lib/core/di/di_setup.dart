@@ -51,7 +51,9 @@ void diSetup() {
       () => ProfileViewModel(userRepository: getIt()));
 
   getIt.registerFactory<MessageViewModel>(() => MessageViewModel(
-      messageRepository: getIt(),
-      userRepository: getIt(),
-      receivePushSaveService: getIt()));
+        messageRepository: getIt(),
+        userRepository: getIt(),
+        receivePushSaveService: getIt(),
+        clipboardService: getIt(),
+      ));
 }

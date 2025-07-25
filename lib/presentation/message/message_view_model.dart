@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:push_test_app/core/util/develop/develop_tool.dart';
+import 'package:push_test_app/domain/clipboard/clipboard_service.dart';
 import 'package:push_test_app/domain/model/receive_push_data.dart';
 import 'package:push_test_app/domain/repository/message_repository.dart';
 import 'package:push_test_app/domain/repository/user_repository.dart';
@@ -12,6 +13,7 @@ class MessageViewModel with ChangeNotifier {
   final MessageRepository _messageRepository;
   final UserRepository _userRepository;
   final ReceivePushSaveService _receivePushSaveService;
+  final ClipboardService _clipboardService;
 
   MessageState _messageState = const MessageState();
   MessageState get messageState => _messageState;
@@ -27,9 +29,11 @@ class MessageViewModel with ChangeNotifier {
     required MessageRepository messageRepository,
     required UserRepository userRepository,
     required ReceivePushSaveService receivePushSaveService,
+    required ClipboardService clipboardService,
   })  : _messageRepository = messageRepository,
         _userRepository = userRepository,
-        _receivePushSaveService = receivePushSaveService {
+        _receivePushSaveService = receivePushSaveService,
+        _clipboardService = clipboardService {
     {
       pushTitleController.text = _messageState.pushTitle;
       pushMessageController.text = _messageState.pushContents;
@@ -68,6 +72,10 @@ class MessageViewModel with ChangeNotifier {
   void setUserInfo() async {
     String id = await loadRegisterInfo('id');
     _messageState = _messageState.copyWith(id: id);
+  }
+
+  void copyClipboard(String value) async {
+    await _clipboardService.copyText(value);
   }
 
   void _getPushMessageHistory() async {
