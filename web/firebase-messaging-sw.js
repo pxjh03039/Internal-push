@@ -28,7 +28,6 @@ messaging.onBackgroundMessage(function (payload) {
       .catch(error => console.error('[SW] Notification error:', error)); // 에러 로그 (중요!)
   }
 });
-
 self.addEventListener('notificationclick', function (event) {
   console.log('[SW] Notification click received.', event);
   event.notification.close();
@@ -60,12 +59,26 @@ self.addEventListener('notificationclick', function (event) {
 
       for (const client of windowClients) {
         // 기존 클라이언트를 찾고, 해당 클라이언트가 포커스 가능한지 확인
+        // 앱의 시작 URL과 일치하는 클라이언트를 찾습니다.
         if (client.url.startsWith(self.location.origin) && 'focus' in client) {
           clientToFocus = client;
           break;
         }
       }
-      return clients.openWindow(urlToOpen);
+
+      if (clientToFocus) {
+        console.log('[SW] Existing client found. Focusing and navigating:', clientToFocus.url, '->', urlToOpen);
+        return clientToFocus.focus().then(focusedClient => {
+          if (focusedClient.url !== urlToOpen) {
+            return focusedClient.navigate(urlToOpen); // GoRouter 경로로 이동
+          }
+          return focusedClient;
+        });
+      } else {
+        // 기존 클라이언트가 없으면 새 창을 엽니다.
+        console.log('[SW] No existing client found. Opening new window:', urlToOpen);
+        return clients.openWindow(urlToOpen);
+      }
     })
   );
 });

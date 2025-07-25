@@ -61,10 +61,13 @@ class MessageViewModel with ChangeNotifier {
   }
 
   void scrollToBottom() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      // 널 체크 및 hasClients 확인 후 스크롤
+    Future.delayed(const Duration(milliseconds: 100), () {
       if (scrollController.hasClients) {
-        scrollController.jumpTo(scrollController.position.minScrollExtent);
+        scrollController.animateTo(
+          scrollController.position.minScrollExtent, // 최하단으로 이동
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeOut,
+        );
       }
     });
   }
@@ -85,7 +88,9 @@ class MessageViewModel with ChangeNotifier {
     debugLog(res);
     _messageState = _messageState.copyWith(getPushMessages: res);
     notifyListeners();
-    scrollToBottom();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      scrollToBottom();
+    });
   }
 
   void _subscribeToPushMessages() {
