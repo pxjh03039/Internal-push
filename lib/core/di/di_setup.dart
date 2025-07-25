@@ -34,8 +34,10 @@ void diSetup() {
   getIt.registerFactory<PushViewModel>(
       () => PushViewModel(pushRepository: getIt()));
 
-  getIt.registerFactory<CreateViewModel>(
-      () => CreateViewModel(pushRepository: getIt()));
+  getIt.registerFactory<CreateViewModel>(() => CreateViewModel(
+        pushRepository: getIt(),
+        userRepository: getIt(),
+      ));
 
   getIt.registerFactoryParam<UpdateViewModel, String, void>(
     (scheduleId, _) => UpdateViewModel(

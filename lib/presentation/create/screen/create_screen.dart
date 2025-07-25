@@ -1,3 +1,4 @@
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -69,12 +70,91 @@ class CreateScreen extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             SmallTextButtonGroup(
-              options: const ['All', 'User'],
+              options: const ['All', 'Group', 'User'],
               selectedTarget: viewModel.createState.selectedTarget,
               onChanged: (String value) {
                 viewModel.createTarget(value);
               },
             ),
+            if (viewModel.createState.selectedTarget == 'Group') ...[
+              const SizedBox(height: 10),
+              DropdownSearch<String>.multiSelection(
+                items: (f, cs) => viewModel.getGroups(),
+                selectedItems: viewModel.createState.selectedGroups,
+                onChanged: (List<String> selected) {
+                  viewModel.createGroups(selected);
+                },
+                decoratorProps: DropDownDecoratorProps(
+                  decoration: InputDecoration(
+                    hintText: "그룹을 선택해주세요",
+                    hintStyle: TextStyles.smallTextRegular
+                        .copyWith(color: ColorStyle.gray3),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                ),
+                dropdownBuilder: (context, selectedItems) {
+                  return Wrap(
+                    spacing: 6.0,
+                    runSpacing: -8.0,
+                    children: selectedItems.map((item) {
+                      return Chip(
+                        backgroundColor: ColorStyle.primary40,
+                        label: Text(
+                          item,
+                          style: TextStyles.smallTextBold,
+                        ),
+                        onDeleted: () {
+                          final updated = List<String>.from(selectedItems)
+                            ..remove(item);
+                          viewModel.createGroups(updated);
+                        },
+                      );
+                    }).toList(),
+                  );
+                },
+              ),
+            ] else if (viewModel.createState.selectedTarget == 'User') ...[
+              const SizedBox(height: 10),
+              DropdownSearch<String>.multiSelection(
+                items: (f, cs) => viewModel.getUsers(),
+                selectedItems: viewModel.createState.selectedUsers,
+                onChanged: (List<String> selected) {
+                  viewModel.createUsers(selected);
+                },
+                decoratorProps: DropDownDecoratorProps(
+                  decoration: InputDecoration(
+                    hintText: "그룹을 선택해주세요",
+                    hintStyle: TextStyles.smallTextRegular
+                        .copyWith(color: ColorStyle.gray3),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                ),
+                dropdownBuilder: (context, selectedItems) {
+                  return Wrap(
+                    spacing: 6.0,
+                    runSpacing: -8.0,
+                    children: selectedItems.map((item) {
+                      return Chip(
+                        backgroundColor: ColorStyle.primary40,
+                        label: Text(
+                          item,
+                          style: TextStyles.smallTextBold,
+                        ),
+                        onDeleted: () {
+                          final updated = List<String>.from(selectedItems)
+                            ..remove(item);
+                          viewModel.createUsers(updated);
+                        },
+                      );
+                    }).toList(),
+                  );
+                },
+              ),
+            ],
             const SizedBox(height: 20),
 
             /// 반복 선택

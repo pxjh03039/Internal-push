@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:push_test_app/core/util/develop/develop_tool.dart';
 import 'package:push_test_app/domain/model/push_schedule.dart';
 import 'package:push_test_app/domain/repository/push_repository.dart';
+import 'package:push_test_app/domain/repository/user_repository.dart';
 import 'package:push_test_app/presentation/create/create_state.dart';
 
 class CreateViewModel extends ChangeNotifier {
   final PushRepository _pushRepository;
+  final UserRepository _userRepository;
 
   final TextEditingController titleController = TextEditingController();
   final TextEditingController messageController = TextEditingController();
@@ -13,7 +15,9 @@ class CreateViewModel extends ChangeNotifier {
 
   CreateViewModel({
     required PushRepository pushRepository,
-  }) : _pushRepository = pushRepository {
+    required UserRepository userRepository,
+  })  : _pushRepository = pushRepository,
+        _userRepository = userRepository {
     titleController.text = _createState.title;
     messageController.text = _createState.message;
 
@@ -56,6 +60,16 @@ class CreateViewModel extends ChangeNotifier {
 
   void createTarget(String newTarget) {
     _createState = _createState.copyWith(selectedTarget: newTarget);
+    notifyListeners();
+  }
+
+  void createGroups(List<String> newGroups) {
+    _createState = _createState.copyWith(selectedGroups: newGroups);
+    notifyListeners();
+  }
+
+  void createUsers(List<String> newUsers) {
+    _createState = _createState.copyWith(selectedUsers: newUsers);
     notifyListeners();
   }
 
@@ -118,6 +132,14 @@ class CreateViewModel extends ChangeNotifier {
 
     _createState = _createState.copyWith(selectedDays: days);
     notifyListeners();
+  }
+
+  Future<List<String>> getGroups() async {
+    return _userRepository.getUserGroup();
+  }
+
+  Future<List<String>> getUsers() async {
+    return _userRepository.getUserNames();
   }
 
   Future<void> createPushSchedule() async {

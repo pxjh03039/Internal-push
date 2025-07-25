@@ -24,6 +24,14 @@ CreateState _$CreateStateFromJson(Map<String, dynamic> json) => CreateState(
       endDate: json['endDate'] == null
           ? null
           : DateTime.parse(json['endDate'] as String),
+      selectedGroups: (json['selectedGroups'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
+      selectedUsers: (json['selectedUsers'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
     );
 
 Map<String, dynamic> _$CreateStateToJson(CreateState instance) =>
@@ -36,4 +44,6 @@ Map<String, dynamic> _$CreateStateToJson(CreateState instance) =>
       'selectedDays': instance.selectedDays,
       'startDate': instance.startDate?.toIso8601String(),
       'endDate': instance.endDate?.toIso8601String(),
+      'selectedGroups': instance.selectedGroups,
+      'selectedUsers': instance.selectedUsers,
     };
