@@ -6,6 +6,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:push_test_app/core/util/develop/fingerprint_js.dart';
 import 'package:push_test_app/data/clipboard/clipboard_service_impl.dart';
 import 'package:push_test_app/router/router.dart';
 import 'package:push_test_app/ui/color_style.dart';
@@ -91,9 +92,8 @@ Future<String> getDeviceId() async {
   final String platform = isPlatform();
 
   if (platform == "WEB") {
-    final webInfo = await deviceInfo.webBrowserInfo;
-    final raw = "${webInfo.userAgent}_${webInfo.platform}_${webInfo.vendor}";
-    return "web_${raw.hashCode}";
+    final id = await getFingerprint();
+    return "web_$id";
   } else if (platform == "AOS") {
     final androidInfo = await deviceInfo.androidInfo;
 
