@@ -15,8 +15,7 @@ class CreateState with _$CreateState {
   final List<String> selectedDays;
   final DateTime? startDate;
   final DateTime? endDate;
-  final List<String> selectedGroups;
-  final List<String> selectedUsers;
+  final List<String> selectedTargetList;
   const CreateState({
     this.title = '',
     this.message = '',
@@ -26,8 +25,7 @@ class CreateState with _$CreateState {
     this.selectedDays = const [],
     this.startDate,
     this.endDate,
-    this.selectedGroups = const [],
-    this.selectedUsers = const [],
+    this.selectedTargetList = const [],
   });
 
   factory CreateState.fromJson(Map<String, dynamic> json) =>

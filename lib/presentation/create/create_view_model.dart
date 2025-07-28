@@ -59,17 +59,21 @@ class CreateViewModel extends ChangeNotifier {
   }
 
   void createTarget(String newTarget) {
-    _createState = _createState.copyWith(selectedTarget: newTarget);
+    final prevTarget = _createState.selectedTarget;
+
+    final newTargetList = (newTarget != prevTarget)
+        ? <String>[]
+        : _createState.selectedTargetList;
+
+    _createState = _createState.copyWith(
+      selectedTarget: newTarget,
+      selectedTargetList: newTargetList,
+    );
     notifyListeners();
   }
 
-  void createGroups(List<String> newGroups) {
-    _createState = _createState.copyWith(selectedGroups: newGroups);
-    notifyListeners();
-  }
-
-  void createUsers(List<String> newUsers) {
-    _createState = _createState.copyWith(selectedUsers: newUsers);
+  void createTargetList(List<String> newTargetItem) {
+    _createState = _createState.copyWith(selectedTargetList: newTargetItem);
     notifyListeners();
   }
 
@@ -155,7 +159,7 @@ class CreateViewModel extends ChangeNotifier {
       idName: idName,
       title: _createState.title,
       message: _createState.message,
-      platform: "AOS",
+      platform: isPlatform(),
       userId: userId,
       scheduleAt:
           _formatTime(_createState.selectedTime).toString().substring(0, 5),
@@ -165,8 +169,9 @@ class CreateViewModel extends ChangeNotifier {
       endTime: _createState.endDate!.toIso8601String().substring(0, 10),
       isSent: false,
       scheduleDays: _createState.selectedDays,
+      targetList: _createState.selectedTargetList,
     );
-    debugLog(data.toString());
+    debugLog("스케줄 생성! ${data.toString()}");
     await _pushRepository.createPushSchedule(data);
   }
 

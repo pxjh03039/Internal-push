@@ -22,6 +22,9 @@ PushSchedule _$PushScheduleFromJson(Map<String, dynamic> json) => PushSchedule(
       scheduleDays: (json['scheduleDays'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
+      targetList: (json['targetList'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
     );
 
 Map<String, dynamic> _$PushScheduleToJson(PushSchedule instance) =>
@@ -39,4 +42,5 @@ Map<String, dynamic> _$PushScheduleToJson(PushSchedule instance) =>
       'isSent': instance.isSent,
       'scheduleDays': instance.scheduleDays,
       'idName': instance.idName,
+      'targetList': instance.targetList,
     };

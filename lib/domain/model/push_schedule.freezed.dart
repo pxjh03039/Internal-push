@@ -28,6 +28,7 @@ mixin _$PushSchedule {
   bool get isSent;
   List<String>? get scheduleDays;
   String get idName;
+  List<String>? get targetList;
 
   /// Create a copy of PushSchedule
   /// with the given fields replaced by the non-null parameter values.
@@ -58,7 +59,9 @@ mixin _$PushSchedule {
             (identical(other.isSent, isSent) || other.isSent == isSent) &&
             const DeepCollectionEquality()
                 .equals(other.scheduleDays, scheduleDays) &&
-            (identical(other.idName, idName) || other.idName == idName));
+            (identical(other.idName, idName) || other.idName == idName) &&
+            const DeepCollectionEquality()
+                .equals(other.targetList, targetList));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -77,11 +80,12 @@ mixin _$PushSchedule {
       repeat,
       isSent,
       const DeepCollectionEquality().hash(scheduleDays),
-      idName);
+      idName,
+      const DeepCollectionEquality().hash(targetList));
 
   @override
   String toString() {
-    return 'PushSchedule(id: $id, title: $title, message: $message, platform: $platform, userId: $userId, target: $target, scheduleAt: $scheduleAt, startTime: $startTime, endTime: $endTime, repeat: $repeat, isSent: $isSent, scheduleDays: $scheduleDays, idName: $idName)';
+    return 'PushSchedule(id: $id, title: $title, message: $message, platform: $platform, userId: $userId, target: $target, scheduleAt: $scheduleAt, startTime: $startTime, endTime: $endTime, repeat: $repeat, isSent: $isSent, scheduleDays: $scheduleDays, idName: $idName, targetList: $targetList)';
   }
 }
 
@@ -104,7 +108,8 @@ abstract mixin class $PushScheduleCopyWith<$Res> {
       String repeat,
       String endTime,
       bool isSent,
-      List<String>? scheduleDays});
+      List<String>? scheduleDays,
+      List<String>? targetList});
 }
 
 /// @nodoc
@@ -132,6 +137,7 @@ class _$PushScheduleCopyWithImpl<$Res> implements $PushScheduleCopyWith<$Res> {
     Object? endTime = null,
     Object? isSent = null,
     Object? scheduleDays = freezed,
+    Object? targetList = freezed,
   }) {
     return _then(PushSchedule(
       id: null == id
@@ -185,6 +191,10 @@ class _$PushScheduleCopyWithImpl<$Res> implements $PushScheduleCopyWith<$Res> {
       scheduleDays: freezed == scheduleDays
           ? _self.scheduleDays
           : scheduleDays // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
+      targetList: freezed == targetList
+          ? _self.targetList
+          : targetList // ignore: cast_nullable_to_non_nullable
               as List<String>?,
     ));
   }
