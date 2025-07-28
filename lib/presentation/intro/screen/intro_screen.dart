@@ -94,7 +94,6 @@ class IntroScreen extends StatelessWidget {
                         placeHolder: "아이디를 입력해주세요.",
                         controller: viewModel.titleController,
                         textColor: ColorStyle.white,
-                        isFocuse: true,
                         onSubmitted: (_) async {
                           await handleRegister();
                         },

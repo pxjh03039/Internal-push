@@ -36,7 +36,6 @@ class MessageScreen extends StatelessWidget {
             children: [
               Expanded(
                 child: TextInputFiled(
-                  isFocuse: true,
                   placeHolder: "메시지 입력",
                   controller: viewModel.pushMessageController,
                   onSubmitted: (_) {
@@ -192,6 +191,7 @@ class MessageScreen extends StatelessWidget {
                                     e.senderId,
                                     style: TextStyles.smallerTextBold,
                                   ),
+                                const SizedBox(height: 4),
                                 Text(
                                   e.body,
                                   style: TextStyles.smallTextBold
