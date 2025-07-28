@@ -170,6 +170,21 @@ class MessageScreen extends StatelessWidget {
                           bool isSent = e.senderId == viewModel.messageState.id;
                           return GestureDetector(
                             onTap: () {
+                              final id = e.senderId;
+                              final List<String> current;
+                              if (viewModel.userGroupGubun(id) == 'user') {
+                                current = viewModel.messageState.selectedUsers;
+                                if (!current.contains(id)) {
+                                  viewModel.setSelectedUsers([...current, id]);
+                                }
+                              } else {
+                                current = viewModel.messageState.selectedGroups;
+                                if (!current.contains(id)) {
+                                  viewModel.setSelectedGroups([...current, id]);
+                                }
+                              }
+                            },
+                            onLongPress: () {
                               viewModel.copyClipboard(e.body);
                               ScaffoldMessenger.of(context).clearSnackBars();
                               ScaffoldMessenger.of(context)
