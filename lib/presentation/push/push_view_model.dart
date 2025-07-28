@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:push_test_app/core/util/develop/develop_tool.dart';
 import 'package:push_test_app/domain/model/push_schedule.dart';
 import 'package:push_test_app/domain/repository/push_repository.dart';
 import 'package:push_test_app/presentation/push/push_action.dart';
@@ -18,6 +19,7 @@ class PushViewModel with ChangeNotifier {
   Stream<PushAction> get eventStream => _eventController.stream;
   late final StreamSubscription<List<PushSchedule>> _schedulesSub;
   List<PushSchedule> _allSchedules = [];
+  String userId = '';
 
   final PushRepository _pushRepository;
 
@@ -27,7 +29,7 @@ class PushViewModel with ChangeNotifier {
     controller.addListener(() {
       _onTextChanged(controller.text);
     });
-
+    _initDeviceId();
     _schedulesSub = _pushRepository.listenPushSchedules().listen((schedules) {
       _allSchedules = schedules;
       _loadSchedules();
@@ -88,6 +90,11 @@ class PushViewModel with ChangeNotifier {
     final repeatFilter = _pushState.selectRepeat;
     if (repeatFilter == 'All') return true;
     return schedule.repeat == repeatFilter;
+  }
+
+  Future<void> _initDeviceId() async {
+    userId = await getDeviceId();
+    notifyListeners();
   }
 
   @override

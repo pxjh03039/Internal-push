@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:push_test_app/core/util/develop/develop_tool.dart';
 import 'package:push_test_app/domain/model/push_schedule.dart';
 import 'package:push_test_app/ui/color_style.dart';
 import 'package:push_test_app/ui/text_styles.dart';
@@ -7,11 +8,13 @@ class PushScheduleCard extends StatelessWidget {
   final PushSchedule pushSchedule;
   final VoidCallback? onDelete;
   final void Function(PushSchedule)? onUpdate;
+  final String userId;
   const PushScheduleCard({
     super.key,
     required this.pushSchedule,
     this.onDelete,
     this.onUpdate,
+    required this.userId,
   });
 
   @override
@@ -83,36 +86,38 @@ class PushScheduleCard extends StatelessWidget {
               ],
             ),
           ),
-          Positioned(
-            top: -1,
-            right: -2,
-            child: IconButton(
-              onPressed: onDelete,
-              iconSize: 22,
-              padding: EdgeInsets.zero,
-              icon: Image.asset(
-                'assets/image/delete.png',
-                width: 18,
-                height: 18,
+          if (pushSchedule.userId == userId) ...[
+            Positioned(
+              top: -1,
+              right: -2,
+              child: IconButton(
+                onPressed: onDelete,
+                iconSize: 22,
+                padding: EdgeInsets.zero,
+                icon: Image.asset(
+                  'assets/image/delete.png',
+                  width: 18,
+                  height: 18,
+                ),
               ),
             ),
-          ),
-          Positioned(
-            bottom: -1,
-            right: -2,
-            child: IconButton(
-              onPressed: () {
-                onUpdate!(pushSchedule);
-              },
-              iconSize: 22,
-              padding: EdgeInsets.zero,
-              icon: Image.asset(
-                'assets/image/update.png',
-                width: 18,
-                height: 18,
+            Positioned(
+              bottom: -1,
+              right: -2,
+              child: IconButton(
+                onPressed: () {
+                  onUpdate!(pushSchedule);
+                },
+                iconSize: 22,
+                padding: EdgeInsets.zero,
+                icon: Image.asset(
+                  'assets/image/update.png',
+                  width: 18,
+                  height: 18,
+                ),
               ),
             ),
-          ),
+          ]
         ],
       ),
     );
