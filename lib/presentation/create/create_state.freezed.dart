@@ -23,8 +23,7 @@ mixin _$CreateState {
   List<String> get selectedDays;
   DateTime? get startDate;
   DateTime? get endDate;
-  List<String> get selectedGroups;
-  List<String> get selectedUsers;
+  List<String> get selectedTargetList;
 
   /// Create a copy of CreateState
   /// with the given fields replaced by the non-null parameter values.
@@ -52,9 +51,7 @@ mixin _$CreateState {
                 other.startDate == startDate) &&
             (identical(other.endDate, endDate) || other.endDate == endDate) &&
             const DeepCollectionEquality()
-                .equals(other.selectedGroups, selectedGroups) &&
-            const DeepCollectionEquality()
-                .equals(other.selectedUsers, selectedUsers));
+                .equals(other.selectedTargetList, selectedTargetList));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -69,12 +66,11 @@ mixin _$CreateState {
       const DeepCollectionEquality().hash(selectedDays),
       startDate,
       endDate,
-      const DeepCollectionEquality().hash(selectedGroups),
-      const DeepCollectionEquality().hash(selectedUsers));
+      const DeepCollectionEquality().hash(selectedTargetList));
 
   @override
   String toString() {
-    return 'CreateState(title: $title, message: $message, selectedTarget: $selectedTarget, selectedRepeat: $selectedRepeat, selectedTime: $selectedTime, selectedDays: $selectedDays, startDate: $startDate, endDate: $endDate, selectedGroups: $selectedGroups, selectedUsers: $selectedUsers)';
+    return 'CreateState(title: $title, message: $message, selectedTarget: $selectedTarget, selectedRepeat: $selectedRepeat, selectedTime: $selectedTime, selectedDays: $selectedDays, startDate: $startDate, endDate: $endDate, selectedTargetList: $selectedTargetList)';
   }
 }
 
@@ -93,8 +89,7 @@ abstract mixin class $CreateStateCopyWith<$Res> {
       List<String> selectedDays,
       DateTime? startDate,
       DateTime? endDate,
-      List<String> selectedGroups,
-      List<String> selectedUsers});
+      List<String> selectedTargetList});
 }
 
 /// @nodoc
@@ -117,8 +112,7 @@ class _$CreateStateCopyWithImpl<$Res> implements $CreateStateCopyWith<$Res> {
     Object? selectedDays = null,
     Object? startDate = freezed,
     Object? endDate = freezed,
-    Object? selectedGroups = null,
-    Object? selectedUsers = null,
+    Object? selectedTargetList = null,
   }) {
     return _then(CreateState(
       title: null == title
@@ -153,13 +147,9 @@ class _$CreateStateCopyWithImpl<$Res> implements $CreateStateCopyWith<$Res> {
           ? _self.endDate
           : endDate // ignore: cast_nullable_to_non_nullable
               as DateTime?,
-      selectedGroups: null == selectedGroups
-          ? _self.selectedGroups
-          : selectedGroups // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      selectedUsers: null == selectedUsers
-          ? _self.selectedUsers
-          : selectedUsers // ignore: cast_nullable_to_non_nullable
+      selectedTargetList: null == selectedTargetList
+          ? _self.selectedTargetList
+          : selectedTargetList // ignore: cast_nullable_to_non_nullable
               as List<String>,
     ));
   }

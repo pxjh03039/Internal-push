@@ -20,6 +20,7 @@ class PushSchedule with _$PushSchedule {
   final bool isSent;
   final List<String>? scheduleDays;
   final String idName;
+  final List<String>? targetList;
 
   const PushSchedule({
     required this.id,
@@ -35,6 +36,7 @@ class PushSchedule with _$PushSchedule {
     required this.endTime,
     required this.isSent,
     this.scheduleDays,
+    this.targetList,
   });
 
   factory PushSchedule.fromJson(Map<String, dynamic> json) =>

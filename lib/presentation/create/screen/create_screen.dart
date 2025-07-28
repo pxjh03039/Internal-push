@@ -80,9 +80,9 @@ class CreateScreen extends StatelessWidget {
               const SizedBox(height: 10),
               DropdownSearch<String>.multiSelection(
                 items: (f, cs) => viewModel.getGroups(),
-                selectedItems: viewModel.createState.selectedGroups,
+                selectedItems: viewModel.createState.selectedTargetList,
                 onChanged: (List<String> selected) {
-                  viewModel.createGroups(selected);
+                  viewModel.createTargetList(selected);
                 },
                 decoratorProps: DropDownDecoratorProps(
                   decoration: InputDecoration(
@@ -108,7 +108,7 @@ class CreateScreen extends StatelessWidget {
                         onDeleted: () {
                           final updated = List<String>.from(selectedItems)
                             ..remove(item);
-                          viewModel.createGroups(updated);
+                          viewModel.createTargetList(updated);
                         },
                       );
                     }).toList(),
@@ -119,13 +119,13 @@ class CreateScreen extends StatelessWidget {
               const SizedBox(height: 10),
               DropdownSearch<String>.multiSelection(
                 items: (f, cs) => viewModel.getUsers(),
-                selectedItems: viewModel.createState.selectedUsers,
+                selectedItems: viewModel.createState.selectedTargetList,
                 onChanged: (List<String> selected) {
-                  viewModel.createUsers(selected);
+                  viewModel.createTargetList(selected);
                 },
                 decoratorProps: DropDownDecoratorProps(
                   decoration: InputDecoration(
-                    hintText: "그룹을 선택해주세요",
+                    hintText: "사용자를 선택해주세요",
                     hintStyle: TextStyles.smallTextRegular
                         .copyWith(color: ColorStyle.gray3),
                     border: OutlineInputBorder(
@@ -147,7 +147,7 @@ class CreateScreen extends StatelessWidget {
                         onDeleted: () {
                           final updated = List<String>.from(selectedItems)
                             ..remove(item);
-                          viewModel.createUsers(updated);
+                          viewModel.createTargetList(updated);
                         },
                       );
                     }).toList(),
