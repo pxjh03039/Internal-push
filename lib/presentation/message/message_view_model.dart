@@ -164,7 +164,7 @@ class MessageViewModel with ChangeNotifier {
     notifyListeners();
     if (_messageState.selectedUsers.isNotEmpty) {
       await _messageRepository.pushSendMessage(
-          title: "유저 푸시 메시지",
+          title: id,
           contents: _messageState.pushContents,
           ids: _messageState.selectedUsers,
           id: id);
