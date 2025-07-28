@@ -66,6 +66,7 @@ class IntroViewModel with ChangeNotifier {
     _introState = _introState.copyWith(
       isRegistered: isRegistered,
     );
+    await saveRegisterInfo(key: 'deviceId', value: userId);
     _introState = _introState.copyWith(isLoading: false);
     notifyListeners();
   }

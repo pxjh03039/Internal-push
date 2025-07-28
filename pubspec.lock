@@ -575,7 +575,7 @@ packages:
     source: hosted
     version: "1.0.5"
   js:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: js
       sha256: f2c445dce49627136094980615a031419f7f3eb393237e4ecd97ac15dea343f3
@@ -1060,7 +1060,7 @@ packages:
     source: hosted
     version: "1.4.0"
   uuid:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: uuid
       sha256: a5be9ef6618a7ac1e964353ef476418026db906c4facdedaa299b7a2e71690ff

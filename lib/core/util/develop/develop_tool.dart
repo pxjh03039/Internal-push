@@ -2,14 +2,13 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:push_test_app/core/util/develop/fingerprint_js.dart';
 import 'package:push_test_app/data/clipboard/clipboard_service_impl.dart';
 import 'package:push_test_app/router/router.dart';
 import 'package:push_test_app/ui/color_style.dart';
+import 'package:uuid/uuid.dart';
 
 final _clipboard = ClipboardServiceImpl();
 
@@ -88,24 +87,28 @@ String isPlatform() {
 }
 
 Future<String> getDeviceId() async {
-  final deviceInfo = DeviceInfoPlugin();
   final String platform = isPlatform();
+  String? deviceId = await loadRegisterInfo('deviceId');
 
-  if (platform == "WEB") {
-    final id = await getFingerprint();
-    return "web_$id";
-  } else if (platform == "AOS") {
-    final androidInfo = await deviceInfo.androidInfo;
+  try {
+    if (deviceId == null) {
+      final rawUuid = const Uuid().v4();
 
-    // ✅ 여러 필드 조합해서 해시값으로 고유 ID 흉내
-    final raw =
-        "${androidInfo.device}_${androidInfo.id}_${androidInfo.model}_${androidInfo.product}";
-    return "aos_${raw.hashCode}";
-  } else if (platform == "iOS") {
-    final iosInfo = await deviceInfo.iosInfo;
-    return "ios_${iosInfo.identifierForVendor}";
-  } else {
-    return "unknown_platform";
+      if (platform == "WEB") {
+        deviceId = "web_$rawUuid";
+      } else if (platform == "AOS") {
+        deviceId = "aos_$rawUuid";
+      } else if (platform == "iOS") {
+        deviceId = "ios_$rawUuid";
+      } else {
+        return "unknown_platform";
+      }
+    }
+
+    return deviceId;
+  } catch (e) {
+    debugLog("getDeviceId 얻기 실패: $e");
+    rethrow;
   }
 }
 
