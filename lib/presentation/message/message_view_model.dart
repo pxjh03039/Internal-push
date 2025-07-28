@@ -72,6 +72,18 @@ class MessageViewModel with ChangeNotifier {
     });
   }
 
+  String userGroupGubun(String gubunValue) {
+    String gubun = 'user';
+    if (_messageState.userNames.contains(gubunValue)) {
+      gubun = 'user';
+    }
+    if (_messageState.userGroup.contains(gubunValue)) {
+      gubun = 'group';
+    }
+
+    return gubun;
+  }
+
   void setUserInfo() async {
     String id = await loadRegisterInfo('id');
     _messageState = _messageState.copyWith(id: id);

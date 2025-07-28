@@ -80,4 +80,10 @@ class IntroViewModel with ChangeNotifier {
 
     return true;
   }
+
+  @override
+  void dispose() {
+    titleController.dispose();
+    super.dispose();
+  }
 }
