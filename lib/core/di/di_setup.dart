@@ -52,7 +52,7 @@ void diSetup() {
   getIt.registerFactory<ProfileViewModel>(
       () => ProfileViewModel(userRepository: getIt()));
 
-  getIt.registerFactory<MessageViewModel>(() => MessageViewModel(
+  getIt.registerLazySingleton<MessageViewModel>(() => MessageViewModel(
         messageRepository: getIt(),
         userRepository: getIt(),
         receivePushSaveService: getIt(),

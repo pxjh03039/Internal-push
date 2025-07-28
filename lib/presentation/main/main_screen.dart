@@ -68,7 +68,7 @@ class MainScreen extends StatelessWidget {
                 onPressed: () {
                   final messageViewModel = getIt<MessageViewModel>();
                   messageViewModel.initData();
-                  onDestinationSelected(2);
+                  onDestinationSelected(1);
                 },
               ),
 
