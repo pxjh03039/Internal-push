@@ -168,6 +168,53 @@ class MessageScreen extends StatelessWidget {
                         children: viewModel.messageState.getPushMessages
                             .map((PushMessage e) {
                           bool isSent = e.senderId == viewModel.messageState.id;
+                          // 툴팁을 조건부로 적용하기 위해 별도의 위젯 변수 생성
+                          Widget messageContent = Container(
+                            constraints: const BoxConstraints(
+                              minWidth: 100,
+                              maxWidth: 250, // 최대 너비 지정
+                            ),
+                            padding: const EdgeInsets.all(8),
+                            margin: const EdgeInsets.symmetric(vertical: 4),
+                            decoration: BoxDecoration(
+                              color: isSent
+                                  ? ColorStyle.primary60
+                                  : Colors.grey[200],
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: isSent
+                                  ? CrossAxisAlignment.end
+                                  : CrossAxisAlignment.start,
+                              children: [
+                                if (!isSent)
+                                  Text(
+                                    e.senderId,
+                                    style: TextStyles.smallerTextBold,
+                                  ),
+                                Text(
+                                  e.body,
+                                  style: TextStyles.smallTextBold
+                                      .copyWith(color: Colors.black),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  formatToMMDD(e.timestamp),
+                                  style: TextStyles.smallerTextRegular,
+                                ),
+                              ],
+                            ),
+                          );
+
+                          // isSent일 경우에만 Tooltip으로 감쌉니다.
+                          if (isSent) {
+                            messageContent = Tooltip(
+                              message: '수신자: ${e.receiverIds.join(', ')}',
+                              child:
+                                  messageContent, // 위에서 정의한 메시지 컨텐츠를 child로 사용
+                            );
+                          }
+
                           return GestureDetector(
                             onTap: () {
                               final id = e.senderId;
@@ -184,7 +231,7 @@ class MessageScreen extends StatelessWidget {
                                 }
                               }
                             },
-                            onLongPress: () {
+                            onDoubleTap: () {
                               viewModel.copyClipboard(e.body);
                               ScaffoldMessenger.of(context).clearSnackBars();
                               ScaffoldMessenger.of(context)
@@ -199,42 +246,8 @@ class MessageScreen extends StatelessWidget {
                               alignment: isSent
                                   ? Alignment.centerRight
                                   : Alignment.centerLeft,
-                              child: Container(
-                                constraints: const BoxConstraints(
-                                  minWidth: 100,
-                                  maxWidth: 250, // 최대 너비 지정
-                                ),
-                                padding: const EdgeInsets.all(8),
-                                margin: const EdgeInsets.symmetric(vertical: 4),
-                                decoration: BoxDecoration(
-                                  color: isSent
-                                      ? ColorStyle.primary60
-                                      : Colors.grey[200],
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: isSent
-                                      ? CrossAxisAlignment.end
-                                      : CrossAxisAlignment.start,
-                                  children: [
-                                    if (!isSent)
-                                      Text(
-                                        e.senderId,
-                                        style: TextStyles.smallerTextBold,
-                                      ),
-                                    Text(
-                                      e.body,
-                                      style: TextStyles.smallTextBold
-                                          .copyWith(color: Colors.black),
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      formatToMMDD(e.timestamp),
-                                      style: TextStyles.smallerTextRegular,
-                                    ),
-                                  ],
-                                ),
-                              ),
+                              child:
+                                  messageContent, // 조건부로 감싸진 messageContent 사용
                             ),
                           );
                         }).toList(),
