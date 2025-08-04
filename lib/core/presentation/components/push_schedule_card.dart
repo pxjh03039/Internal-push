@@ -86,6 +86,15 @@ class PushScheduleCard extends StatelessWidget {
               ],
             ),
           ),
+          Positioned(
+            bottom: 5,
+            left: 8,
+            child: Text(
+              pushSchedule.idName,
+              style:
+                  TextStyles.smallTextRegular.copyWith(color: ColorStyle.gray3),
+            ),
+          ),
           if (pushSchedule.userId == userId) ...[
             Positioned(
               top: -1,

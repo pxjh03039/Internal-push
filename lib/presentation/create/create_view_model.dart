@@ -178,8 +178,6 @@ class CreateViewModel extends ChangeNotifier {
   String _formatTime(Duration d) {
     final h = d.inHours.toString().padLeft(2, '0');
     final m = (d.inMinutes % 60).toString().padLeft(2, '0');
-    debugLog(h);
-    debugLog(m);
     return '$h:$m';
   }
 
