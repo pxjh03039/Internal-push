@@ -96,6 +96,7 @@ class MessageViewModel with ChangeNotifier {
   void _getPushMessageHistory() async {
     String id = await loadRegisterInfo('id');
     final res = await _messageRepository.getPushMessageHistory(id: id);
+    res.sort((a, b) => b.timestamp.compareTo(a.timestamp));
     debugLog('push 확인');
     debugLog(res);
     _messageState = _messageState.copyWith(getPushMessages: res);
