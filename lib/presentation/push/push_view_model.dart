@@ -19,7 +19,7 @@ class PushViewModel with ChangeNotifier {
   Stream<PushAction> get eventStream => _eventController.stream;
   late final StreamSubscription<List<PushSchedule>> _schedulesSub;
   List<PushSchedule> _allSchedules = [];
-  String userId = '';
+  String idName = '';
 
   final PushRepository _pushRepository;
 
@@ -93,7 +93,7 @@ class PushViewModel with ChangeNotifier {
   }
 
   Future<void> _initDeviceId() async {
-    userId = await getDeviceId();
+    idName = await loadRegisterInfo('id');
     notifyListeners();
   }
 

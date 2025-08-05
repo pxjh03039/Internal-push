@@ -99,7 +99,7 @@ class PushScreen extends StatelessWidget {
                       onUpdate: (item) {
                         context.push(RoutePath.update, extra: item);
                       },
-                      userId: viewModel.userId,
+                      idName: viewModel.idName,
                     );
                   },
                 ),

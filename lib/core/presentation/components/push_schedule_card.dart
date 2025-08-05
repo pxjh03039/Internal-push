@@ -8,13 +8,13 @@ class PushScheduleCard extends StatelessWidget {
   final PushSchedule pushSchedule;
   final VoidCallback? onDelete;
   final void Function(PushSchedule)? onUpdate;
-  final String userId;
+  final String idName;
   const PushScheduleCard({
     super.key,
     required this.pushSchedule,
     this.onDelete,
     this.onUpdate,
-    required this.userId,
+    required this.idName,
   });
 
   @override
@@ -95,7 +95,7 @@ class PushScheduleCard extends StatelessWidget {
                   TextStyles.smallTextRegular.copyWith(color: ColorStyle.gray3),
             ),
           ),
-          if (pushSchedule.userId == userId) ...[
+          if (pushSchedule.idName == idName) ...[
             Positioned(
               top: -1,
               right: -2,
