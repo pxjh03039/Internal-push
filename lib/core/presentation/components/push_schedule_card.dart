@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:push_test_app/core/presentation/components/overflow_tootip_text.dart';
 import 'package:push_test_app/core/util/develop/develop_tool.dart';
 import 'package:push_test_app/domain/model/push_schedule.dart';
 import 'package:push_test_app/ui/color_style.dart';
@@ -64,25 +65,17 @@ class PushScheduleCard extends StatelessWidget {
                   ),
                 ),
                 const Divider(),
-                Text(
-                  pushSchedule.title,
+                OverflowTooltipText(
+                  '${pushSchedule.title} | ${pushSchedule.idName}',
                   style: TextStyles.smallTextBold,
+                  maxLines: 1,
                 ),
-                const SizedBox(height: 4),
-                Text(
+                OverflowTooltipText(
                   pushSchedule.message,
                   style: TextStyles.smallTextRegular,
                   maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(
-                  height: 4,
-                ),
-                Text(
-                  pushSchedule.target,
-                  style: TextStyles.smallTextRegular
-                      .copyWith(color: ColorStyle.gray3),
-                ),
+                const SizedBox(height: 4),
               ],
             ),
           ),
@@ -90,40 +83,49 @@ class PushScheduleCard extends StatelessWidget {
             bottom: 5,
             left: 8,
             child: Text(
-              pushSchedule.idName,
+              pushSchedule.target,
               style:
                   TextStyles.smallTextRegular.copyWith(color: ColorStyle.gray3),
             ),
           ),
           if (pushSchedule.idName == idName) ...[
-            Positioned(
-              top: -1,
-              right: -2,
-              child: IconButton(
-                onPressed: onDelete,
-                iconSize: 22,
-                padding: EdgeInsets.zero,
-                icon: Image.asset(
-                  'assets/image/delete.png',
-                  width: 18,
-                  height: 18,
-                ),
-              ),
-            ),
-            Positioned(
-              bottom: -1,
-              right: -2,
-              child: IconButton(
-                onPressed: () {
-                  onUpdate!(pushSchedule);
-                },
-                iconSize: 22,
-                padding: EdgeInsets.zero,
-                icon: Image.asset(
-                  'assets/image/update.png',
-                  width: 18,
-                  height: 18,
-                ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      onUpdate!(pushSchedule);
+                    },
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.zero,
+                      minimumSize: const Size(18, 18),
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
+                    child: Image.asset(
+                      'assets/image/update.png',
+                      width: 18,
+                      height: 18,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  TextButton(
+                    onPressed: onDelete,
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.zero,
+                      minimumSize: const Size(18, 18),
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
+                    child: Image.asset(
+                      'assets/image/delete.png',
+                      width: 18,
+                      height: 18,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ],
               ),
             ),
           ]
